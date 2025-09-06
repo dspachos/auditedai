@@ -51,7 +51,8 @@
         "drupal/twig_tweak": "^3.2",
         "drupal/views_migration": "^1.2",
         "drupal/webform": "^6.2",
-        "drush/drush": "^13.5"
+        "drush/drush": "^13.5",
+        "wikimedia/composer-merge-plugin": "*"
     },
     "conflict": {
         "drupal/drupal": "*"
