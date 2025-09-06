@@ -1,0 +1,17 @@
+vp_analytics.settings_form:
+  title: 'VP Analytics'
+  description: 'Configure VP Analytics.'
+  parent: system.admin_config_system
+  route_name: vp_analytics.settings_form
+  weight: 10
+
+entity.vp_analytics.settings:
+  title: 'VP Analytics'
+  description: 'Configure a VP Analytics entity type.'
+  route_name:  entity.vp_analytics.settings
+  parent: system.admin_structure
+entity.vp_analytics.collection:
+  title: 'VP Analyticss'
+  description: 'List of vp analyticss.'
+  route_name: entity.vp_analytics.collection
+  parent: system.admin_content

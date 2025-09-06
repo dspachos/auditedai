@@ -1,0 +1,4 @@
+services:
+  vp_analytics.post:
+    class: Drupal\vp_analytics\VpAnalyticsPostData
+    arguments: ['@http_client', '@config.factory', '@logger.factory', '@current_user', '@entity_type.manager']

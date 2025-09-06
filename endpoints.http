@@ -1,0 +1,36 @@
+
+curl -X POST "http://127.0.0.1:8888/api/vp/analytics" \
+     -H "Content-Type: application/json" \
+     -d '{
+         "uuid": "61192be2-44be-45ee-aeda-92cae2d657af",
+         "uid": "567"
+     }'
+
+
+###
+GET http://127.0.0.1:8888/api/vp/list/en/
+
+###
+GET http://127.0.0.1:8888//api/vp/node/en/1862150f-5a37-4137-9967-0347058bd490
+
+###
+GET http://127.0.0.1:8888//api/vp/node/de/e7a02d9d-ee54-47f0-b8ad-6b8d9e82a142
+
+
+
+###
+POST http://127.0.0.1:8888/api/vp-authentication
+ontent-Type: application/json
+
+{
+    "uuid": "1",
+}
+
+###
+POST http://127.0.0.1:8888/api/vp/analytics HTTP/1.1
+content-type: application/json
+
+{
+    "uuid": "61192be2-44be-45ee-aeda-92cae2d657af",
+    "uid": "1"
+}

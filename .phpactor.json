@@ -1,0 +1,6 @@
+{
+    "$schema": "/Users/dimitris.spachos/.local/share/nvim/mason/packages/phpactor/phpactor.schema.json",
+    "language_server_phpstan.enabled": true,
+    "php_code_sniffer.enabled": true,
+    "prophecy.enabled": true
+}

@@ -1,0 +1,15 @@
+uuid: ceb2fd21-8adf-451a-b5c4-00ab1e12160c
+langcode: el
+status: true
+dependencies: {  }
+name: vp_node_image
+label: 'VP Node Image'
+effects:
+  54e47d1e-3ac5-401a-bf09-cfa8fac0147d:
+    uuid: 54e47d1e-3ac5-401a-bf09-cfa8fac0147d
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1600
+      height: 900
+      anchor: center-center

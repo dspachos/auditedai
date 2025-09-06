@@ -1,0 +1,8 @@
+# Schema for the configuration files of the VP Visual Editor module.
+vp_visual_editor.settings:
+  type: config_object
+  label: 'VP Visual Editor settings'
+  mapping:
+    example:
+      type: string
+      label: 'Example'

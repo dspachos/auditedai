@@ -1,0 +1,39 @@
+theme = "catppuccin_macchiato"
+
+[editor]
+mouse = false
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+left = [
+"mode",
+"spacer",
+"version-control",
+"spacer",
+"separator",
+"file-name",
+"file-modification-indicator"
+]
+right = [
+"spinner",
+"spacer",
+"workspace-diagnostics",
+"separator",
+"spacer",
+"diagnostics",
+"position",
+"file-encoding",
+"file-line-ending",
+"file-type"
+]
+separator = "|"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"

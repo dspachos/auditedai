@@ -1,0 +1,22 @@
+uuid: a3a0dbca-2203-4d7f-8412-260abbbcfb47
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.vp_analytics.field_success
+  module:
+    - vp_analytics
+id: vp_analytics.vp_analytics.field_success
+field_name: field_success
+entity_type: vp_analytics
+bundle: vp_analytics
+label: Success
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,32 @@
+vp.settings_form:
+  title: 'Virtual Patients'
+  description: 'Configure Virtual Patients'
+  parent: system.admin_config_content
+  route_name: vp.settings_form
+  weight: 10
+
+entity.virtual_patient.settings:
+  title: 'Virtual Patient'
+  description: 'Configure a Virtual Patient entity type.'
+  route_name:  entity.virtual_patient.settings
+  parent: system.admin_structure
+
+entity.virtual_patient.collection:
+  title: 'Virtual Patients'
+  description: 'List of virtual patients.'
+  route_name: entity.virtual_patient.collection
+  parent: system.admin_content
+  weight: -10
+
+entity.vp_node.settings:
+  title: 'Virtual Patient Node'
+  description: 'Configure a VP node entity type.'
+  route_name:  entity.vp_node.settings
+  parent: system.admin_structure
+
+entity.vp_node.collection:
+  title: 'Virtual Patient Nodes'
+  description: 'List of vp nodes.'
+  route_name: entity.vp_node.collection
+  parent: system.admin_content
+  weight: -9

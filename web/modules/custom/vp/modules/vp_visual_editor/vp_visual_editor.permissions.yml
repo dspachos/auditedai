@@ -1,0 +1,4 @@
+administer vp_visual_editor configuration:
+  title: 'Administer vp_visual_editor configuration'
+  description: 'Optional description.'
+  restrict access: true

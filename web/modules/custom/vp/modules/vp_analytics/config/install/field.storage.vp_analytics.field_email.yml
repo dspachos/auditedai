@@ -1,0 +1,21 @@
+uuid: 416a11b8-cf47-47cf-89d6-d7ec86e732f0
+langcode: en
+status: true
+dependencies:
+  module:
+    - vp_analytics
+id: vp_analytics.field_email
+field_name: field_email
+entity_type: vp_analytics
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

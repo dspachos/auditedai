@@ -1,0 +1,20 @@
+uuid: fccff610-cd79-4ac0-9b47-3e9c3ecace79
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.vp_analytics.field_email
+  module:
+    - vp_analytics
+id: vp_analytics.vp_analytics.field_email
+field_name: field_email
+entity_type: vp_analytics
+bundle: vp_analytics
+label: Email
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

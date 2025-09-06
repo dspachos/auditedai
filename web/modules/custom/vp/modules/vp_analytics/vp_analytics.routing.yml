@@ -1,0 +1,27 @@
+vp_analytics.settings_form:
+  path: "/admin/config/system/vp-analytics"
+  defaults:
+    _title: "VP Analytics settings"
+    _form: 'Drupal\vp_analytics\Form\SettingsForm'
+  requirements:
+    _permission: "administer vp_analytics configuration"
+
+entity.vp_analytics.settings:
+  path: "admin/structure/vp-analytics"
+  defaults:
+    _form: '\Drupal\vp_analytics\Form\VpAnalyticsSettingsForm'
+    _title: "VP Analytics"
+  requirements:
+    _permission: "administer vp analytics"
+
+vp_analytics.scores:
+  path: "/virtual-patient/{virtual_patient}/scores"
+  defaults:
+    _controller: '\Drupal\vp_analytics\Controller\VpScores::build'
+    _title_callback: '\Drupal\vp_analytics\Controller\VpScores::getTitle'
+  requirements:
+    _permission: "access content"
+  options:
+    parameters:
+      virtual_patient:
+        type: "entity:virtual_patient"

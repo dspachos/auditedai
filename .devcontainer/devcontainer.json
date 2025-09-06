@@ -1,0 +1,14 @@
+{
+  "name": "Drupal Development",
+  "dockerFile": "Dockerfile",
+  "forwardPorts": [80],
+  "postCreateCommand": "composer install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "mrmlnc.vscode-apache"
+      ]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+/** Styles */
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 100px;
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px 15px 10px 15px;
+  left: -72px;
+  top: 24px;
+  font-family: monospace;
+  width: 144px;
+}
+
+.tooltip-text-options {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 100px;
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px 15px 10px 15px;
+  left: -222px;
+  top: 24px;
+  font-family: monospace;
+  width: 444px;
+  text-align: left;
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text:hover .tooltip-text-options {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  font-family: Arial;
+  text-align: center;
+}
+
+kbd {
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+  0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+  color: #333;
+  display: inline-block;
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
+}
+
+.input-disabled .form-autocomplete {
+  pointer-events: none;
+  background-color: #ddd;
+  opacity: 0.5;
+}
+
+.text-warning {
+  color: orangered;
+}

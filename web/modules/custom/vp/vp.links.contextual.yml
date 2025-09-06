@@ -1,0 +1,21 @@
+entity.virtual_patient.edit_form:
+  route_name: entity.virtual_patient.edit_form
+  group: virtual_patient
+  title: Edit
+
+entity.virtual_patient.delete_form:
+  route_name: entity.virtual_patient.delete_form
+  group: virtual_patient
+  title: Delete
+  weight: 10
+
+entity.vp_node.edit_form:
+  route_name: entity.vp_node.edit_form
+  group: vp_node
+  title: Edit
+
+entity.vp_node.delete_form:
+  route_name: entity.vp_node.delete_form
+  group: vp_node
+  title: Delete
+  weight: 10

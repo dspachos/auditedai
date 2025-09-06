@@ -1,0 +1,13 @@
+name: VP Export
+type: module
+description: Provides export functionality for VPs (EXPERIMENTAL)
+package: Virtual Patient
+core_version_requirement: ^9 || ^10
+dependencies:
+  - vp
+  - single_content_sync
+
+# Information added by Drupal.org packaging script on 2024-09-10
+version: '1.0.0-alpha3+6-dev'
+project: 'vp'
+datestamp: 1725974192

@@ -1,0 +1,7 @@
+live:
+  host: ivp.med.auth.gr
+  user: dimitris
+  root: /var/www/auditedai/web
+  uri: https://auditedai.med.auth.gr
+  paths:
+    drush-script: "/var/www/auditedai/vendor/bin/drush"

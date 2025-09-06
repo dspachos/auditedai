@@ -1,0 +1,4 @@
+services:
+  vp.service:
+    class: Drupal\vp\VpService
+    arguments: ['@current_user', '@entity_type.manager', '@current_route_match']

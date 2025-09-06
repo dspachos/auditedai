@@ -1,0 +1,18 @@
+uuid: 42f16dd5-2eed-447c-881c-b0e9d31db0e1
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - user
+    - vp
+id: vp_rest_node
+plugin_id: vp_rest_node
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie
