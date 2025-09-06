@@ -1,0 +1,10 @@
+entity.audit_question.edit_form:
+  route_name: entity.audit_question.edit_form
+  group: audit_question
+  title: 'Edit'
+
+entity.audit_question.delete_form:
+  route_name: entity.audit_question.delete_form
+  group: audit_question
+  title: 'Delete'
+  weight: 10

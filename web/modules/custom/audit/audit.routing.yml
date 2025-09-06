@@ -1,0 +1,7 @@
+entity.audit_question.settings:
+  path: 'admin/structure/audit-question'
+  defaults:
+    _form: '\Drupal\audit\Form\AuditQuestionSettingsForm'
+    _title: 'Audit Question'
+  requirements:
+    _permission: 'administer audit_question'

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the audit module.
+ */
+
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function audit_install() {
+  // Create VET 21001 Clusters vocabulary.
+  $vid = 'vet_21001_clusters';
+  if (!Vocabulary::load($vid)) {
+    Vocabulary::create([
+      'vid' => $vid,
+      'name' => 'VET 21001 Clusters',
+      'description' => 'Vocabulary for VET 21001 Clusters.',
+    ])->save();
+  }
+
+  // Populate terms.
+  $terms = [
+    '1. Leadership & Strategy',
+    '2. Quality & Risk Management',
+    '3. Data Protection & Control',
+    '4. Knowledge and Human Resources',
+    '5. Involvement of Stakeholders',
+    '6. Partnerships & Providers',
+    '7. Infrastructure & work environment',
+    '8. Design & Delivery of Services',
+    '9. Analyses & Evaluation',
+    '10. Review & Improvement',
+  ];
+
+  foreach ($terms as $name) {
+    Term::create([
+      'vid' => $vid,
+      'name' => $name,
+    ])->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function audit_uninstall() {
+  // Optional: Code to remove the vocabulary and terms can be added here if needed.
+}

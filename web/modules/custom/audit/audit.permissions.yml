@@ -1,0 +1,11 @@
+administer audit_question:
+  title: 'Administer audit questions'
+  restrict access: true
+view audit_question:
+  title: 'View audit question'
+edit audit_question:
+  title: 'Edit audit question'
+delete audit_question:
+  title: 'Delete audit question'
+create audit_question:
+  title: 'Create audit question'

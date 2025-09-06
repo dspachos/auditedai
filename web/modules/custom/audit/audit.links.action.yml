@@ -1,0 +1,5 @@
+audit_question.add_form:
+  title: 'Add audit question'
+  route_name: entity.audit_question.add_form
+  appears_on:
+    - entity.audit_question.collection

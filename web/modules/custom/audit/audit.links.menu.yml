@@ -1,0 +1,11 @@
+entity.audit_question.settings:
+  title: 'Audit Question'
+  description: 'Configure an Audit Question entity type.'
+  route_name:  entity.audit_question.settings
+  parent: system.admin_structure
+
+entity.audit_question.collection:
+  title: 'Audit Questions'
+  description: 'List of audit questions.'
+  route_name: entity.audit_question.collection
+  parent: system.admin_content
