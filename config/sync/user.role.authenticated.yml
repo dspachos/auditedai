@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - filter.format.basic_html
+    - filter.format.webform_default
   module:
     - contact
     - file
@@ -24,3 +25,4 @@ permissions:
   - 'delete own files'
   - 'search content'
   - 'use text format basic_html'
+  - 'use text format webform_default'
