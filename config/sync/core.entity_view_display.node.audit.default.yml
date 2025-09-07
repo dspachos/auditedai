@@ -1,0 +1,28 @@
+uuid: 49adab29-0575-4a52-b0a8-facbbe8933a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.audit.body
+    - node.type.audit
+  module:
+    - text
+    - user
+id: node.audit.default
+targetEntityType: node
+bundle: audit
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }
