@@ -1,4 +1,4 @@
-uuid: c0b12e3d-6762-48f7-bb1b-49be2e09d279
+uuid: c22e618d-42d2-45bf-abf4-13b59978896c
 langcode: en
 status: true
 dependencies:
@@ -7,15 +7,12 @@ dependencies:
     - field_group
 third_party_settings:
   field_group:
-    group_iso_details:
+    group_iso_21001:
       children:
-        - field_iso_section
-        - field_iso_requirements
+        - field_iso_21001
         - field_iso_doc_info
-        - field_eqavet_criteria
-        - field_eqavet_indicators
-        - field_eqavet_doc_info
-      label: 'ISO - EQAVET details'
+        - field_iso_21001_criteria
+      label: 'ISO 21001'
       region: content
       parent_name: ''
       weight: 2
@@ -25,7 +22,25 @@ third_party_settings:
         show_empty_fields: false
         id: ''
         label_as_html: false
-        open: true
+        open: false
+        description: ''
+        required_fields: true
+    group_eqavet:
+      children:
+        - field_eqavet
+        - field_eqavet_doc_info
+        - field_eqavet_criteria
+      label: EQAVET
+      region: content
+      parent_name: ''
+      weight: 6
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        label_as_html: false
+        open: false
         description: ''
         required_fields: true
 id: audit_question.audit_question.default
@@ -43,57 +58,59 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_eqavet:
+    type: boolean_checkbox
+    weight: 4
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_eqavet_criteria:
-    type: string_textfield
+    type: entity_reference_autocomplete
     weight: 6
     region: content
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
   field_eqavet_doc_info:
     type: options_select
-    weight: 8
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_eqavet_indicators:
-    type: string_textfield
-    weight: 7
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_help:
     type: string_textarea
-    weight: 9
+    weight: 10
     region: content
     settings:
       rows: 4
       placeholder: ''
     third_party_settings: {  }
-  field_iso_doc_info:
-    type: options_select
-    weight: 5
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_iso_requirements:
-    type: string_textfield
-    weight: 4
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_iso_section:
-    type: string_textfield
+  field_iso_21001:
+    type: boolean_checkbox
     weight: 3
     region: content
     settings:
+      display_label: true
+    third_party_settings: {  }
+  field_iso_21001_criteria:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_iso_doc_info:
+    type: options_select
+    weight: 4
+    region: content
+    settings: {  }
     third_party_settings: {  }
   label:
     type: string_textfield
@@ -105,11 +122,20 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: false
     third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 12
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
 hidden:
   created: true
-  uid: true

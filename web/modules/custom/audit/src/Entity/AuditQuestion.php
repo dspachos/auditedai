@@ -100,7 +100,7 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['field_cluster'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Cluster'))
+      ->setLabel(t('VET 21001 Cluster'))
       ->setDescription(t('References a term in the "VET 21001 Clusters" vocabulary (e.g., "1. Leadership & Strategy").'))
       ->setSetting('target_type', 'taxonomy_term')
       ->setRequired(TRUE)
@@ -121,35 +121,81 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['field_iso_section'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('ISO 21001 Section'))
-      ->setDescription(t('Stores the ISO 21001 section reference (e.g., "4.1").'))
-      ->setSetting('max_length', 50)
+    $fields['field_iso_21001'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('ISO 21001'))
+      ->setDescription(t('A boolean field to indicate if the question is related to ISO 21001.'))
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'boolean_checkbox',
         'weight' => -8,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'boolean',
         'weight' => -8,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['field_iso_requirements'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('ISO Requirements Covered'))
-      ->setDescription(t('Stores detailed ISO requirements (e.g., "4.1, 5.2 a), e)").'))
-      ->setSetting('max_length', 255)
+    $fields['field_eqavet'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('EQAVET'))
+      ->setDescription(t('A boolean field to indicate if the question is related to EQAVET.'))
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'boolean_checkbox',
         'weight' => -7,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'boolean',
         'weight' => -7,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['field_iso_21001_criteria'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('ISO 21001 Criteria'))
+      ->setDescription(t('References terms in the "ISO Criteria" vocabulary.'))
+      ->setSetting('target_type', 'taxonomy_term')
+      ->setSetting('handler_settings', ['target_bundles' => ['iso_criteria' => 'iso_criteria']])
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => -6,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'entity_reference_label',
+        'weight' => -6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['field_eqavet_criteria'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('EQAVET Criteria'))
+      ->setDescription(t('References terms in the "EQAVET Criteria" vocabulary.'))
+      ->setSetting('target_type', 'taxonomy_term')
+      ->setSetting('handler_settings', ['target_bundles' => ['eqavet_criteria' => 'eqavet_criteria']])
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => -5,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'entity_reference_label',
+        'weight' => -5,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -163,44 +209,12 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ->setDefaultValue('empty')
       ->setDisplayOptions('form', [
         'type' => 'options_select',
-        'weight' => -6,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'list_default',
-        'weight' => -6,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-
-    $fields['field_eqavet_criteria'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('EQAVET Criteria'))
-      ->setDescription(t('Stores EQAVET criteria reference (e.g., "1").'))
-      ->setSetting('max_length', 50)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => -5,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -5,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-
-    $fields['field_eqavet_indicators'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('EQAVET Criteria and Indicators'))
-      ->setDescription(t('Stores detailed EQAVET criteria/indicators (e.g., "1.3, 1.7").'))
-      ->setSetting('max_length', 255)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
         'weight' => -4,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'list_default',
         'weight' => -4,
       ])
       ->setDisplayConfigurable('view', TRUE);

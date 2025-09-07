@@ -6,7 +6,6 @@ dependencies:
     - node.type.page
     - taxonomy.vocabulary.tags
   module:
-    - audit
     - contextual
     - file
     - node
@@ -30,15 +29,12 @@ permissions:
   - 'create page content'
   - 'create terms in tags'
   - 'create url aliases'
-  - 'delete any audit_question entities'
   - 'delete own files'
   - 'delete own page content'
   - 'delete page revisions'
-  - 'edit any audit_question entities'
   - 'edit own page content'
   - 'edit terms in tags'
   - 'revert all revisions'
   - 'view all revisions'
-  - 'view audit_question entities'
   - 'view own unpublished content'
   - 'view the administration theme'
