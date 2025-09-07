@@ -1,0 +1,9 @@
+uuid: c78d1327-7f2b-4c62-8464-cb101fc4c98d
+langcode: en
+status: true
+dependencies: {  }
+name: 'VET 21001 Clusters'
+vid: vet_21001_clusters
+description: 'Vocabulary for VET 21001 Clusters.'
+weight: 0
+new_revision: false

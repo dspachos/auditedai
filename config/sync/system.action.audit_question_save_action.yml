@@ -1,0 +1,13 @@
+uuid: a2a12c42-490d-4253-b38a-6df6646d2241
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+_core:
+  default_config_hash: Mq76nSFBjlR1l-I81OuRXOOCUesWm9UZZNJSysaBZO8
+id: audit_question_save_action
+label: 'Save audit questions'
+type: audit_question
+plugin: 'entity:save_action:audit_question'
+configuration: {  }

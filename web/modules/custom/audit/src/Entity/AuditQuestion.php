@@ -136,31 +136,28 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['field_iso_requirements'] = BaseFieldDefinition::create('string_long')
+    $fields['field_iso_requirements'] = BaseFieldDefinition::create('string')
       ->setLabel(t('ISO Requirements Covered'))
       ->setDescription(t('Stores detailed ISO requirements (e.g., "4.1, 5.2 a), e)").'))
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
-        'type' => 'string_textarea',
+        'type' => 'string_textfield',
         'weight' => -7,
-        'settings' => [
-          'rows' => 4,
-        ],
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'basic_string',
+        'type' => 'string',
         'weight' => -7,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['field_iso_doc_info'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('ISO Documented Information'))
-      ->setDescription(t('Indicates if documented information is needed for ISO (options: "yes", "no", "empty").'))
+      ->setDescription(t('Indicates if documented information is needed for ISO (options: "yes", "no").'))
       ->setSetting('allowed_values', [
         'yes' => 'Yes',
-        'no' => 'No',
-        'empty' => 'Empty',
+        'no' => 'No'
       ])
       ->setDefaultValue('empty')
       ->setDisplayOptions('form', [
@@ -191,20 +188,18 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['field_eqavet_indicators'] = BaseFieldDefinition::create('string_long')
+    $fields['field_eqavet_indicators'] = BaseFieldDefinition::create('string')
       ->setLabel(t('EQAVET Criteria and Indicators'))
       ->setDescription(t('Stores detailed EQAVET criteria/indicators (e.g., "1.3, 1.7").'))
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
-        'type' => 'string_textarea',
+        'type' => 'string_textfield',
         'weight' => -4,
-        'settings' => [
-          'rows' => 4,
-        ],
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'basic_string',
+        'type' => 'string',
         'weight' => -4,
       ])
       ->setDisplayConfigurable('view', TRUE);
@@ -227,6 +222,24 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
         'label' => 'above',
         'type' => 'list_default',
         'weight' => -3,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['field_help'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Help'))
+      ->setDescription(t('Help text to be displayed to the user on hover.'))
+      ->setDisplayOptions('form', [
+        'type' => 'string_textarea',
+        'weight' => -2,
+        'settings' => [
+          'rows' => 4,
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'basic_string',
+        'weight' => -2,
       ])
       ->setDisplayConfigurable('view', TRUE);
 

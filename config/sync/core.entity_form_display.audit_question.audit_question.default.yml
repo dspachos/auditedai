@@ -1,0 +1,115 @@
+uuid: c0b12e3d-6762-48f7-bb1b-49be2e09d279
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+    - field_group
+third_party_settings:
+  field_group:
+    group_iso_details:
+      children:
+        - field_iso_section
+        - field_iso_requirements
+        - field_iso_doc_info
+        - field_eqavet_criteria
+        - field_eqavet_indicators
+        - field_eqavet_doc_info
+      label: 'ISO - EQAVET details'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        label_as_html: false
+        open: true
+        description: ''
+        required_fields: true
+id: audit_question.audit_question.default
+targetEntityType: audit_question
+bundle: audit_question
+mode: default
+content:
+  field_cluster:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_eqavet_criteria:
+    type: string_textfield
+    weight: 6
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_eqavet_doc_info:
+    type: options_select
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_eqavet_indicators:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_help:
+    type: string_textarea
+    weight: 9
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_iso_doc_info:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_iso_requirements:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_iso_section:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: false
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

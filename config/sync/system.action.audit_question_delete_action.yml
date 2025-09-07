@@ -1,0 +1,13 @@
+uuid: 0b889a4d-038d-447c-b746-2202125df53f
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+_core:
+  default_config_hash: iS-t4_i9Mr-CCkuy-tdURR4Me2tZ8h-22gLrnzimKeI
+id: audit_question_delete_action
+label: 'Delete audit questions'
+type: audit_question
+plugin: 'entity:delete_action:audit_question'
+configuration: {  }
