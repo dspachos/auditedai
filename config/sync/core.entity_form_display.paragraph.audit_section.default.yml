@@ -1,0 +1,34 @@
+uuid: 49bf2b02-70ae-4432-b8ff-6232f52b277b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.audit_section.field_audit_questions
+    - field.field.paragraph.audit_section.field_section_header
+    - paragraphs.paragraphs_type.audit_section
+id: paragraph.audit_section.default
+targetEntityType: paragraph
+bundle: audit_section
+mode: default
+content:
+  field_audit_questions:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_section_header:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

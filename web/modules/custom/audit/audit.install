@@ -50,3 +50,47 @@ function audit_install() {
 function audit_uninstall() {
   // Optional: Code to remove the vocabulary and terms can be added here if needed.
 }
+
+/**
+ * Create audit vocabularies.
+ */
+function audit_update_8001() {
+  $vocabularies = [
+    'audit_type' => [
+      'name' => 'Audit type',
+      'description' => 'First-party (Self-assessment) or Third-party (External)',
+      'terms' => [
+        'First-party (Self-assessment)',
+        'Third-party (External)',
+      ],
+    ],
+    'audit_criteria' => [
+      'name' => 'Audit criteria',
+      'description' => 'ISO 21001, EQAVET',
+      'terms' => [
+        'ISO 21001',
+        'EQAVET',
+      ],
+    ],
+  ];
+
+  foreach ($vocabularies as $vid => $data) {
+    if (!Vocabulary::load($vid)) {
+      Vocabulary::create([
+        'vid' => $vid,
+        'name' => $data['name'],
+        'description' => $data['description'],
+      ])->save();
+    }
+
+    foreach ($data['terms'] as $term_name) {
+      $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => $vid, 'name' => $term_name]);
+      if (empty($terms)) {
+        Term::create([
+          'vid' => $vid,
+          'name' => $term_name,
+        ])->save();
+      }
+    }
+  }
+}

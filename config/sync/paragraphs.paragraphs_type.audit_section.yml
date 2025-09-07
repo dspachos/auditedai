@@ -1,0 +1,10 @@
+uuid: 37be48d3-a692-4ff5-9717-fa9a322713c6
+langcode: en
+status: true
+dependencies: {  }
+id: audit_section
+label: 'Audit Section'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

@@ -1,0 +1,9 @@
+uuid: 05dd1dd2-d98f-451a-aa90-e6ba12ab2b43
+langcode: en
+status: true
+dependencies: {  }
+name: 'Audit type'
+vid: audit_type
+description: 'First-party (Self-assessment) or Third-party (External)'
+weight: 0
+new_revision: false

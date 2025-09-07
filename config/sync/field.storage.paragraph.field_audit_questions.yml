@@ -1,0 +1,20 @@
+uuid: e64225f9-955f-4781-867e-a9b7bd902607
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+    - paragraphs
+id: paragraph.field_audit_questions
+field_name: field_audit_questions
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: audit_question
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
