@@ -1,0 +1,9 @@
+uuid: 5f3d280a-679a-463a-921d-7ae1aa19d0db
+langcode: en
+status: true
+dependencies: {  }
+name: 'EQAVET criteria'
+vid: eqavet_criteria
+description: null
+weight: 0
+new_revision: false

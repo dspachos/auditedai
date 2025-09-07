@@ -1,9 +1,0 @@
-uuid: 0204525a-cb1a-481d-b850-2df7eb7d8c90
-langcode: en
-status: true
-dependencies: {  }
-name: 'Audit criteria'
-vid: audit_criteria
-description: 'ISO 21001, EQAVET'
-weight: 0
-new_revision: false

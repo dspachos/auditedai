@@ -1,0 +1,9 @@
+uuid: a5b43513-fd9d-4826-8acc-f0806a1b4df4
+langcode: en
+status: true
+dependencies: {  }
+name: 'ISO 21001 Criteria'
+vid: iso_criteria
+description: null
+weight: 0
+new_revision: false

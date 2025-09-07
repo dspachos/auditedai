@@ -81,3 +81,7 @@ function audit_user_predelete(UserInterface $account): void {
     $storage->loadMultiple($audit_question_ids)
   );
 }
+
+function audit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id): void {
+  // @todo
+}

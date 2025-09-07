@@ -54,7 +54,7 @@ function audit_uninstall() {
 /**
  * Create audit vocabularies.
  */
-function audit_update_8001() {
+function audit_update_8010() {
   $vocabularies = [
     'audit_type' => [
       'name' => 'Audit type',
@@ -63,15 +63,7 @@ function audit_update_8001() {
         'First-party (Self-assessment)',
         'Third-party (External)',
       ],
-    ],
-    'audit_criteria' => [
-      'name' => 'Audit criteria',
-      'description' => 'ISO 21001, EQAVET',
-      'terms' => [
-        'ISO 21001',
-        'EQAVET',
-      ],
-    ],
+    ]
   ];
 
   foreach ($vocabularies as $vid => $data) {
@@ -98,7 +90,7 @@ function audit_update_8001() {
 /**
  * Create audit vocabularies.
  */
-function audit_update_8003() {
+function audit_update_8012() {
   $vocabularies = [
     'iso_criteria' => [
       'name' => 'ISO 21001 Criteria',
@@ -130,7 +122,7 @@ function audit_update_8003() {
         '4.2 Understanding the needs and expectations of interested parties',
         '5.1.1 m) ensuring that learners’ educational requirements, including special needs, are identified and addressed',
         '7.4.2 Communication purposes',
-        '8.2.1 Determining the requirements for the educational products and services……. b) those resulting from needs analysis that is performed to determine requirements of (current and potential future) learners and other beneficiaries, in particular those with special needs',
+        '8.2.1 Determining the requirements for the educational products and services',
         '8.3.2 Design and Development planning… m) the extent to which learners require individualized learning pathways, based on their skills, interests and aptitudes;',
         '9.1.2 Satisfaction of learners, other beneficiaries and staff',
         '9.1.3 Other monitoring and measuring needs',
@@ -194,7 +186,7 @@ function audit_update_8003() {
         '3.1. A methodology for evaluation has been devised, covering internal and external evaluation',
         '3.2. Stakeholder involvement in the monitoring and evaluation process is agreed and clearly described',
         '4. Review',
-        '4.1. Learners’ feedback is gathered on their individual learning experience and on the learning and teaching environment. Together with teachers’, trainers’ and all other relevant stakeholders’ feedback this is used to inform further actions',
+        '4.1. Learners’ feedback is gathered on their individual learning experience and on the learning and teaching environment. ',
         '4.2. Information on the outcomes of the review is widely and publicly available',
         '4.3. Procedures on feedback and review are part of a strategic learning process in the organisation, support the development of high quality provision, and improve opportunities for learners',
         '4.4. Results/outcomes of the evaluation process are discussed with relevant stakeholders and appropriate action plans are put in place',
@@ -207,7 +199,6 @@ function audit_update_8003() {
       Vocabulary::create([
         'vid' => $vid,
         'name' => $data['name'],
-        'description' => $data['description'],
       ])->save();
     }
 
