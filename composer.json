@@ -36,7 +36,7 @@
         "drupal/honeypot": "^2.1",
         "drupal/httpswww": "^2.1",
         "drupal/key_auth": "^2.1",
-        "drupal/mail_login": "^3.0",
+        "drupal/mail_login": "^4.2",
         "drupal/migrate_tools": "^6.0",
         "drupal/pathauto": "^1.11",
         "drupal/phpmailer_smtp": "^2.2",
