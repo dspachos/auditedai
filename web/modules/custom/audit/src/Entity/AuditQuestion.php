@@ -207,11 +207,10 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
 
     $fields['field_eqavet_doc_info'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('EQAVET Documented Information'))
-      ->setDescription(t('Indicates if documented information is needed for EQAVET (options: "yes", "no", "empty").'))
+      ->setDescription(t('Indicates if documented information is needed for EQAVET.'))
       ->setSetting('allowed_values', [
         'yes' => 'Yes',
-        'no' => 'No',
-        'empty' => 'Empty',
+        'no' => 'No'
       ])
       ->setDefaultValue('empty')
       ->setDisplayOptions('form', [
