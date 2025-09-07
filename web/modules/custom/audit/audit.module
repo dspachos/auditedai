@@ -14,6 +14,7 @@ use Drupal\user\UserInterface;
 function audit_theme(): array {
   return [
     'audit_question' => ['render element' => 'elements'],
+    'audit_evidence' => ['render element' => 'elements'],
   ];
 }
 
@@ -80,22 +81,19 @@ function audit_user_predelete(UserInterface $account): void {
   $storage->delete(
     $storage->loadMultiple($audit_question_ids)
   );
+
+  $storage = \Drupal::entityTypeManager()->getStorage('audit_evidence');
+  $audit_evidence_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($audit_evidence_ids)
+  );
 }
 
 function audit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id): void {
   // @todo
-}
-
-use Drupal\Core\Render\Element;
-use Drupal\user\UserInterface;
-
-/**
- * Implements hook_theme().
- */
-function audit_theme(): array {
-  return [
-    'audit_evidence' => ['render element' => 'elements'],
-  ];
 }
 
 /**
@@ -114,51 +112,4 @@ function template_preprocess_audit_evidence(array &$variables): void {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function audit_user_cancel($edit, UserInterface $account, $method): void {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish audit evidences.
-      $storage = \Drupal::entityTypeManager()->getStorage('audit_evidence');
-      $audit_evidence_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->condition('status', 1)
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($audit_evidence_ids) as $audit_evidence) {
-        $audit_evidence->set('status', FALSE)->save();
-      }
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize audit evidences.
-      $storage = \Drupal::entityTypeManager()->getStorage('audit_evidence');
-      $audit_evidence_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($audit_evidence_ids) as $audit_evidence) {
-        $audit_evidence->setOwnerId(0)->save();
-      }
-      break;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function audit_user_predelete(UserInterface $account): void {
-  // Delete audit evidences that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('audit_evidence');
-  $audit_evidence_ids = $storage->getQuery()
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  $storage->delete(
-    $storage->loadMultiple($audit_evidence_ids)
-  );
 }
