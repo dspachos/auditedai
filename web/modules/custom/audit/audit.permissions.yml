@@ -28,3 +28,14 @@ administer audit_question:
   title: 'Administer audit question'
   description: 'Administer audit question entities.'
   restrict access: true
+administer audit_evidence:
+  title: 'Administer audit evidences'
+  restrict access: true
+view audit_evidence:
+  title: 'View audit evidence'
+edit audit_evidence:
+  title: 'Edit audit evidence'
+delete audit_evidence:
+  title: 'Delete audit evidence'
+create audit_evidence:
+  title: 'Create audit evidence'

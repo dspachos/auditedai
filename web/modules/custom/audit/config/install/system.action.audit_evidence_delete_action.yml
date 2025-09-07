@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_evidence_delete_action
+label: 'Delete audit evidences'
+type: audit_evidence
+plugin: entity:delete_action:audit_evidence
+configuration: {  }

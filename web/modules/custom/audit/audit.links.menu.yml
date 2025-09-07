@@ -9,3 +9,15 @@ entity.audit_question.collection:
   description: 'List of audit questions.'
   route_name: entity.audit_question.collection
   parent: system.admin_content
+
+entity.audit_evidence.settings:
+  title: 'Audit Evidence'
+  description: 'Configure an Audit Evidence entity type.'
+  route_name:  entity.audit_evidence.settings
+  parent: system.admin_structure
+
+entity.audit_evidence.collection:
+  title: 'Audit Evidences'
+  description: 'List of audit evidences.'
+  route_name: entity.audit_evidence.collection
+  parent: system.admin_content

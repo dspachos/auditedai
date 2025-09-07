@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_evidence_save_action
+label: 'Save audit evidences'
+type: audit_evidence
+plugin: entity:save_action:audit_evidence
+configuration: {  }

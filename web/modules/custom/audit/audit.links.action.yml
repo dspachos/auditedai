@@ -3,3 +3,9 @@ audit_question.add_form:
   route_name: entity.audit_question.add_form
   appears_on:
     - entity.audit_question.collection
+
+audit_evidence.add_form:
+  title: 'Add audit evidence'
+  route_name: entity.audit_evidence.add_form
+  appears_on:
+    - entity.audit_evidence.collection

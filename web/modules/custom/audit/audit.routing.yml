@@ -13,3 +13,11 @@ audit.audit_dashboard:
     _controller: '\Drupal\audit\Controller\AuditDashboard'
   requirements:
     _role: 'authenticated'
+
+entity.audit_evidence.settings:
+  path: 'admin/structure/audit-evidence'
+  defaults:
+    _form: '\Drupal\audit\Form\AuditEvidenceSettingsForm'
+    _title: 'Audit Evidence'
+  requirements:
+    _permission: 'administer audit_evidence'

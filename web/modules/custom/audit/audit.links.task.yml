@@ -20,3 +20,26 @@ entity.audit_question.collection:
   route_name: entity.audit_question.collection
   base_route: system.admin_content
   weight: 10
+
+entity.audit_evidence.settings:
+  title: 'Settings'
+  route_name: entity.audit_evidence.settings
+  base_route: entity.audit_evidence.settings
+entity.audit_evidence.view:
+  title: 'View'
+  route_name: entity.audit_evidence.canonical
+  base_route: entity.audit_evidence.canonical
+entity.audit_evidence.edit_form:
+  title: 'Edit'
+  route_name: entity.audit_evidence.edit_form
+  base_route: entity.audit_evidence.canonical
+entity.audit_evidence.delete_form:
+  title: 'Delete'
+  route_name: entity.audit_evidence.delete_form
+  base_route: entity.audit_evidence.canonical
+  weight: 10
+entity.audit_evidence.collection:
+  title: 'Audit Evidences'
+  route_name: entity.audit_evidence.collection
+  base_route: system.admin_content
+  weight: 10
