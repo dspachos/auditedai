@@ -6,6 +6,7 @@ dependencies:
     - filter.format.basic_html
     - filter.format.webform_default
   module:
+    - audit
     - contact
     - file
     - filter
@@ -22,7 +23,11 @@ permissions:
   - 'access content'
   - 'access shortcuts'
   - 'access site-wide contact form'
+  - 'create audit_question entities'
+  - 'delete own audit_question entities'
   - 'delete own files'
+  - 'edit own audit_question entities'
   - 'search content'
   - 'use text format basic_html'
   - 'use text format webform_default'
+  - 'view audit_question entities'

@@ -1,11 +1,30 @@
-administer audit_question:
-  title: 'Administer audit questions'
-  restrict access: true
-view audit_question:
+view audit_question entities:
   title: 'View audit question'
-edit audit_question:
-  title: 'Edit audit question'
-delete audit_question:
-  title: 'Delete audit question'
-create audit_question:
+  description: 'View any audit question.'
+
+create audit_question entities:
   title: 'Create audit question'
+  description: 'Create new audit questions.'
+
+edit own audit_question entities:
+  title: 'Edit own audit question'
+  description: 'Edit own audit questions.'
+
+edit any audit_question entities:
+  title: 'Edit any audit question'
+  description: 'Edit any audit question.'
+  restrict access: true
+
+delete own audit_question entities:
+  title: 'Delete own audit question'
+  description: 'Delete own audit questions.'
+
+delete any audit_question entities:
+  title: 'Delete any audit question'
+  description: 'Delete any audit question.'
+  restrict access: true
+
+administer audit_question:
+  title: 'Administer audit question'
+  description: 'Administer audit question entities.'
+  restrict access: true

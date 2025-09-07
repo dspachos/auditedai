@@ -10,35 +10,48 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access control handler for the audit question entity type.
- *
- * phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
- *
- * @see https://www.drupal.org/project/coder/issues/3185082
+ * Defines the access control handler for the audit question entity.
  */
-final class AuditQuestionAccessControlHandler extends EntityAccessControlHandler {
+class AuditQuestionAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResult {
-    if ($account->hasPermission($this->entityType->getAdminPermission())) {
-      return AccessResult::allowed()->cachePerPermissions();
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+    $is_owner = $entity->getOwnerId() === $account->id();
+
+    // The 'administer audit_question' permission is checked by the parent.
+    $access = parent::checkAccess($entity, $operation, $account);
+    if ($access->isAllowed()) {
+      return $access;
     }
 
-    return match($operation) {
-      'view' => AccessResult::allowedIfHasPermission($account, 'view audit_question'),
-      'update' => AccessResult::allowedIfHasPermission($account, 'edit audit_question'),
-      'delete' => AccessResult::allowedIfHasPermission($account, 'delete audit_question'),
-      default => AccessResult::neutral(),
-    };
+    if ($operation === 'view') {
+      return AccessResult::allowedIfHasPermission($account, 'view audit_question entities');
+    }
+
+    if ($operation === 'update') {
+      if ($account->hasPermission('edit any audit_question entities')) {
+        return AccessResult::allowed();
+      }
+      return AccessResult::allowedIf($is_owner && $account->hasPermission('edit own audit_question entities'));
+    }
+
+    if ($operation === 'delete') {
+      if ($account->hasPermission('delete any audit_question entities')) {
+        return AccessResult::allowed();
+      }
+      return AccessResult::allowedIf($is_owner && $account->hasPermission('delete own audit_question entities'));
+    }
+
+    return $access;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL): AccessResult {
-    return AccessResult::allowedIfHasPermissions($account, ['create audit_question', 'administer audit_question'], 'OR');
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return AccessResult::allowedIfHasPermission($account, 'create audit_question entities');
   }
 
 }

@@ -41,6 +41,7 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   base_table = "audit_question",
  *   admin_permission = "administer audit_question",
+ *   permission_granularity = "entity_type",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
