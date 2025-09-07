@@ -18,7 +18,7 @@
         "batkor/editorjs_dependencies": "^1.0",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
-        "drupal/admin_toolbar": "^3.3",
+        "drupal/admin_toolbar": "^3.6",
         "drupal/core": "^10.3",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
@@ -51,8 +51,7 @@
         "drupal/twig_tweak": "^3.2",
         "drupal/views_migration": "^1.2",
         "drupal/webform": "^6.2",
-        "drush/drush": "^13.5",
-        "wikimedia/composer-merge-plugin": "*"
+        "drush/drush": "^13.5"
     },
     "conflict": {
         "drupal/drupal": "*"
