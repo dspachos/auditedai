@@ -5,3 +5,11 @@ entity.audit_question.settings:
     _title: 'Audit Question'
   requirements:
     _permission: 'administer audit_question'
+
+audit.audit_dashboard:
+  path: '/dashboard'
+  defaults:
+    _title: 'Audit Dashboard'
+    _controller: '\Drupal\audit\Controller\AuditDashboard'
+  requirements:
+    _role: 'authenticated'
