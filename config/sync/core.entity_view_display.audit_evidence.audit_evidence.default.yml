@@ -5,8 +5,11 @@ dependencies:
   config:
     - field.field.audit_evidence.audit_evidence.field_audit
     - field.field.audit_evidence.audit_evidence.field_audit_question
+    - field.field.audit_evidence.audit_evidence.field_evidence
+    - field.field.audit_evidence.audit_evidence.field_supporting_files
   module:
     - audit
+    - file
     - text
     - user
 id: audit_evidence.audit_evidence.default
@@ -55,6 +58,21 @@ content:
       link: true
     third_party_settings: {  }
     weight: 22
+    region: content
+  field_evidence:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 24
+    region: content
+  field_supporting_files:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 23
     region: content
   label:
     type: string

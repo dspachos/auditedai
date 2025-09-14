@@ -1,0 +1,20 @@
+uuid: bbe26cb4-4eae-457c-8e02-099dcf683534
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.audit_evidence.field_evidence
+  module:
+    - audit
+id: audit_evidence.audit_evidence.field_evidence
+field_name: field_evidence
+entity_type: audit_evidence
+bundle: audit_evidence
+label: Evidence
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

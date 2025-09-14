@@ -1,0 +1,23 @@
+uuid: d168eb8d-eeef-4e64-8430-b0701cf6b72b
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+    - file
+id: audit_evidence.field_supporting_files
+field_name: field_supporting_files
+entity_type: audit_evidence
+type: file
+settings:
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: public
+module: file
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

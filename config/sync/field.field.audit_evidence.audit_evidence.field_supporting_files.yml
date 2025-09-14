@@ -1,0 +1,27 @@
+uuid: 0e0b9ce1-7cae-493d-8370-2dfbf96a14e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.audit_evidence.field_supporting_files
+  module:
+    - audit
+    - file
+id: audit_evidence.audit_evidence.field_supporting_files
+field_name: field_supporting_files
+entity_type: audit_evidence
+bundle: audit_evidence
+label: 'Supporting files'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf zip docx csv xlsx rtf md markdown'
+  max_filesize: ''
+  description_field: true
+field_type: file
