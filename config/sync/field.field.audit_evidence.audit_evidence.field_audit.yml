@@ -1,0 +1,30 @@
+uuid: 4f1287f1-4b24-4403-840b-189022146ced
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.audit_evidence.field_audit
+    - node.type.audit
+  module:
+    - audit
+id: audit_evidence.audit_evidence.field_audit
+field_name: field_audit
+entity_type: audit_evidence
+bundle: audit_evidence
+label: Audit
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      audit: audit
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

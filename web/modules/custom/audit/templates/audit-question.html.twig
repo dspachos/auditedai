@@ -9,6 +9,8 @@
  * - content: A list of content items. Use 'content' to print all content, or
  *   print a subset such as 'content.label'.
  * - attributes: HTML attributes for the container element.
+ * - question: The question text.
+ * - help_text: Help text for the question.
  *
  * @see template_preprocess_audit_question()
  */
@@ -18,11 +20,22 @@
     {{ title_prefix }}
     {{ title_suffix }}
   {% endif %}
-  {% if content %}
+  {% if content and not view_mode == 'audit' %}
     {{- content -}}
   {% endif %}
 </article>
 
 {% if(view_mode == 'audit') %}
-  {# @todo #}
+  <div class="audit-card">
+    <div class="audit-card-header">
+      <h3 class="audit-card-title">{{ question }}</h3>
+    </div>
+    <div class="audit-card-body">
+      <div class="audit-card-content">
+        <p>{{ help_text }}</p>
+        <button class="audit-card-button audit-card-button-secondary" data-action="review">➕ {{ 'Evidence'|t }}</button>
+      </div>
+    </div>
+    <div class="audit-card-footer"></div>
+  </div>
 {% endif %}

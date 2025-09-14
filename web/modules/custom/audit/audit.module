@@ -35,6 +35,19 @@ function template_preprocess_audit_question(array &$variables): void {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+
+  // Get the audit question entity.
+  $audit_question = $variables['elements']['#audit_question'];
+
+  // Pass the question text.
+  if (!empty($audit_question->label())) {
+    $variables['question'] = $audit_question->label();
+  }
+
+  // Pass the help text if available.
+  if (isset($audit_question->field_help->value)) {
+    $variables['help_text'] = $audit_question->field_help->value;
+  }
 }
 
 /**
@@ -158,7 +171,7 @@ function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupa
       if (empty($questions)) {
         $build['cluster_' . $term->id()]['question'] = [
           '#type' => "markup",
-          '#markup' => Markup::create(t('<div class="audit-no-questions">Currently, there are not questions for this cluster.</div>')),
+          '#markup' => Markup::create(t('<div class="audit-no-questions"><i class="bi bi-ban"></i> Currently, there are not questions for this cluster.</div>')),
           '#attributes' => [
             'class' => ['audit-no-questions'],
           ],
@@ -173,7 +186,10 @@ function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupa
       foreach ($questions as $question) {
         /** @var \Drupal\audit\Entity\AuditQuestion $question */
         $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
-        $build['cluster_' . $term->id()]['question_' . $question->id()] = $view_builder->view($question, 'audit');
+        $question_build = $view_builder->view($question, 'audit');
+        // Pass the entity to the template
+        $question_build['#audit_question'] = $question;
+        $build['cluster_' . $term->id()]['question_' . $question->id()] = $question_build;
       }
     }
   }

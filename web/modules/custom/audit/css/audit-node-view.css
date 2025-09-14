@@ -2,6 +2,84 @@
  * Audit Node View Styles
  */
 
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+/* Card Styles */
+.audit-card {
+  background: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.audit-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.audit-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e8ed;
+  background-color: #f7f9fa;
+}
+
+.audit-card-title {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #1d2129;
+}
+
+.audit-card-body {
+  padding: 20px;
+}
+
+.audit-card-content {
+  color: #4b4f56;
+  line-height: 1.5;
+  font-size: 0.95em;
+}
+
+.audit-card-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e1e8ed;
+  background-color: #f7f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.audit-card-button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.audit-card-button-primary {
+  background-color: #1877f2;
+  color: white;
+}
+
+.audit-card-button-primary:hover {
+  background-color: #166fe5;
+}
+
+.audit-card-button-secondary {
+  background-color: #e4e6eb;
+  color: #4b4f56;
+}
+
+.audit-card-button-secondary:hover {
+  background-color: #d8dadf;
+}
+
+/* Existing Styles */
 .audit-question {
   margin-bottom: 15px;
   padding: 10px;
@@ -38,4 +116,5 @@
   font-style: italic;
   color: #666;
   padding: 10px;
+  font-size: 0.9em;
 }

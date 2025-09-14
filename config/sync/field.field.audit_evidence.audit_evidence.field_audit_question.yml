@@ -1,0 +1,27 @@
+uuid: b7c9a54c-c48f-4174-ac10-213a9d429043
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.audit_evidence.field_audit_question
+  module:
+    - audit
+id: audit_evidence.audit_evidence.field_audit_question
+field_name: field_audit_question
+entity_type: audit_evidence
+bundle: audit_evidence
+label: 'Audit Question'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:audit_question'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

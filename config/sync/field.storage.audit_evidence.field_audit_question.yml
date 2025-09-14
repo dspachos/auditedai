@@ -1,0 +1,19 @@
+uuid: 28b53e98-54e0-4805-b57e-164c3f665d66
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_evidence.field_audit_question
+field_name: field_audit_question
+entity_type: audit_evidence
+type: entity_reference
+settings:
+  target_type: audit_question
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
