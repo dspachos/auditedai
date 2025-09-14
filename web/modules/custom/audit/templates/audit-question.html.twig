@@ -49,8 +49,12 @@
               <div class="audit-evidence-item">
                 <div class="audit-evidence-content">{{ evidence.field_evidence.value }}</div>
                 <div class="audit-evidence-actions">
-                  {# Edit button - functionality to be added later #}
-                  <button class="audit-evidence-edit" data-evidence-id="{{ evidence.id() }}"><i class="bi bi-pencil-square"></i></button>
+                  {# Edit button #}
+                  {% if audit_entity and audit_question_entity %}
+                    <a href="{{ path('audit.evidence.edit_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id(), 'audit_evidence': evidence.id()}) }}" class="audit-evidence-edit"><i class="bi bi-pencil-square"></i></a>
+                  {% else %}
+                    <button class="audit-evidence-edit" data-evidence-id="{{ evidence.id() }}"><i class="bi bi-pencil-square"></i></button>
+                  {% endif %}
                   <span>&nbsp;</span>
                   <button class="audit-evidence-edit" data-evidence-id="{{ evidence.id() }}"><i class="bi bi-trash"></i></button>
                 </div>

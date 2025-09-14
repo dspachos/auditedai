@@ -35,3 +35,19 @@ audit.evidence.add_form:
         type: entity:node
       audit_question:
         type: entity:audit_question
+
+audit.evidence.edit_form:
+  path: '/evidence/{audit}/{audit_question}/{audit_evidence}/edit'
+  defaults:
+    _form: '\Drupal\audit\Form\AuditEvidenceEditForm'
+    _title: 'Edit Evidence'
+  requirements:
+    _role: 'authenticated'
+  options:
+    parameters:
+      audit:
+        type: entity:node
+      audit_question:
+        type: entity:audit_question
+      audit_evidence:
+        type: entity:audit_evidence
