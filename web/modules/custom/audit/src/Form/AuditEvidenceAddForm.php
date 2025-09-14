@@ -91,14 +91,14 @@ final class AuditEvidenceAddForm extends FormBase {
           $standards_tags[] = '<span class="standard-tag eqavet-tag">EQAVET</span>';
         }
       }
-      
+
       if ($audit_question->hasField('field_iso_21001') && !$audit_question->get('field_iso_21001')->isEmpty()) {
         $iso_value = $audit_question->get('field_iso_21001')->value;
         if ($iso_value) {
           $standards_tags[] = '<span class="standard-tag iso-tag">ISO 21001</span>';
         }
       }
-      
+
       $standards_markup = '';
       if (!empty($standards_tags)) {
         $standards_markup = '<div class="standards-tags">' . implode(' ', $standards_tags) . '</div>';
@@ -108,13 +108,14 @@ final class AuditEvidenceAddForm extends FormBase {
         '#type' => 'markup',
         '#markup' => '<h5>' . $audit_question->label() . '</h5>' . $standards_markup,
       ];
-      
+
       // Add CSS for the tags
       $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
     $form['description'] = [
       '#type' => 'textarea',
+      '#title' => $this->t('Evidence'),
       '#description' => $this->t('Provide evidence for this audit question.'),
       '#required' => FALSE,
     ];
@@ -132,6 +133,7 @@ final class AuditEvidenceAddForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
       '#submit' => ['::cancelForm'],
+      '#limit_validation_errors' => [],
     ];
 
     return $form;
@@ -141,23 +143,30 @@ final class AuditEvidenceAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-    parent::validateForm($form, $form_state);
-
     $triggering_element = $form_state->getTriggeringElement();
     if (isset($triggering_element['#value']) && $triggering_element['#value'] === $this->t('Cancel')) {
+      // Skip validation when canceling
       return;
     }
+    
+    parent::validateForm($form, $form_state);
 
-    // We're not requiring any fields, but we still check for entities to provide better error messages.
+    // Validate that we have the required entities.
     $audit = $form_state->get('audit');
     $audit_question = $form_state->get('audit_question');
 
     if (!$audit) {
-      $this->messenger()->addWarning($this->t('Audit information is missing.'));
+      $form_state->setError($form, $this->t('Audit is required.'));
     }
 
     if (!$audit_question) {
-      $this->messenger()->addWarning($this->t('Audit question information is missing.'));
+      $form_state->setError($form, $this->t('Audit question is required.'));
+    }
+
+    // Validate that evidence is provided when saving.
+    $description = $form_state->getValue('description');
+    if (empty($description)) {
+      $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
     }
   }
 
@@ -175,18 +184,12 @@ final class AuditEvidenceAddForm extends FormBase {
     $audit_question = $form_state->get('audit_question');
     $description = $form_state->getValue('description');
 
-    // Check if we have the required entities
-    if (!$audit || !$audit_question) {
-      $this->messenger()->addError($this->t('Unable to save evidence: missing audit or question information.'));
-      return;
-    }
-
     // Create a new audit evidence entity.
     $evidence = $this->entityTypeManager->getStorage('audit_evidence')->create([
       'label' => $this->t('Evidence for @question', ['@question' => $audit_question->label()]),
       'field_audit' => $audit->id(),
       'field_audit_question' => $audit_question->id(),
-      'description' => $description,
+      'field_evidence' => $description,
       'uid' => $this->currentUser->id(),
     ]);
 
