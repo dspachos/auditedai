@@ -1,0 +1,24 @@
+.standards-tags {
+  margin: 10px 0;
+}
+
+.standard-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-right: 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.eqavet-tag {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.iso-tag {
+  background-color: #2196F3; /* Blue */
+  color: white;
+}

@@ -69,13 +69,12 @@ final class AuditEvidenceAddForm extends FormBase {
     if ($audit) {
       $form['audit_info'] = [
         '#type' => 'markup',
-        '#markup' => '<h3>' . '</strong> ' . $audit->label() . '</h3>',
+        '#markup' => '<h3>' . $this->t('Audit: ') . $audit->label() . '</h3>',
       ];
     }
 
     if ($audit_question) {
       // Get cluster information if available
-      $cluster_info = '';
       if ($audit_question->hasField('field_cluster') && !$audit_question->get('field_cluster')->isEmpty()) {
         $cluster_term = $audit_question->get('field_cluster')->entity;
         $form['cluster_info'] = [
@@ -84,10 +83,34 @@ final class AuditEvidenceAddForm extends FormBase {
         ];
       }
 
+      // Display EQAVET and ISO 21001 field information as tags
+      $standards_tags = [];
+      if ($audit_question->hasField('field_eqavet') && !$audit_question->get('field_eqavet')->isEmpty()) {
+        $eqavet_value = $audit_question->get('field_eqavet')->value;
+        if ($eqavet_value) {
+          $standards_tags[] = '<span class="standard-tag eqavet-tag">EQAVET</span>';
+        }
+      }
+      
+      if ($audit_question->hasField('field_iso_21001') && !$audit_question->get('field_iso_21001')->isEmpty()) {
+        $iso_value = $audit_question->get('field_iso_21001')->value;
+        if ($iso_value) {
+          $standards_tags[] = '<span class="standard-tag iso-tag">ISO 21001</span>';
+        }
+      }
+      
+      $standards_markup = '';
+      if (!empty($standards_tags)) {
+        $standards_markup = '<div class="standards-tags">' . implode(' ', $standards_tags) . '</div>';
+      }
+
       $form['question_info'] = [
         '#type' => 'markup',
-        '#markup' => '<h5>' . $audit_question->label() . '</h5>',
+        '#markup' => '<h5>' . $audit_question->label() . '</h5>' . $standards_markup,
       ];
+      
+      // Add CSS for the tags
+      $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
     $form['description'] = [

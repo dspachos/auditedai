@@ -10,3 +10,9 @@ audit-node-view:
     - core/drupal
     - core/drupalSettings
     - core/once
+
+standards-tags:
+  version: 1.x
+  css:
+    theme:
+      css/standards-tags.css: {}
