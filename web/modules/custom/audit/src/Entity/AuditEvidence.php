@@ -32,7 +32,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "form" = {
  *       "add" = "Drupal\audit\Form\AuditEvidenceForm",
  *       "edit" = "Drupal\audit\Form\AuditEvidenceForm",
- *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
+ *       "delete" = "Drupal\audit\Form\AuditEvidenceDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
  *     },
  *     "route_provider" = {

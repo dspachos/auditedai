@@ -10,6 +10,7 @@ audit-node-view:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.ui.dialog
 
 standards-tags:
   version: 1.x
