@@ -68,7 +68,7 @@ function template_preprocess_audit_question(array &$variables): void {
 
       // Sort evidences by creation date (newest first)
       uasort($evidences, function ($a, $b) {
-        return $b->getCreatedTime() <=> $a->getCreatedTime();
+        return $b->get('created')->value <=> $a->get('created')->value;
       });
 
       $variables['evidences'] = $evidences;
