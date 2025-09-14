@@ -113,3 +113,46 @@ function template_preprocess_audit_evidence(array &$variables): void {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 }
+
+/**
+ * Implements hook_node_view().
+ *
+ * Alter the view of audit nodes.
+ */
+function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode): void {
+  if ($node->getType() === 'audit') {
+    // Load the terms of the vocabulary vet_21001_clusters.
+    $terms = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties(['vid' => 'vet_21001_clusters']);
+
+    // Sort terms by weight.
+    uasort($terms, function ($a, $b) {
+      return (int) $a->weight->value > (int) $b->weight->value ? 1 : -1;
+    });
+
+    // Create a details element for each term.
+    foreach ($terms as $term) {
+      /** @var \Drupal\taxonomy\Entity\Term $term */
+      $build['cluster_' . $term->id()] = [
+        '#type' => 'details',
+        '#title' => $term->label(),
+        '#description' => $term->description->value,
+        '#open' => TRUE,
+        '#weight' => $term->weight->value,
+      ];
+
+      // Load audit questions that belong to this cluster.
+      $questions = \Drupal::entityTypeManager()
+        ->getStorage('audit_question')
+        ->loadByProperties(['field_cluster' => $term->id()]);
+
+      // Add each question to the cluster details element.
+      foreach ($questions as $question) {
+        /** @var \Drupal\audit\Entity\AuditQuestion $question */
+        $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
+        $build['cluster_' . $term->id()][$question->id()] = $view_builder->view($question, 'audit');
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+uuid: ec345af8-766c-46e1-874b-a9e7f0a1339a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.audit_question.field_weight
+  module:
+    - audit
+id: audit_question.audit_question.field_weight
+field_name: field_weight
+entity_type: audit_question
+bundle: audit_question
+label: Weight
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

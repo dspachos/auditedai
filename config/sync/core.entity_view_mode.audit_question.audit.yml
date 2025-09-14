@@ -1,0 +1,11 @@
+uuid: 0d41a044-5222-4d97-86f6-861bb6a7d922
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_question.audit
+label: Audit
+description: ''
+targetEntityType: audit_question
+cache: true

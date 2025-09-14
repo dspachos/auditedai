@@ -1,0 +1,116 @@
+uuid: 92844a5f-c06b-4fee-a991-f62dd9e1c78e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.audit_question.audit_question.field_weight
+  module:
+    - audit
+id: audit_question.audit_question.default
+targetEntityType: audit_question
+bundle: audit_question
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_cluster:
+    type: entity_reference_autocomplete
+    weight: -9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_eqavet:
+    type: boolean_checkbox
+    weight: -7
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_eqavet_criteria:
+    type: entity_reference_autocomplete
+    weight: -5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_eqavet_doc_info:
+    type: options_select
+    weight: -3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_help:
+    type: string_textarea
+    weight: -2
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_iso_21001:
+    type: boolean_checkbox
+    weight: -8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_iso_21001_criteria:
+    type: entity_reference_autocomplete
+    weight: -6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_iso_doc_info:
+    type: options_select
+    weight: -4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_weight:
+    type: number
+    weight: 21
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 0
+    region: content
+    settings:
+      display_label: false
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

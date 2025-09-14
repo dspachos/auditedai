@@ -16,18 +16,18 @@ third_party_settings:
       children:
         - field_iso
         - field_eqavet
-      label: "Audit Criteria"
+      label: 'Audit Criteria'
       region: content
-      parent_name: ""
+      parent_name: ''
       weight: 2
       format_type: details
       format_settings:
-        classes: ""
+        classes: ''
         show_empty_fields: false
-        id: ""
+        id: ''
         label_as_html: false
         open: true
-        description: ""
+        description: ''
         required_fields: true
 id: node.audit.default
 targetEntityType: node
@@ -35,64 +35,60 @@ bundle: audit
 mode: default
 content:
   field_audit_type:
-    type: entity_reference_autocomplete
+    type: options_buttons
     weight: 1
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ""
-    third_party_settings: {}
+    settings: {  }
+    third_party_settings: {  }
   field_eqavet:
     type: boolean_checkbox
     weight: 9
     region: content
     settings:
       display_label: true
-    third_party_settings: {}
+    third_party_settings: {  }
   field_iso:
     type: boolean_checkbox
     weight: 8
     region: content
     settings:
       display_label: true
-    third_party_settings: {}
+    third_party_settings: {  }
   path:
     type: path
     weight: 3
     region: content
-    settings: {}
-    third_party_settings: {}
+    settings: {  }
+    third_party_settings: {  }
   promote:
     type: boolean_checkbox
     weight: 8
     region: content
     settings:
       display_label: true
-    third_party_settings: {}
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 4
     region: content
     settings:
       display_label: true
-    third_party_settings: {}
+    third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     weight: 7
     region: content
     settings:
       display_label: true
-    third_party_settings: {}
+    third_party_settings: {  }
   title:
     type: string_textfield
     weight: 0
     region: content
     settings:
       size: 60
-      placeholder: ""
-    third_party_settings: {}
+      placeholder: ''
+    third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
     weight: 5
@@ -101,7 +97,7 @@ content:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
-      placeholder: ""
-    third_party_settings: {}
+      placeholder: ''
+    third_party_settings: {  }
 hidden:
   created: true

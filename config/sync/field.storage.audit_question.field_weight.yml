@@ -1,0 +1,20 @@
+uuid: 5cc372f6-178b-4363-a0e2-acd13731ce0b
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_question.field_weight
+field_name: field_weight
+entity_type: audit_question
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
