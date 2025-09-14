@@ -13,6 +13,7 @@
  * - help_text: Help text for the question.
  * - audit_entity: The audit node entity.
  * - audit_question_entity: The audit question entity.
+ * - evidences: Array of existing evidence entities for this question.
  *
  * @see template_preprocess_audit_question()
  */
@@ -30,11 +31,34 @@
 {% if(view_mode == 'audit') %}
   <div class="audit-card">
     <div class="audit-card-header">
-      <h3 class="audit-card-title">{{ question }}</h3>
+      <h3 class="audit-card-title">
+        {{ question }}
+        {% if help_text %}
+          <span class="audit-help-icon" data-audit-tooltip="{{ help_text }}">
+            <i class="bi bi-info-circle-fill"></i>
+          </span>
+        {% endif %}
+      </h3>
     </div>
     <div class="audit-card-body">
       <div class="audit-card-content">
-        <p>{{ help_text }}</p>
+        {# Display existing evidences #}
+        {% if evidences is not empty %}
+          <div class="audit-evidences">
+            {% for evidence in evidences %}
+              <div class="audit-evidence-item">
+                <div class="audit-evidence-content">{{ evidence.field_evidence.value }}</div>
+                <div class="audit-evidence-actions">
+                  {# Edit button - functionality to be added later #}
+                  <button class="audit-evidence-edit" data-evidence-id="{{ evidence.id() }}"><i class="bi bi-pencil-square"></i></button>
+                  <span>&nbsp;</span>
+                  <button class="audit-evidence-edit" data-evidence-id="{{ evidence.id() }}"><i class="bi bi-trash"></i></button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
         {% if audit_entity and audit_question_entity %}
           <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
         {% else %}
