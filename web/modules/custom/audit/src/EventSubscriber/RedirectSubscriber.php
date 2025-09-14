@@ -61,7 +61,8 @@ class RedirectSubscriber implements EventSubscriberInterface {
       $response = new TrustedRedirectResponse('/dashboard');
       $response->getCacheableMetadata()->setCacheContexts(['user.roles:authenticated']);
       $event->setResponse($response);
-    } else {
+    }
+    else {
       \Drupal::logger('audit')->debug('No redirect: route or path does not match, or user not authenticated');
     }
   }
@@ -74,4 +75,5 @@ class RedirectSubscriber implements EventSubscriberInterface {
       KernelEvents::REQUEST => ['checkForRedirect', 300],
     ];
   }
+
 }

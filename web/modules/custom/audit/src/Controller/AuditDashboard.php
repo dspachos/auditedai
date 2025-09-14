@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\audit\Controller;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -42,4 +37,5 @@ final class AuditDashboard extends ControllerBase {
 
     return $build;
   }
+
 }

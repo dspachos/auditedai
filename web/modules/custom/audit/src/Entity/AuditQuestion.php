@@ -204,7 +204,7 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ->setDescription(t('Indicates if documented information is needed for ISO (options: "yes", "no").'))
       ->setSetting('allowed_values', [
         'yes' => 'Yes',
-        'no' => 'No'
+        'no' => 'No',
       ])
       ->setDefaultValue('empty')
       ->setDisplayOptions('form', [
@@ -224,7 +224,7 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
       ->setDescription(t('Indicates if documented information is needed for EQAVET.'))
       ->setSetting('allowed_values', [
         'yes' => 'Yes',
-        'no' => 'No'
+        'no' => 'No',
       ])
       ->setDefaultValue('empty')
       ->setDisplayOptions('form', [
@@ -321,4 +321,5 @@ final class AuditQuestion extends ContentEntityBase implements AuditQuestionInte
 
     return $fields;
   }
+
 }

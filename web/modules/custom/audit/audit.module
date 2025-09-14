@@ -5,6 +5,9 @@
  * Primary module hooks for audit module.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\user\UserInterface;
@@ -52,22 +55,22 @@ function template_preprocess_audit_question(array &$variables): void {
   // Pass the audit entity and audit question entity if available.
   if (isset($variables['elements']['#audit_entity'])) {
     $variables['audit_entity'] = $variables['elements']['#audit_entity'];
-    
-    // Load existing evidences for this audit and question
+
+    // Load existing evidences for this audit and question.
     if (isset($variables['elements']['#audit_question_entity'])) {
       $audit_question_entity = $variables['elements']['#audit_question_entity'];
-      
+
       $evidence_storage = \Drupal::entityTypeManager()->getStorage('audit_evidence');
       $evidences = $evidence_storage->loadByProperties([
         'field_audit' => $variables['audit_entity']->id(),
         'field_audit_question' => $audit_question_entity->id(),
       ]);
-      
+
       // Sort evidences by creation date (newest first)
       uasort($evidences, function ($a, $b) {
         return $b->getCreatedTime() <=> $a->getCreatedTime();
       });
-      
+
       $variables['evidences'] = $evidences;
     }
   }
@@ -133,7 +136,10 @@ function audit_user_predelete(UserInterface $account): void {
   );
 }
 
-function audit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id): void {
+/**
+ *
+ */
+function audit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   // @todo
 }
 
@@ -160,9 +166,9 @@ function template_preprocess_audit_evidence(array &$variables): void {
  *
  * Alter the view of audit nodes.
  */
-function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode): void {
+function audit_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode): void {
   if ($node->getType() === 'audit') {
-    // Attach our custom library
+    // Attach our custom library.
     $build['#attached']['library'][] = 'audit/audit-node-view';
 
     // Load the terms of the vocabulary vet_21001_clusters.
@@ -214,7 +220,7 @@ function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupa
         /** @var \Drupal\audit\Entity\AuditQuestion $question */
         $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
         $question_build = $view_builder->view($question, 'audit');
-        // Pass the entities to the template
+        // Pass the entities to the template.
         $question_build['#audit_question'] = $question;
         $question_build['#audit_entity'] = $node;
         $question_build['#audit_question_entity'] = $question;

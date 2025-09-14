@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\audit\Entity\AuditQuestion;
@@ -60,7 +59,7 @@ final class AuditEvidenceAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $audit = NULL, AuditQuestion $audit_question = NULL): array {
+  public function buildForm(array $form, FormStateInterface $form_state, ?NodeInterface $audit = NULL, ?AuditQuestion $audit_question = NULL): array {
     // Store the audit and audit_question entities in the form state for later use.
     $form_state->set('audit', $audit);
     $form_state->set('audit_question', $audit_question);
@@ -74,7 +73,7 @@ final class AuditEvidenceAddForm extends FormBase {
     }
 
     if ($audit_question) {
-      // Get cluster information if available
+      // Get cluster information if available.
       if ($audit_question->hasField('field_cluster') && !$audit_question->get('field_cluster')->isEmpty()) {
         $cluster_term = $audit_question->get('field_cluster')->entity;
         $form['cluster_info'] = [
@@ -83,7 +82,7 @@ final class AuditEvidenceAddForm extends FormBase {
         ];
       }
 
-      // Display EQAVET and ISO 21001 field information as tags
+      // Display EQAVET and ISO 21001 field information as tags.
       $standards_tags = [];
       if ($audit_question->hasField('field_eqavet') && !$audit_question->get('field_eqavet')->isEmpty()) {
         $eqavet_value = $audit_question->get('field_eqavet')->value;
@@ -109,7 +108,7 @@ final class AuditEvidenceAddForm extends FormBase {
         '#markup' => '<h5>' . $audit_question->label() . '</h5>' . $standards_markup,
       ];
 
-      // Add CSS for the tags
+      // Add CSS for the tags.
       $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
@@ -120,10 +119,10 @@ final class AuditEvidenceAddForm extends FormBase {
       '#required' => FALSE,
     ];
 
-    // Check if we should display the file upload field
+    // Check if we should display the file upload field.
     $show_file_upload = FALSE;
     if ($audit_question) {
-      // Check if field_eqavet or field_iso_21001 is true
+      // Check if field_eqavet or field_iso_21001 is true.
       if (($audit_question->hasField('field_iso_doc_info') && !$audit_question->get('field_iso_doc_info')->isEmpty() && $audit_question->get('field_iso_doc_info')->value == 'yes') ||
         ($audit_question->hasField('field_eqavet_doc_info') && !$audit_question->get('field_eqavet_doc_info')->isEmpty() && $audit_question->get('field_eqavet_doc_info')->value == 'yes')
       ) {
@@ -131,7 +130,7 @@ final class AuditEvidenceAddForm extends FormBase {
       }
     }
 
-    // Add file upload field if needed
+    // Add file upload field if needed.
     if ($show_file_upload) {
       $form['field_supporting_files'] = [
         '#type' => 'managed_file',
@@ -142,7 +141,8 @@ final class AuditEvidenceAddForm extends FormBase {
           'file_validate_extensions' => ['txt pdf zip docx csv xlsx rtf md markdown'],
         ],
         '#multiple' => TRUE,
-        '#cardinality' => -1, // Unlimited
+        // Unlimited.
+        '#cardinality' => -1,
         '#required' => FALSE,
       ];
     }
@@ -172,7 +172,7 @@ final class AuditEvidenceAddForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     $triggering_element = $form_state->getTriggeringElement();
     if (isset($triggering_element['#value']) && $triggering_element['#value'] === $this->t('Cancel')) {
-      // Skip validation when canceling
+      // Skip validation when canceling.
       return;
     }
 
@@ -220,21 +220,21 @@ final class AuditEvidenceAddForm extends FormBase {
       'uid' => $this->currentUser->id(),
     ]);
 
-    // Handle file uploads if any
+    // Handle file uploads if any.
     $file_ids = $form_state->getValue('field_supporting_files', []);
     if (!empty($file_ids)) {
-      // Load and save files permanently
+      // Load and save files permanently.
       $files = [];
       foreach ($file_ids as $fid) {
         if ($file = $this->entityTypeManager->getStorage('file')->load($fid)) {
-          // Set file status to permanent
+          // Set file status to permanent.
           $file->setPermanent();
           $file->save();
           $files[] = ['target_id' => $fid];
         }
       }
 
-      // Set files to the evidence entity
+      // Set files to the evidence entity.
       if (!empty($files)) {
         $evidence->set('field_supporting_files', $files);
       }
@@ -254,9 +254,11 @@ final class AuditEvidenceAddForm extends FormBase {
 
     if ($audit) {
       $form_state->setRedirect('entity.node.canonical', ['node' => $audit->id()]);
-    } else {
+    }
+    else {
       // Fallback redirect.
       $form_state->setRedirect('<front>');
     }
   }
+
 }

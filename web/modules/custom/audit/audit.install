@@ -63,7 +63,7 @@ function audit_update_8010() {
         'First-party (Self-assessment)',
         'Third-party (External)',
       ],
-    ]
+    ],
   ];
 
   foreach ($vocabularies as $vid => $data) {
