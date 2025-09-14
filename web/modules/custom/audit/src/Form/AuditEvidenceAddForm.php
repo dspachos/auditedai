@@ -69,7 +69,7 @@ final class AuditEvidenceAddForm extends FormBase {
     if ($audit) {
       $form['audit_info'] = [
         '#type' => 'markup',
-        '#markup' => '<h3>' . $this->t('Audit: ') . $audit->label() . '</h3>',
+        '#markup' => '<h3>' . $audit->label() . '</h3>',
       ];
     }
 
@@ -115,10 +115,37 @@ final class AuditEvidenceAddForm extends FormBase {
 
     $form['description'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('Evidence'),
+      '#title' => $this->t('Provide evidence:'),
       '#description' => $this->t('Provide evidence for this audit question.'),
       '#required' => FALSE,
     ];
+
+    // Check if we should display the file upload field
+    $show_file_upload = FALSE;
+    if ($audit_question) {
+      // Check if field_eqavet or field_iso_21001 is true
+      if (($audit_question->hasField('field_iso_doc_info') && !$audit_question->get('field_iso_doc_info')->isEmpty() && $audit_question->get('field_iso_doc_info')->value == 'yes') ||
+        ($audit_question->hasField('field_eqavet_doc_info') && !$audit_question->get('field_eqavet_doc_info')->isEmpty() && $audit_question->get('field_eqavet_doc_info')->value == 'yes')
+      ) {
+        $show_file_upload = TRUE;
+      }
+    }
+
+    // Add file upload field if needed
+    if ($show_file_upload) {
+      $form['field_supporting_files'] = [
+        '#type' => 'managed_file',
+        '#title' => $this->t('Supporting Files:'),
+        '#description' => $this->t('Upload supporting files for this evidence. You can select multiple files.'),
+        '#upload_location' => 'public://audit-evidence/',
+        '#upload_validators' => [
+          'file_validate_extensions' => ['txt pdf zip docx csv xlsx rtf md markdown'],
+        ],
+        '#multiple' => TRUE,
+        '#cardinality' => -1, // Unlimited
+        '#required' => FALSE,
+      ];
+    }
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -148,7 +175,7 @@ final class AuditEvidenceAddForm extends FormBase {
       // Skip validation when canceling
       return;
     }
-    
+
     parent::validateForm($form, $form_state);
 
     // Validate that we have the required entities.
@@ -192,6 +219,26 @@ final class AuditEvidenceAddForm extends FormBase {
       'field_evidence' => $description,
       'uid' => $this->currentUser->id(),
     ]);
+
+    // Handle file uploads if any
+    $file_ids = $form_state->getValue('field_supporting_files', []);
+    if (!empty($file_ids)) {
+      // Load and save files permanently
+      $files = [];
+      foreach ($file_ids as $fid) {
+        if ($file = $this->entityTypeManager->getStorage('file')->load($fid)) {
+          // Set file status to permanent
+          $file->setPermanent();
+          $file->save();
+          $files[] = ['target_id' => $fid];
+        }
+      }
+
+      // Set files to the evidence entity
+      if (!empty($files)) {
+        $evidence->set('field_supporting_files', $files);
+      }
+    }
 
     $evidence->save();
 
