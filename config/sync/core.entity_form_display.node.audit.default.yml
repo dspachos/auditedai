@@ -3,67 +3,96 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.audit.body
+    - field.field.node.audit.field_audit_type
+    - field.field.node.audit.field_eqavet
+    - field.field.node.audit.field_iso
     - node.type.audit
   module:
+    - field_group
     - path
-    - text
+third_party_settings:
+  field_group:
+    group_audit_criteria:
+      children:
+        - field_iso
+        - field_eqavet
+      label: "Audit Criteria"
+      region: content
+      parent_name: ""
+      weight: 2
+      format_type: details
+      format_settings:
+        classes: ""
+        show_empty_fields: false
+        id: ""
+        label_as_html: false
+        open: true
+        description: ""
+        required_fields: true
 id: node.audit.default
 targetEntityType: node
 bundle: audit
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 121
+  field_audit_type:
+    type: entity_reference_autocomplete
+    weight: 1
     region: content
     settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-  created:
-    type: datetime_timestamp
-    weight: 10
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ""
+    third_party_settings: {}
+  field_eqavet:
+    type: boolean_checkbox
+    weight: 9
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      display_label: true
+    third_party_settings: {}
+  field_iso:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {}
   path:
     type: path
-    weight: 30
+    weight: 3
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings: {}
+    third_party_settings: {}
   promote:
     type: boolean_checkbox
-    weight: 15
+    weight: 8
     region: content
     settings:
       display_label: true
-    third_party_settings: {  }
+    third_party_settings: {}
   status:
     type: boolean_checkbox
-    weight: 120
+    weight: 4
     region: content
     settings:
       display_label: true
-    third_party_settings: {  }
+    third_party_settings: {}
   sticky:
     type: boolean_checkbox
-    weight: 16
+    weight: 7
     region: content
     settings:
       display_label: true
-    third_party_settings: {  }
+    third_party_settings: {}
   title:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
-      placeholder: ''
-    third_party_settings: {  }
+      placeholder: ""
+    third_party_settings: {}
   uid:
     type: entity_reference_autocomplete
     weight: 5
@@ -72,6 +101,7 @@ content:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
-      placeholder: ''
-    third_party_settings: {  }
-hidden: {  }
+      placeholder: ""
+    third_party_settings: {}
+hidden:
+  created: true

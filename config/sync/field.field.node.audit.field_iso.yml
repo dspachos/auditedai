@@ -1,0 +1,21 @@
+uuid: 0259afc5-4325-42da-ae56-bd3d134bc799
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_iso
+    - node.type.audit
+id: node.audit.field_iso
+field_name: field_iso
+entity_type: node
+bundle: audit
+label: 'ISO 21001'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

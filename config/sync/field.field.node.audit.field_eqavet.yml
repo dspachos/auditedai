@@ -1,0 +1,21 @@
+uuid: 504575e7-399a-4576-91dd-cc5a9e24c26a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_eqavet
+    - node.type.audit
+id: node.audit.field_eqavet
+field_name: field_eqavet
+entity_type: node
+bundle: audit
+label: EQAVET
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

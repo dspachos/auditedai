@@ -4,27 +4,23 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.audit.body
+    - field.field.node.audit.field_audit_type
+    - field.field.node.audit.field_eqavet
+    - field.field.node.audit.field_iso
     - node.type.audit
   module:
-    - text
     - user
 id: node.audit.teaser
 targetEntityType: node
 bundle: audit
 mode: teaser
 content:
-  body:
-    type: text_summary_or_trimmed
-    label: hidden
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
-    weight: 101
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  field_audit_type: true
+  field_eqavet: true
+  field_iso: true

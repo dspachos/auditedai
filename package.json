@@ -5,6 +5,6 @@
   "author": "Dimitris Spachos <dimitris.spachos@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "drush uli --uri=http://127.0.0.1:8888 && ./vendor/bin/drush rs",
+    "dev": "drush uli --uri=http://127.0.0.1:8888 && ./vendor/bin/drush rs"
   }
 }

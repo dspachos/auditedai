@@ -3,20 +3,42 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.audit.body
+    - field.field.node.audit.field_audit_type
+    - field.field.node.audit.field_eqavet
+    - field.field.node.audit.field_iso
     - node.type.audit
   module:
-    - text
     - user
 id: node.audit.default
 targetEntityType: node
 bundle: audit
 mode: default
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
+  field_audit_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_eqavet:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_iso:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
     weight: 101
     region: content
