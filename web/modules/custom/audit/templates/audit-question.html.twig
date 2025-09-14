@@ -11,6 +11,8 @@
  * - attributes: HTML attributes for the container element.
  * - question: The question text.
  * - help_text: Help text for the question.
+ * - audit_entity: The audit node entity.
+ * - audit_question_entity: The audit question entity.
  *
  * @see template_preprocess_audit_question()
  */
@@ -33,7 +35,11 @@
     <div class="audit-card-body">
       <div class="audit-card-content">
         <p>{{ help_text }}</p>
-        <button class="audit-card-button audit-card-button-secondary" data-action="review">➕ {{ 'Evidence'|t }}</button>
+        {% if audit_entity and audit_question_entity %}
+          <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
+        {% else %}
+          <button class="audit-card-button audit-card-button-secondary" data-action="review">➕ {{ 'Evidence'|t }}</button>
+        {% endif %}
       </div>
     </div>
     {# <div class="audit-card-footer"></div> #}

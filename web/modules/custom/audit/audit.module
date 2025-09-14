@@ -48,6 +48,15 @@ function template_preprocess_audit_question(array &$variables): void {
   if (isset($audit_question->field_help->value)) {
     $variables['help_text'] = $audit_question->field_help->value;
   }
+
+  // Pass the audit entity and audit question entity if available.
+  if (isset($variables['elements']['#audit_entity'])) {
+    $variables['audit_entity'] = $variables['elements']['#audit_entity'];
+  }
+
+  if (isset($variables['elements']['#audit_question_entity'])) {
+    $variables['audit_question_entity'] = $variables['elements']['#audit_question_entity'];
+  }
 }
 
 /**
@@ -187,8 +196,10 @@ function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupa
         /** @var \Drupal\audit\Entity\AuditQuestion $question */
         $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
         $question_build = $view_builder->view($question, 'audit');
-        // Pass the entity to the template
+        // Pass the entities to the template
         $question_build['#audit_question'] = $question;
+        $question_build['#audit_entity'] = $node;
+        $question_build['#audit_question_entity'] = $question;
         $build['cluster_' . $term->id()]['question_' . $question->id()] = $question_build;
       }
     }

@@ -21,3 +21,17 @@ entity.audit_evidence.settings:
     _title: 'Audit Evidence'
   requirements:
     _permission: 'administer audit_evidence'
+
+audit.evidence.add_form:
+  path: '/evidence/{audit}/{audit_question}/add'
+  defaults:
+    _form: '\Drupal\audit\Form\AuditEvidenceAddForm'
+    _title: 'Add Evidence'
+  requirements:
+    _role: 'authenticated'
+  options:
+    parameters:
+      audit:
+        type: entity:node
+      audit_question:
+        type: entity:audit_question
