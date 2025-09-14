@@ -1,0 +1,41 @@
+/**
+ * Audit Node View Styles
+ */
+
+.audit-question {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.audit-question-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.audit-question-content {
+  margin-left: 10px;
+}
+
+.audit-question-actions {
+  margin-top: 10px;
+}
+
+.audit-cluster-details {
+  margin-bottom: 20px;
+}
+
+.audit-cluster-details summary {
+  font-weight: bold;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+
+.audit-no-questions {
+  font-style: italic;
+  color: #666;
+  padding: 10px;
+}

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
 use Drupal\user\UserInterface;
 
 /**
@@ -121,6 +122,9 @@ function template_preprocess_audit_evidence(array &$variables): void {
  */
 function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode): void {
   if ($node->getType() === 'audit') {
+    // Attach our custom library
+    $build['#attached']['library'][] = 'audit/audit-node-view';
+
     // Load the terms of the vocabulary vet_21001_clusters.
     $terms = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
@@ -140,6 +144,10 @@ function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupa
         '#description' => $term->description->value,
         '#open' => TRUE,
         '#weight' => $term->weight->value,
+        '#attributes' => [
+          'class' => ['audit-cluster-details'],
+          'id' => 'cluster-' . $term->id(),
+        ],
       ];
 
       // Load audit questions that belong to this cluster.
@@ -147,11 +155,25 @@ function audit_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupa
         ->getStorage('audit_question')
         ->loadByProperties(['field_cluster' => $term->id()]);
 
+      if (empty($questions)) {
+        $build['cluster_' . $term->id()]['question'] = [
+          '#type' => "markup",
+          '#markup' => Markup::create(t('<div class="audit-no-questions">Currently, there are not questions for this cluster.</div>')),
+          '#attributes' => [
+            'class' => ['audit-no-questions'],
+          ],
+        ];
+      }
+
+      uasort($questions, function ($a, $b) {
+        return (int) $a->field_weight->value > (int) $b->field_weight->value ? 1 : -1;
+      });
+
       // Add each question to the cluster details element.
       foreach ($questions as $question) {
         /** @var \Drupal\audit\Entity\AuditQuestion $question */
         $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
-        $build['cluster_' . $term->id()][$question->id()] = $view_builder->view($question, 'audit');
+        $build['cluster_' . $term->id()]['question_' . $question->id()] = $view_builder->view($question, 'audit');
       }
     }
   }

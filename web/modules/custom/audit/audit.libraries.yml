@@ -1,0 +1,12 @@
+audit-node-view:
+  version: 1.x
+  css:
+    theme:
+      css/audit-node-view.css: {}
+  js:
+    js/audit-node-view.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once
