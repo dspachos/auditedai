@@ -1,0 +1,13 @@
+uuid: 436529a1-c9cc-40e6-877e-0034d942b409
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+_core:
+  default_config_hash: FMehe8ZtgjkpT-LVRqQKB2g8-B3I4OV654j341NzrxY
+id: audit_evidence_save_action
+label: 'Save audit evidences'
+type: audit_evidence
+plugin: 'entity:save_action:audit_evidence'
+configuration: {  }

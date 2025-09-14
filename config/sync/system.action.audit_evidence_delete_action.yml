@@ -1,0 +1,13 @@
+uuid: 1399351b-0e84-41ba-961f-985441fc942d
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+_core:
+  default_config_hash: '-ze4rj6akBv1UoKuDr3zOiay57cpwxZ8mshSdTqgL5A'
+id: audit_evidence_delete_action
+label: 'Delete audit evidences'
+type: audit_evidence
+plugin: 'entity:delete_action:audit_evidence'
+configuration: {  }
