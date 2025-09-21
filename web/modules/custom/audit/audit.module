@@ -56,22 +56,19 @@ function template_preprocess_audit_question(array &$variables): void {
   if (isset($variables['elements']['#audit_entity'])) {
     $variables['audit_entity'] = $variables['elements']['#audit_entity'];
 
-    // Load existing evidences for this audit and question.
+    // Load existing evidences for this audit and question with a single optimized query.
     if (isset($variables['elements']['#audit_question_entity'])) {
       $audit_question_entity = $variables['elements']['#audit_question_entity'];
 
       $evidence_storage = \Drupal::entityTypeManager()->getStorage('audit_evidence');
-      $evidences = $evidence_storage->loadByProperties([
-        'field_audit' => $variables['audit_entity']->id(),
-        'field_audit_question' => $audit_question_entity->id(),
-      ]);
+      $query = $evidence_storage->getQuery()
+        ->condition('field_audit', $variables['audit_entity']->id())
+        ->condition('field_audit_question', $audit_question_entity->id())
+        ->sort('created', 'DESC')
+        ->accessCheck(TRUE);
 
-      // Sort evidences by creation date (newest first)
-      uasort($evidences, function ($a, $b) {
-        return $b->get('created')->value <=> $a->get('created')->value;
-      });
-
-      $variables['evidences'] = $evidences;
+      $evidence_ids = $query->execute();
+      $variables['evidences'] = $evidence_storage->loadMultiple($evidence_ids);
     }
   }
 
