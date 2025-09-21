@@ -1,0 +1,18 @@
+uuid: f97711e8-37d3-4e98-b02c-a0ed975549ab
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_question.field_simple_yes_no
+field_name: field_simple_yes_no
+entity_type: audit_question
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
