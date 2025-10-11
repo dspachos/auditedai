@@ -12,6 +12,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Url;
 
 /**
  * Returns responses for AuditED AI routes.
@@ -193,8 +194,16 @@ final class AuditDashboard extends ControllerBase {
             ],
             'complete' => [
               'title' => $this->t('Complete'),
-              'url' => $audit->toUrl('edit-form'), // User would change status in edit form
-              'query' => ['destination' => '<current>'],
+              'url' => $audit->toUrl('edit-form'),
+              'query' => ['destination' => '/dashboard'],
+              'attributes' => [
+                'class' => ['edit'],
+              ],
+            ],
+            'export' => [
+              'title' => $this->t('Export'),
+              'url' => Url::fromRoute('audit.audit_export', ['audit' => $audit->id()]),
+              'query' => ['destination' => '/dashboard'],
               'attributes' => [
                 'class' => ['edit'],
               ],
@@ -202,7 +211,7 @@ final class AuditDashboard extends ControllerBase {
             'delete' => [
               'title' => $this->t('Delete'),
               'url' => $audit->toUrl('delete-form'),
-              'query' => ['destination' => '<current>'],
+              'query' => ['destination' => '/dashboard'],
               'attributes' => [
                 'class' => ['delete'],
               ],
