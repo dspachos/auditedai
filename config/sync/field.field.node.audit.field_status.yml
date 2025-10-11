@@ -1,0 +1,21 @@
+uuid: d4e7f1bd-c38a-4e12-bdbb-5cdf9bb3a921
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_status
+    - node.type.audit
+  module:
+    - options
+id: node.audit.field_status
+field_name: field_status
+entity_type: node
+bundle: audit
+label: Status
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

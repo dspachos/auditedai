@@ -14,7 +14,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -53,7 +53,7 @@ content:
     third_party_settings: {  }
   field_help:
     type: string_textarea
-    weight: 9
+    weight: 10
     region: content
     settings:
       rows: 4
@@ -91,7 +91,7 @@ content:
     third_party_settings: {  }
   field_weight:
     type: number
-    weight: 13
+    weight: 9
     region: content
     settings:
       placeholder: ''
@@ -106,14 +106,14 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: false
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 11
+    weight: 12
     region: content
     settings:
       match_operator: CONTAINS

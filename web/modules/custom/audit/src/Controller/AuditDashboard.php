@@ -93,12 +93,6 @@ final class AuditDashboard extends ControllerBase {
     $build['#attached']['library'][] = 'audit/audit-node-view';
     $build['#attached']['library'][] = 'audit/standards-tags';
 
-    // Add title
-    $build['title'] = [
-      '#type' => 'markup',
-      '#markup' => '<h2>' . $this->t('Audit Dashboard') . '</h2>',
-    ];
-
     // Add button to create a new audit
     $build['new_audit'] = [
       '#type' => 'link',
@@ -128,7 +122,9 @@ final class AuditDashboard extends ControllerBase {
         $this->t('Audit Title'),
         $this->t('Standards'),
         $this->t('Audit Type'),
+        $this->t('Status'),
         $this->t('Created'),
+        $this->t('Operations'),
       ];
 
       $rows = [];
@@ -159,11 +155,60 @@ final class AuditDashboard extends ControllerBase {
           }
         }
 
-        // Format creation date
+        // Get status
+        $status = '';
+        if ($audit->hasField('field_status') && !$audit->get('field_status')->isEmpty()) {
+          $status_value = $audit->get('field_status')->value;
+          // Get the allowed values for the field to convert value to label
+          $field_definition = $audit->getFieldDefinition('field_status');
+          $field_settings = $field_definition->getSettings();
+          $allowed_values = $field_settings['allowed_values'];
+          $status = $allowed_values[$status_value] ?? $status_value;
+        }
+
+        if (empty($status)) {
+          $status = $this->t('Draft');
+        }
+
+        // Format creation date (date only, no time)
         $created_date = \Drupal::service('date.formatter')->format(
           $audit->get('created')->value,
-          'short'
+          'custom',
+          'd.M.Y'
         );
+
+        // Create operations dropdown
+        $operations = [
+          '#type' => 'dropbutton',
+          '#attributes' => [
+            'class' => ['audit-operations'],
+          ],
+          '#links' => [
+            'view' => [
+              'title' => $this->t('View'),
+              'url' => $audit->toUrl(),
+              'attributes' => [
+                'class' => ['view'],
+              ],
+            ],
+            'complete' => [
+              'title' => $this->t('Complete'),
+              'url' => $audit->toUrl('edit-form'), // User would change status in edit form
+              'query' => ['destination' => '<current>'],
+              'attributes' => [
+                'class' => ['edit'],
+              ],
+            ],
+            'delete' => [
+              'title' => $this->t('Delete'),
+              'url' => $audit->toUrl('delete-form'),
+              'query' => ['destination' => '<current>'],
+              'attributes' => [
+                'class' => ['delete'],
+              ],
+            ],
+          ],
+        ];
 
         $rows[] = [
           'data' => [
@@ -181,7 +226,12 @@ final class AuditDashboard extends ControllerBase {
               ],
             ],
             $audit_type,
+            $status,
             $created_date,
+            [
+              'data' => $operations,
+              'class' => ['operations'],
+            ],
           ],
         ];
       }

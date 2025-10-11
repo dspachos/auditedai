@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.audit.field_audit_type
     - field.field.node.audit.field_eqavet
     - field.field.node.audit.field_iso
+    - field.field.node.audit.field_status
     - node.type.audit
   module:
     - user
@@ -24,3 +25,4 @@ hidden:
   field_audit_type: true
   field_eqavet: true
   field_iso: true
+  field_status: true

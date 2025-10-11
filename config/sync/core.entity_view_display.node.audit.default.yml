@@ -6,8 +6,10 @@ dependencies:
     - field.field.node.audit.field_audit_type
     - field.field.node.audit.field_eqavet
     - field.field.node.audit.field_iso
+    - field.field.node.audit.field_status
     - node.type.audit
   module:
+    - options
     - user
 id: node.audit.default
 targetEntityType: node
@@ -41,6 +43,13 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 101
+    region: content
+  field_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 104
     region: content
   links:
     settings: {  }
