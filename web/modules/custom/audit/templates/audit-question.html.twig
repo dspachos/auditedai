@@ -60,7 +60,6 @@
                   <div class="audit-evidence-content">{{ evidence.field_evidence.value }}</div>
                 {% endif %}
 
-
                 <div class="audit-evidence-actions">
                   {# Evaluate with AI #}
                   {# <a href="#" title="Evaluate with AI"><i class="bi bi-stars"></i></a> #}
@@ -80,11 +79,11 @@
           </div>
         {% endif %}
 
-        {% if audit_entity and audit_question_entity %}
-          <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
-        {% else %}
-          <button class="audit-card-button audit-card-button-secondary" data-action="review">➕ {{ 'Evidence'|t }}</button>
-        {% endif %}
+          {% if audit_question_entity.field_simple_yes_no.value and evidences is not empty %}
+            <a href="#" class="audit-card-button audit-card-button-secondary" style="opacity: 0.2;pointer-events: none;">➕ {{ 'Evidence'|t }}</a>
+          {% else %}
+            <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
+          {% endif %}
       </div>
     </div>
     {# <div class="audit-card-footer"></div> #}

@@ -247,8 +247,8 @@ final class AuditEvidenceEditForm extends FormBase {
     // Check if this is a yes/no question
     $is_yes_no_question = FALSE;
     if ($audit_question) {
-      if ($audit_question->hasField('field_is_yes_no') && !$audit_question->get('field_is_yes_no')->isEmpty()) {
-        $is_yes_no_question = (bool) $audit_question->get('field_is_yes_no')->value;
+      if ($audit_question->hasField('field_simple_yes_no') && !$audit_question->get('field_simple_yes_no')->isEmpty()) {
+        $is_yes_no_question = (bool) $audit_question->get('field_simple_yes_no')->value;
       }
     }
 
@@ -258,7 +258,9 @@ final class AuditEvidenceEditForm extends FormBase {
       if (empty($yes_no_answer)) {
         $form_state->setErrorByName('field_yes_no_answer', $this->t('Please select an answer (Yes or No).'));
       }
-    } else {
+    }
+
+    if (!$is_yes_no_question) {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
       if (empty($description)) {
