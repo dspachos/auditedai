@@ -41,8 +41,10 @@
   </head>
 
   <body{{ attributes.addClass(body_classes) }}>
+    {# HEADER MENU HERE #}
+
     {#
-      Keyboard navigation/accessibility link to main content section in
+    Keyboard navigation/accessibility link to main content section in
       page.html.twig.
     #}
     <a href="#main-content" class="visually-hidden focusable skip-link">
@@ -52,5 +54,9 @@
     {{ page }}
     {{ page_bottom }}
     <js-bottom-placeholder token="{{ placeholder_token }}">
+
+
+    {# FOOTER MENU HERE #}
+
   </body>
 </html>

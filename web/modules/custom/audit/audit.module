@@ -227,22 +227,39 @@ function audit_node_view(array &$build, NodeInterface $node, EntityViewDisplayIn
   }
 }
 
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
 function audit_preprocess_page(&$variables) {
   // Add the top menu block to all pages for authenticated users.
   $block_manager = \Drupal::service('plugin.manager.block');
   $config = [];
   $plugin_block = $block_manager->createInstance('audit_top_menu_block', $config);
   $access_result = $plugin_block->access(\Drupal::currentUser());
-
+  
   // Check if access result is allowed
-  if ((is_object($access_result) && method_exists($access_result, 'isAllowed') && $access_result->isAllowed()) ||
-    (is_bool($access_result) && $access_result)
-  ) {
+  if ((is_object($access_result) && method_exists($access_result, 'isAllowed') && $access_result->isAllowed()) || 
+      (is_bool($access_result) && $access_result)) {
     $render_array = $plugin_block->build();
     if (!empty($render_array)) {
       $variables['page']['audit_top_menu'] = $render_array;
       // Ensure the menu appears at the top
       $variables['page']['audit_top_menu']['#weight'] = -100;
+    }
+  }
+  
+  // Add the footer block to all pages for authenticated users.
+  $footer_block = $block_manager->createInstance('audit_footer_block', $config);
+  $footer_access_result = $footer_block->access(\Drupal::currentUser());
+  
+  // Check if access result is allowed
+  if ((is_object($footer_access_result) && method_exists($footer_access_result, 'isAllowed') && $footer_access_result->isAllowed()) || 
+      (is_bool($footer_access_result) && $footer_access_result)) {
+    $footer_render_array = $footer_block->build();
+    if (!empty($footer_render_array)) {
+      $variables['page']['audit_footer'] = $footer_render_array;
+      // Ensure the footer appears at the bottom
+      $variables['page']['audit_footer']['#weight'] = 100;
     }
   }
 }

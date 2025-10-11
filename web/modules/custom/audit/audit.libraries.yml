@@ -23,3 +23,9 @@ audit-top-menu:
   css:
     theme:
       css/audit-top-menu.css: {}
+
+audit-footer:
+  version: 1.x
+  css:
+    theme:
+      css/audit-footer.css: {}
