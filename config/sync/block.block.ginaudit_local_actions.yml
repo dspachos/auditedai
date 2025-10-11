@@ -1,0 +1,20 @@
+uuid: 93cbd71b-88dd-41da-b42a-7b8fdd6e0b91
+langcode: en
+status: true
+dependencies:
+  theme:
+    - ginaudit
+_core:
+  default_config_hash: OQ9aJ-4qVwK1x00o9EOYK4eFDjQr_HLpbPiJaPSVZiQ
+id: ginaudit_local_actions
+theme: ginaudit
+region: content
+weight: -10
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }

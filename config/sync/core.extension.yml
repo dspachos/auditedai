@@ -56,4 +56,5 @@ module:
 theme:
   claro: 0
   gin: 0
+  ginaudit: 0
 profile: standard

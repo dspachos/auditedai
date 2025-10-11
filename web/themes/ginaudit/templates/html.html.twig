@@ -41,7 +41,32 @@
   </head>
 
   <body{{ attributes.addClass(body_classes) }}>
-    {# HEADER MENU HERE #}
+
+    {% if logged_in %}
+        <nav class="top-navigation-menu">
+          <ul>
+            <li class="logo-item">
+              <a href="/" class="logo-link">
+                [LOGO]
+              </a>
+            </li>
+            <li class="main-menu">
+              <ul>
+                <li><a href="/dashboard">{{ 'Dashboard'|t }}</a></li>
+                <li><a href="/user">{{ 'My Account'|t }}</a></li>
+              </ul>
+            </li>
+            <li class="user-icon-item">
+              <a href="/user/logout" title="{{ 'Logout'|t }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+    {% endif %}
 
     {#
     Keyboard navigation/accessibility link to main content section in
@@ -56,7 +81,35 @@
     <js-bottom-placeholder token="{{ placeholder_token }}">
 
 
-    {# FOOTER MENU HERE #}
+    {% if logged_in %}
+      <footer class="audit-footer">
+        <div class="audit-footer-container">
+          <div class="audit-footer-column audit-footer-column-1">
+            <h4>About</h4>
+            <ul>
+              <li><a href="/about">About</a></li>
+              <li><a href="/feedback">Feedback</a></li>
+            </ul>
+          </div>
+
+          <div class="audit-footer-column audit-footer-column-2">
+            <h4>Project</h4>
+            <ul>
+              <li><a href="/project">Project</a></li>
+              <li><a href="/contribute">Contribute</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="audit-footer-column audit-footer-column-3">
+            <div class="audit-footer-logo-placeholder">
+              <!-- Logo and text will be added here manually -->
+              <p>Logo and additional information here</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    {% endif %}
 
   </body>
 </html>

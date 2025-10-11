@@ -1,0 +1,22 @@
+uuid: 5115af4f-c45f-455a-82fe-eb20241ccdc7
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - ginaudit
+_core:
+  default_config_hash: hBHXB7hC05XU7pDYzETt-GUcpFlogK1gkjyAsg0Ym58
+id: ginaudit_content
+theme: ginaudit
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

@@ -1,0 +1,22 @@
+uuid: c8f22eac-9cad-4765-b070-fb82bfd56e7f
+langcode: en
+status: true
+dependencies:
+  theme:
+    - ginaudit
+_core:
+  default_config_hash: BCWhood0xXFQYqxFgL1spXdb9KeIuXH1YvTdjIEedDg
+id: ginaudit_secondary_local_tasks
+theme: ginaudit
+region: header
+weight: 0
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

@@ -1,4 +1,4 @@
-uuid: 0e5fd977-8342-415a-a60d-8d5cf36f9266
+uuid: 9296971e-4377-4055-b2df-1bcee06af1a0
 langcode: en
 status: true
 dependencies:
@@ -6,11 +6,11 @@ dependencies:
     - system
     - user
   theme:
-    - gin
+    - ginaudit
 _core:
   default_config_hash: y9X3xgCsO59pQyzNLzY1D3SDJJxCHILLWkpPnmuTJ2E
-id: gin_breadcrumbs
-theme: gin
+id: ginaudit_breadcrumbs
+theme: ginaudit
 region: breadcrumb
 weight: 0
 provider: null

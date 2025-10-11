@@ -1,0 +1,22 @@
+uuid: d3095be8-c421-442c-8566-d58e6517fcc5
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - ginaudit
+_core:
+  default_config_hash: WvPhI8OwllG0gE69-F8qL3ai3nd5SbYD6JpmEuZcyok
+id: ginaudit_messages
+theme: ginaudit
+region: header
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }
