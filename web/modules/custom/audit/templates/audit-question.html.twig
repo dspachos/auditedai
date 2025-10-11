@@ -47,10 +47,23 @@
           <div class="audit-evidences">
             {% for evidence in evidences %}
               <div class="audit-evidence-item">
-                <div class="audit-evidence-content">{{ evidence.field_evidence.value }}</div>
+
+                {% if audit_question_entity.field_simple_yes_no.value %}
+                  {% if evidence.field_yes_no_answer.value %}
+                    <em>{{ 'YES' | t }}</em>
+                  {% else %}
+                  <em>{{ 'NO' | t }}</em>
+                  {% endif %}
+                {% endif %}
+
+                {% if not audit_question_entity.field_simple_yes_no.value %}
+                  <div class="audit-evidence-content">{{ evidence.field_evidence.value }}</div>
+                {% endif %}
+
+
                 <div class="audit-evidence-actions">
                   {# Evaluate with AI #}
-                  <a href="#" title="Evaluate with AI"><i class="bi bi-stars"></i></a>
+                  {# <a href="#" title="Evaluate with AI"><i class="bi bi-stars"></i></a> #}
                   <span>&nbsp;</span>
                   {# Edit button #}
                   {% if audit_entity and audit_question_entity %}

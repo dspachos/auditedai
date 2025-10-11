@@ -114,19 +114,52 @@ final class AuditEvidenceEditForm extends FormBase {
       $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
-    // Preload existing evidence value.
-    $existing_evidence = '';
-    if ($audit_evidence && $audit_evidence->hasField('field_evidence')) {
-      $existing_evidence = $audit_evidence->get('field_evidence')->value;
+    // Check if this is a yes/no question
+    $is_yes_no_question = FALSE;
+    if ($audit_question) {
+      // Assuming there's a field to identify yes/no questions - adjust the field name as needed
+      if ($audit_question->hasField('field_simple_yes_no') && !$audit_question->get('field_simple_yes_no')->isEmpty()) {
+        $is_yes_no_question = (bool) $audit_question->get('field_simple_yes_no')->value;
+      }
     }
 
-    $form['description'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Provide evidence:'),
-      '#description' => $this->t('Provide evidence for this audit question.'),
-      '#required' => FALSE,
-      '#default_value' => $existing_evidence,
-    ];
+    // If it's a yes/no question, show the dropdown
+    if ($is_yes_no_question) {
+      // Preload existing yes/no answer if available
+      $existing_yes_no_answer = NULL;
+      if ($audit_evidence && $audit_evidence->hasField('field_yes_no_answer') && !$audit_evidence->get('field_yes_no_answer')->isEmpty()) {
+        $existing_yes_no_answer = $audit_evidence->get('field_yes_no_answer')->value;
+      }
+
+      $form['field_yes_no_answer'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Answer'),
+        '#description' => $this->t('Select Yes or No for this question.'),
+        '#required' => FALSE,
+        '#options' => [
+          '' => $this->t('- Select -'),
+          'yes' => $this->t('Yes'),
+          'no' => $this->t('No'),
+        ],
+        '#default_value' => $existing_yes_no_answer ? 'yes' : 'no',
+      ];
+    }
+    // Otherwise, show the regular text field
+    else {
+      // Preload existing evidence value.
+      $existing_evidence = '';
+      if ($audit_evidence && $audit_evidence->hasField('field_evidence')) {
+        $existing_evidence = $audit_evidence->get('field_evidence')->value;
+      }
+
+      $form['description'] = [
+        '#type' => 'textarea',
+        '#title' => $this->t('Provide evidence:'),
+        '#description' => $this->t('Provide evidence for this audit question.'),
+        '#required' => FALSE,
+        '#default_value' => $existing_evidence,
+      ];
+    }
 
     // Check if we should display the file upload field.
     $show_file_upload = FALSE;
@@ -211,10 +244,26 @@ final class AuditEvidenceEditForm extends FormBase {
       $form_state->setError($form, $this->t('Audit evidence is required.'));
     }
 
-    // Validate that evidence is provided when saving.
-    $description = $form_state->getValue('description');
-    if (empty($description)) {
-      $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
+    // Check if this is a yes/no question
+    $is_yes_no_question = FALSE;
+    if ($audit_question) {
+      if ($audit_question->hasField('field_is_yes_no') && !$audit_question->get('field_is_yes_no')->isEmpty()) {
+        $is_yes_no_question = (bool) $audit_question->get('field_is_yes_no')->value;
+      }
+    }
+
+    if ($is_yes_no_question) {
+      // For yes/no questions, validate that an answer was selected
+      $yes_no_answer = $form_state->getValue('field_yes_no_answer');
+      if (empty($yes_no_answer)) {
+        $form_state->setErrorByName('field_yes_no_answer', $this->t('Please select an answer (Yes or No).'));
+      }
+    } else {
+      // For regular questions, validate that evidence text is provided
+      $description = $form_state->getValue('description');
+      if (empty($description)) {
+        $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
+      }
     }
   }
 
@@ -231,10 +280,24 @@ final class AuditEvidenceEditForm extends FormBase {
     $audit = $form_state->get('audit');
     $audit_question = $form_state->get('audit_question');
     $audit_evidence = $form_state->get('audit_evidence');
-    $description = $form_state->getValue('description');
 
-    // Update the existing audit evidence entity.
-    $audit_evidence->set('field_evidence', $description);
+    // Check if this is a yes/no question
+    $is_yes_no_question = FALSE;
+    if ($audit_question) {
+      if ($audit_question->hasField('field_is_yes_no') && !$audit_question->get('field_is_yes_no')->isEmpty()) {
+        $is_yes_no_question = (bool) $audit_question->get('field_is_yes_no')->value;
+      }
+    }
+
+    if ($is_yes_no_question) {
+      // For yes/no questions, save the yes/no answer
+      $yes_no_answer = $form_state->getValue('field_yes_no_answer');
+      $audit_evidence->set('field_yes_no_answer', $yes_no_answer == 'yes' ? TRUE : FALSE);
+    } else {
+      // For regular questions, save the text evidence
+      $description = $form_state->getValue('description');
+      $audit_evidence->set('field_evidence', $description);
+    }
 
     // Handle file uploads if any.
     $file_ids = $form_state->getValue('field_supporting_files', []);
@@ -268,11 +331,9 @@ final class AuditEvidenceEditForm extends FormBase {
 
     if ($audit) {
       $form_state->setRedirect('entity.node.canonical', ['node' => $audit->id()]);
-    }
-    else {
+    } else {
       // Fallback redirect.
       $form_state->setRedirect('<front>');
     }
   }
-
 }
