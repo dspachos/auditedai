@@ -17,3 +17,9 @@ standards-tags:
   css:
     theme:
       css/standards-tags.css: {}
+
+audit-top-menu:
+  version: 1.x
+  css:
+    theme:
+      css/audit-top-menu.css: {}

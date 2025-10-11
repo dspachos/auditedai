@@ -1,0 +1,30 @@
+uuid: 16600b90-e93d-45e2-b327-7096fda12fcb
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+    - user
+  theme:
+    - gin
+id: gin_audittopmenublock
+theme: gin
+region: header
+weight: -4
+provider: null
+plugin: audit_top_menu_block
+settings:
+  id: audit_top_menu_block
+  label: 'Audit top menu block'
+  label_display: '0'
+  provider: audit
+visibility:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated
+      content_editor: content_editor
+      administrator: administrator

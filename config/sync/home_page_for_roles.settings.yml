@@ -1,0 +1,5 @@
+anonymous_homepage: /
+authenticated_homepage: /dashboard
+role_homepages:
+  content_editor: ''
+  administrator: ''
