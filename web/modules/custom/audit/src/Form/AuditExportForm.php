@@ -6,6 +6,7 @@ namespace Drupal\audit\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Provides a AuditED AI form.
@@ -24,17 +25,17 @@ final class AuditExportForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
 
-    $form['message'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Message'),
-      '#required' => TRUE,
+    $form['info'] = [
+      '#type' => 'markup',
+      '#markup' => Markup::create($this->t('<h3><em>Comming soon</em></h3>'))
     ];
+
 
     $form['actions'] = [
       '#type' => 'actions',
       'submit' => [
         '#type' => 'submit',
-        '#value' => $this->t('Send'),
+        '#value' => $this->t('PDF Export'),
       ],
     ];
 
@@ -46,23 +47,12 @@ final class AuditExportForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     // @todo Validate the form here.
-    // Example:
-    // @code
-    //   if (mb_strlen($form_state->getValue('message')) < 10) {
-    //     $form_state->setErrorByName(
-    //       'message',
-    //       $this->t('Message should be at least 10 characters.'),
-    //     );
-    //   }
-    // @endcode
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $this->messenger()->addStatus($this->t('The message has been sent.'));
     $form_state->setRedirect('<front>');
   }
-
 }
