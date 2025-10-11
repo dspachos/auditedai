@@ -181,7 +181,7 @@ final class AuditDashboard extends ControllerBase {
         $operations = [
           '#type' => 'dropbutton',
           '#attributes' => [
-            'class' => ['audit-operations'],
+            'class' => ['audit-operations', 'dropbutton', 'dropbutton--extrasmall', 'dropbutton--multiple', 'dropbutton--gin'],
           ],
           '#links' => [
             'view' => [

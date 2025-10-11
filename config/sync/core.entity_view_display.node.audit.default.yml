@@ -9,51 +9,19 @@ dependencies:
     - field.field.node.audit.field_status
     - node.type.audit
   module:
-    - options
     - user
 id: node.audit.default
 targetEntityType: node
 bundle: audit
 mode: default
 content:
-  field_audit_type:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 103
-    region: content
-  field_eqavet:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 102
-    region: content
-  field_iso:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 101
-    region: content
-  field_status:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 104
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
-hidden: {  }
+hidden:
+  field_audit_type: true
+  field_eqavet: true
+  field_iso: true
+  field_status: true
