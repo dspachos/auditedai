@@ -126,28 +126,36 @@
   }
 }
 
+/* Set up flexbox layout for page */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 /**
  * Footer menu styles
  */
 .audit-footer {
   background-color: #2c3e50; /* Dark background */
   color: white;
-  padding: 40px 20px 20px; /* Reduced bottom padding */
+  padding: 40px 20px 0; /* Removed bottom padding */
   width: 100%;
-  margin-top: auto;
-  margin-bottom: 0;
+  margin: 0;
+  margin-top: auto; /* Push footer to bottom */
 }
 
 .audit-footer-container {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Don't wrap by default */
 }
 
 .audit-footer-column {
   padding: 0 15px;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 .audit-footer-column-1 {
@@ -195,4 +203,16 @@
 
 .audit-footer-logo-placeholder {
   padding-top: 20px;
+}
+
+/* Responsive adjustments for footer */
+@media (max-width: 768px) {
+  .audit-footer-container {
+    flex-direction: column;
+  }
+  
+  .audit-footer-column {
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
 }
