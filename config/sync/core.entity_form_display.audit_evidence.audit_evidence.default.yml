@@ -7,6 +7,7 @@ dependencies:
     - field.field.audit_evidence.audit_evidence.field_audit_question
     - field.field.audit_evidence.audit_evidence.field_evidence
     - field.field.audit_evidence.audit_evidence.field_supporting_files
+    - field.field.audit_evidence.audit_evidence.field_yes_no_answer
   module:
     - audit
     - file
@@ -64,6 +65,13 @@ content:
     region: content
     settings:
       progress_indicator: throbber
+    third_party_settings: {  }
+  field_yes_no_answer:
+    type: boolean_checkbox
+    weight: 25
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   label:
     type: string_textfield

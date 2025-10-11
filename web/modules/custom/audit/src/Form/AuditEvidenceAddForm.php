@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\audit\Entity\AuditQuestion;
+use Drupal\views\Plugin\views\field\Boolean;
 
 /**
  * Form controller for adding audit evidence.
@@ -73,6 +74,7 @@ final class AuditEvidenceAddForm extends FormBase {
     }
 
     if ($audit_question) {
+
       // Get cluster information if available.
       if ($audit_question->hasField('field_cluster') && !$audit_question->get('field_cluster')->isEmpty()) {
         $cluster_term = $audit_question->get('field_cluster')->entity;
@@ -118,6 +120,8 @@ final class AuditEvidenceAddForm extends FormBase {
       '#description' => $this->t('Provide evidence for this audit question.'),
       '#required' => FALSE,
     ];
+
+    $is_yes_no_question = (bool) $audit_question->field_simple_yes_no->value;
 
     // Check if we should display the file upload field.
     $show_file_upload = FALSE;
@@ -254,11 +258,9 @@ final class AuditEvidenceAddForm extends FormBase {
 
     if ($audit) {
       $form_state->setRedirect('entity.node.canonical', ['node' => $audit->id()]);
-    }
-    else {
+    } else {
       // Fallback redirect.
       $form_state->setRedirect('<front>');
     }
   }
-
 }

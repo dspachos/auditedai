@@ -7,6 +7,7 @@ dependencies:
     - field.field.audit_evidence.audit_evidence.field_audit_question
     - field.field.audit_evidence.audit_evidence.field_evidence
     - field.field.audit_evidence.audit_evidence.field_supporting_files
+    - field.field.audit_evidence.audit_evidence.field_yes_no_answer
   module:
     - audit
     - file
@@ -73,6 +74,16 @@ content:
       use_description_as_link_text: true
     third_party_settings: {  }
     weight: 23
+    region: content
+  field_yes_no_answer:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 25
     region: content
   label:
     type: string
