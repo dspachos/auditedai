@@ -57,7 +57,7 @@
                 {% endif %}
 
                 {% if not audit_question_entity.field_simple_yes_no.value %}
-                  <div class="audit-evidence-content">{{ evidence.field_evidence.value|length > 360 ? (evidence.field_evidence.value|slice(0, 360) ~ '...') : evidence.field_evidence.value }}</div>
+                  <div class="audit-evidence-content">{{ evidence.field_evidence.value|length > 140 ? (evidence.field_evidence.value|slice(0, 360) ~ '...') : evidence.field_evidence.value }}</div>
                 {% endif %}
 
                 {# files list here #}
