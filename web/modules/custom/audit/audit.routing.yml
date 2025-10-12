@@ -76,3 +76,16 @@ audit.audit_export:
     parameters:
       audit:
         type: entity:node
+
+audit.promote_status_form:
+  path: "/node/{node}/promote-status"
+  defaults:
+    _form: '\Drupal\audit\Form\AuditPromoteStatusForm'
+    _title: 'Promote Audit Status'
+  requirements:
+    _permission: 'edit any audit content'
+    node: '\d+'
+  options:
+    parameters:
+      node:
+        type: entity:node

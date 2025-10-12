@@ -13,6 +13,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
+use Drupal\audit\Service\AuditCompletionService;
 
 /**
  * Returns responses for AuditED AI routes.
@@ -55,6 +56,13 @@ final class AuditDashboard extends ControllerBase {
   protected $configFactory;
 
   /**
+   * The audit completion service.
+   *
+   * @var \Drupal\audit\Service\AuditCompletionService
+   */
+  protected $auditCompletionService;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -62,13 +70,15 @@ final class AuditDashboard extends ControllerBase {
     RouteMatchInterface $route_match,
     AccountInterface $current_user,
     LoggerChannelFactoryInterface $logger_factory,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
+    AuditCompletionService $audit_completion_service
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->currentUser = $current_user;
     $this->loggerFactory = $logger_factory;
     $this->configFactory = $config_factory;
+    $this->auditCompletionService = $audit_completion_service;
   }
 
   /**
@@ -80,7 +90,8 @@ final class AuditDashboard extends ControllerBase {
       $container->get('current_route_match'),
       $container->get('current_user'),
       $container->get('logger.factory'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('audit.completion_service')
     );
   }
 
@@ -124,6 +135,7 @@ final class AuditDashboard extends ControllerBase {
         $this->t('Standards'),
         $this->t('Audit Type'),
         $this->t('Status'),
+        $this->t('Completion'),
         $this->t('Created'),
         $this->t('Operations'),
       ];
@@ -171,6 +183,12 @@ final class AuditDashboard extends ControllerBase {
           $status = $this->t('Draft');
         }
 
+        // Calculate completion percentage
+        $completion_percentage = $this->auditCompletionService->calculateCompletionPercentage($audit->id());
+
+        // Format completion as a simple percentage number
+        $completion_markup = '<span class="completion-text">' . $completion_percentage . '%</span>';
+
         // Format creation date (date only, no time)
         $created_date = \Drupal::service('date.formatter')->format(
           $audit->get('created')->value,
@@ -192,9 +210,9 @@ final class AuditDashboard extends ControllerBase {
                 'class' => ['view'],
               ],
             ],
-            'complete' => [
-              'title' => $this->t('Complete'),
-              'url' => $audit->toUrl('edit-form'),
+            'promote_status' => [
+              'title' => $this->t('Update Status'),
+              'url' => Url::fromRoute('audit.promote_status_form', ['node' => $audit->id()]),
               'query' => ['destination' => '/dashboard'],
               'attributes' => [
                 'class' => ['edit'],
@@ -236,6 +254,12 @@ final class AuditDashboard extends ControllerBase {
             ],
             $audit_type,
             $status,
+            [
+              'data' => [
+                '#type' => 'markup',
+                '#markup' => $completion_markup,
+              ],
+            ],
             $created_date,
             [
               'data' => $operations,
