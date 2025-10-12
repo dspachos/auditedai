@@ -57,7 +57,28 @@
                 {% endif %}
 
                 {% if not audit_question_entity.field_simple_yes_no.value %}
-                  <div class="audit-evidence-content">{{ evidence.field_evidence.value }}</div>
+                  <div class="audit-evidence-content">{{ evidence.field_evidence.value|length > 360 ? (evidence.field_evidence.value|slice(0, 360) ~ '...') : evidence.field_evidence.value }}</div>
+                {% endif %}
+
+                {# files list here #}
+                {% if evidence.field_supporting_files is not empty %}
+                  <div class="audit-evidence-files">
+                    <strong>{{ 'Supporting Files:'|t }}</strong>
+                    <ul>
+                      {% for file_item in evidence.field_supporting_files %}
+                        {% set file = file_item.entity %}
+                        {% if file %}
+                          <li class="audit-file-item">
+                            <a href="{{ file_url(file.uri.value) }}" target="_blank">
+                              <i class="bi bi-file-earmark"></i>
+                              {{ file.getFilename() }}
+                            </a>
+                            <small class="text-muted">({{ (file.getSize() / 1024 / 1024)|number_format(2) }} MB)</small>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
                 {% endif %}
 
                 <div class="audit-evidence-actions">

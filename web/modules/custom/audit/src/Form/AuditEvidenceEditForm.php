@@ -177,7 +177,11 @@ final class AuditEvidenceEditForm extends FormBase {
       // Preload existing files if any.
       $existing_files = [];
       if ($audit_evidence && $audit_evidence->hasField('field_supporting_files')) {
-        $existing_files = $audit_evidence->get('field_supporting_files')->getValue();
+        $file_references = $audit_evidence->get('field_supporting_files')->getValue();
+        // Extract file IDs from the file references.
+        $existing_files = array_map(function ($file_ref) {
+          return $file_ref['target_id'];
+        }, $file_references);
       }
 
       $form['field_supporting_files'] = [
