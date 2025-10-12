@@ -138,7 +138,31 @@ function audit_user_predelete(UserInterface $account): void {
  */
 function audit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   // @todo
+  if ($form_id == 'user_register_form') {
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $length = rand(8, 12); // Random length between 8 and 12
+    $username = '';
+
+    for ($i = 0; $i < $length; $i++) {
+      $username .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    $form['account']['name']['#default_value'] = $username;
+    $form['account']['name']['#access'] = FALSE;
+
+    // Add custom submit handler to redirect after registration
+    $form['#submit'][] = 'audit_user_register_form_submit';
+  }
 }
+
+/**
+ * Custom submit handler for user registration form.
+ */
+function audit_user_register_form_submit(&$form, FormStateInterface $form_state) {
+  // Redirect to registration success page after successful registration
+  dd(__METHOD__);
+  $form_state->setRedirect('audit.registration_success');
+}
+
 
 /**
  * Prepares variables for audit evidence templates.
@@ -236,10 +260,11 @@ function audit_preprocess_page(&$variables) {
   $config = [];
   $plugin_block = $block_manager->createInstance('audit_top_menu_block', $config);
   $access_result = $plugin_block->access(\Drupal::currentUser());
-  
+
   // Check if access result is allowed
-  if ((is_object($access_result) && method_exists($access_result, 'isAllowed') && $access_result->isAllowed()) || 
-      (is_bool($access_result) && $access_result)) {
+  if ((is_object($access_result) && method_exists($access_result, 'isAllowed') && $access_result->isAllowed()) ||
+    (is_bool($access_result) && $access_result)
+  ) {
     $render_array = $plugin_block->build();
     if (!empty($render_array)) {
       $variables['page']['audit_top_menu'] = $render_array;
@@ -247,14 +272,15 @@ function audit_preprocess_page(&$variables) {
       $variables['page']['audit_top_menu']['#weight'] = -100;
     }
   }
-  
+
   // Add the footer block to all pages for authenticated users.
   $footer_block = $block_manager->createInstance('audit_footer_block', $config);
   $footer_access_result = $footer_block->access(\Drupal::currentUser());
-  
+
   // Check if access result is allowed
-  if ((is_object($footer_access_result) && method_exists($footer_access_result, 'isAllowed') && $footer_access_result->isAllowed()) || 
-      (is_bool($footer_access_result) && $footer_access_result)) {
+  if ((is_object($footer_access_result) && method_exists($footer_access_result, 'isAllowed') && $footer_access_result->isAllowed()) ||
+    (is_bool($footer_access_result) && $footer_access_result)
+  ) {
     $footer_render_array = $footer_block->build();
     if (!empty($footer_render_array)) {
       $variables['page']['audit_footer'] = $footer_render_array;

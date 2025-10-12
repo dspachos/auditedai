@@ -1,0 +1,22 @@
+uuid: a7bacda4-0ee7-4e6a-a555-e83b1ffb4243
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_terms_and_conditions
+  module:
+    - user
+id: user.user.field_terms_and_conditions
+field_name: field_terms_and_conditions
+entity_type: user
+bundle: user
+label: 'I accept the terms and conditions'
+description: 'By creating an account this field you fully accept the terms and conditions of this website.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,11 @@
+uuid: cd0faab6-3563-41fb-ad2e-2dd18068bf6b
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_evidence.token
+label: Token
+description: ''
+targetEntityType: audit_evidence
+cache: true

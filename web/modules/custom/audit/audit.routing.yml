@@ -89,3 +89,11 @@ audit.promote_status_form:
     parameters:
       node:
         type: entity:node
+
+audit.registration_success:
+  path: "/register/success"
+  defaults:
+    _title: "Registration Success"
+    _controller: '\Drupal\audit\Controller\RegistrationSuccessController::registrationSuccess'
+  requirements:
+    _access: 'TRUE'

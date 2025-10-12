@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Pager\PagerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
@@ -63,6 +64,13 @@ final class AuditDashboard extends ControllerBase {
   protected $auditCompletionService;
 
   /**
+   * The pager manager service.
+   *
+   * @var \Drupal\Core\Pager\PagerManager
+   */
+  protected $pagerManager;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -71,7 +79,8 @@ final class AuditDashboard extends ControllerBase {
     AccountInterface $current_user,
     LoggerChannelFactoryInterface $logger_factory,
     ConfigFactoryInterface $config_factory,
-    AuditCompletionService $audit_completion_service
+    AuditCompletionService $audit_completion_service,
+    PagerManager $pager_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
@@ -79,6 +88,7 @@ final class AuditDashboard extends ControllerBase {
     $this->loggerFactory = $logger_factory;
     $this->configFactory = $config_factory;
     $this->auditCompletionService = $audit_completion_service;
+    $this->pagerManager = $pager_manager;
   }
 
   /**
@@ -91,7 +101,8 @@ final class AuditDashboard extends ControllerBase {
       $container->get('current_user'),
       $container->get('logger.factory'),
       $container->get('config.factory'),
-      $container->get('audit.completion_service')
+      $container->get('audit.completion_service'),
+      $container->get('pager.manager')
     );
   }
 
@@ -115,18 +126,35 @@ final class AuditDashboard extends ControllerBase {
       ],
     ];
 
-    // Load user's audit entities
+    // Initialize pager - 25 items per page
+    $current_page = $this->pagerManager->createPager(1, 25)->getCurrentPage();
+    $items_per_page = 25;
+    $offset = $current_page * $items_per_page;
+
+    // Load user's audit entities with pagination
+    $query = $this->entityTypeManager
+      ->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'audit')
+      ->condition('uid', $this->currentUser->id())
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE)
+      ->range($offset, $items_per_page);
+
+    $audit_ids = $query->execute();
     $user_audits = $this->entityTypeManager
       ->getStorage('node')
-      ->loadByProperties([
-        'type' => 'audit',
-        'uid' => $this->currentUser->id(),
-      ]);
+      ->loadMultiple($audit_ids);
 
-    // Sort by creation date (newest first)
-    uasort($user_audits, function ($a, $b) {
-      return $b->get('created')->value <=> $a->get('created')->value;
-    });
+    // Count total number of audits for this user
+    $total_audits = $this->entityTypeManager
+      ->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'audit')
+      ->condition('uid', $this->currentUser->id())
+      ->accessCheck(TRUE)
+      ->count()
+      ->execute();
 
     if (!empty($user_audits)) {
       // Create table header
@@ -278,6 +306,12 @@ final class AuditDashboard extends ControllerBase {
         ],
         '#responsive' => TRUE,
         '#sticky' => TRUE,
+      ];
+
+      // Add the pager
+      $build['pager'] = [
+        '#type' => 'pager',
+        '#element' => 0,
       ];
     } else {
       $build['no_audits'] = [

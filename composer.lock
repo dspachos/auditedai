@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de3ac47dc0e25e03574df59c8ff86bd8",
+    "content-hash": "4c1d20e243609defa1e65d3480fe5583",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2671,29 +2671,30 @@
         },
         {
             "name": "drupal/honeypot",
-            "version": "2.2.0",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/honeypot.git",
-                "reference": "2.2.0"
+                "reference": "2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/honeypot-2.2.0.zip",
-                "reference": "2.2.0",
-                "shasum": "56397c3779ebac1526cce9ecd39385017ee9a837"
+                "url": "https://ftp.drupal.org/files/projects/honeypot-2.2.2.zip",
+                "reference": "2.2.2",
+                "shasum": "828872d31d1a2c37a818cacae7fcd77a60996c66"
             },
             "require": {
                 "drupal/core": "^10.3 || ^11"
             },
             "require-dev": {
-                "drupal/rules": "^4.0"
+                "drupal/rules": "^4.0",
+                "drupal/webform": "^6.2"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.2.0",
-                    "datestamp": "1723761042",
+                    "version": "2.2.2",
+                    "datestamp": "1739854442",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2711,11 +2712,11 @@
                     "email": "geerlingguy@mac.com"
                 },
                 {
-                    "name": "Manuel Garcia",
+                    "name": "manuel garcia",
                     "homepage": "https://www.drupal.org/user/213194"
                 },
                 {
-                    "name": "TR",
+                    "name": "tr",
                     "homepage": "https://www.drupal.org/user/202830"
                 },
                 {
@@ -3240,30 +3241,31 @@
         },
         {
             "name": "drupal/realname",
-            "version": "2.0.0-beta2",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/realname.git",
-                "reference": "2.0.0-beta2"
+                "reference": "2.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/realname-2.0.0-beta2.zip",
-                "reference": "2.0.0-beta2",
-                "shasum": "cbe209423e9f089ce472acce11bd059e860c3537"
+                "url": "https://ftp.drupal.org/files/projects/realname-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "b1eaac469916c64b8593a24d7c9d20bbcb78baf9"
             },
             "require": {
-                "drupal/core": "^8 || ^9 || ^10",
-                "drupal/token": "^1.0.0-alpha2"
+                "drupal/core": "^8 || ^9 || ^10 || ^11",
+                "drupal/token": "^1.0.0-alpha2",
+                "php": ">=8.1"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0-beta2",
-                    "datestamp": "1677775747",
+                    "version": "2.0.0",
+                    "datestamp": "1726781900",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -15347,8 +15349,7 @@
     "aliases": [],
     "minimum-stability": "alpha",
     "stability-flags": {
-        "drupal/email_registration": 5,
-        "drupal/realname": 10
+        "drupal/email_registration": 5
     },
     "prefer-stable": true,
     "prefer-lowest": false,

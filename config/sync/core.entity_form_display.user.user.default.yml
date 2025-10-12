@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_full_name
+    - field.field.user.user.field_terms_and_conditions
     - field.field.user.user.user_picture
   module:
     - user
@@ -14,9 +16,24 @@ bundle: user
 mode: default
 content:
   account:
-    weight: 0
+    weight: 1
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_full_name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_terms_and_conditions:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
 hidden:
   contact: true

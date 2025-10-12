@@ -39,7 +39,6 @@ class RedirectSubscriber implements EventSubscriberInterface {
   public function checkForRedirect(RequestEvent $event) {
     // Skip if not the main request.
     if (!$event->isMainRequest()) {
-      \Drupal::logger('audit')->debug('Skipping sub-request');
       return;
     }
 
@@ -48,22 +47,14 @@ class RedirectSubscriber implements EventSubscriberInterface {
     $path = $event->getRequest()->getPathInfo();
     $is_authenticated = $this->currentUser->isAuthenticated();
 
-    // Log debugging information.
-    \Drupal::logger('audit')->debug('Request details: route=@route, path=@path, authenticated=@auth', [
-      '@route' => $route_name ?: 'none',
-      '@path' => $path,
-      '@auth' => $is_authenticated ? 'Yes' : 'No',
-    ]);
-
     // Check if the user is authenticated and the request is for the front page, /, or /user/login.
     if ($is_authenticated && ($route_name === 'system.front' || $route_name === 'user.login' || $path === '/' || $path === '/user/login')) {
       \Drupal::logger('audit')->debug('Redirecting authenticated user to /dashboard');
       $response = new TrustedRedirectResponse('/dashboard');
       $response->getCacheableMetadata()->setCacheContexts(['user.roles:authenticated']);
       $event->setResponse($response);
-    }
-    else {
-      \Drupal::logger('audit')->debug('No redirect: route or path does not match, or user not authenticated');
+    } else {
+      // Do nothing for now
     }
   }
 
@@ -75,5 +66,4 @@ class RedirectSubscriber implements EventSubscriberInterface {
       KernelEvents::REQUEST => ['checkForRedirect', 300],
     ];
   }
-
 }

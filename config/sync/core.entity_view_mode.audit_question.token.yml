@@ -1,0 +1,11 @@
+uuid: dee048a2-88a7-4fe9-ba40-a162e17a6551
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_question.token
+label: Token
+description: ''
+targetEntityType: audit_question
+cache: true
