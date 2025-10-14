@@ -75,6 +75,20 @@ function template_preprocess_audit_question(array &$variables): void {
   if (isset($variables['elements']['#audit_question_entity'])) {
     $variables['audit_question_entity'] = $variables['elements']['#audit_question_entity'];
   }
+  
+  // Pass the hierarchy level if available
+  if (isset($variables['elements']['#question_hierarchy_level'])) {
+    $variables['question_hierarchy_level'] = $variables['elements']['#question_hierarchy_level'];
+  } else {
+    $variables['question_hierarchy_level'] = 0;
+  }
+  
+  // Pass children if available
+  if (isset($variables['elements']['#question_children_from_tree'])) {
+    $variables['question_children'] = $variables['elements']['#question_children_from_tree'];
+  } else {
+    $variables['question_children'] = [];
+  }
 }
 
 /**
@@ -232,22 +246,100 @@ function audit_node_view(array &$build, NodeInterface $node, EntityViewDisplayIn
         ];
       }
 
-      uasort($questions, function ($a, $b) {
-        return (int) $a->field_weight->value > (int) $b->field_weight->value ? 1 : -1;
+      // Build parent-child relationships: find which questions are children of others
+      $parent_map = [];
+      foreach ($questions as $question) {
+        $children = $question->field_children->referencedEntities();
+        foreach ($children as $child) {
+          $parent_map[$child->id()] = $question->id();
+        }
+      }
+
+      // Create a tree structure for questions
+      $tree = [];
+      
+      // Build the tree structure - top-level questions (not children of others)
+      foreach ($questions as $question) {
+        $question_id = $question->id();
+        if (!isset($parent_map[$question_id])) {
+          // This is a top-level question (not a child of another question in this cluster)
+          $tree[$question_id] = [
+            'question' => $question,
+            'children' => [],
+          ];
+        }
+      }
+
+      // Add children to their parents
+      foreach ($questions as $question) {
+        $question_id = $question->id();
+        if (isset($parent_map[$question_id])) {
+          // This is a child question
+          $parent_id = $parent_map[$question_id];
+          foreach ($tree as $top_parent_id => $tree_item) {
+            // Find the correct parent in the tree (could be nested)
+            $add_child_to_tree = function($item, $target_parent_id, $child_data) use (&$add_child_to_tree, &$tree, $top_parent_id) {
+              if ($item['question']->id() == $target_parent_id) {
+                $tree[$top_parent_id]['children'][$child_data['question']->id()] = $child_data;
+                return true;
+              }
+              
+              // Check recursively in children
+              foreach ($item['children'] as $child_id => $child_item) {
+                if ($add_child_to_tree($child_item, $target_parent_id, $child_data)) {
+                  return true;
+                }
+              }
+              return false;
+            };
+            
+            if ($add_child_to_tree($tree_item, $parent_id, [
+              'question' => $question,
+              'children' => []
+            ])) {
+              break; // Found and added
+            }
+          }
+        }
+      }
+
+      // Process questions in hierarchical order
+      $process_questions_tree = function($tree_items, $current_level = 0) use (&$process_questions_tree, $node, $term, &$build) {
+        // Sort questions by weight at each level
+        $sorted_items = $tree_items;
+        uasort($sorted_items, function ($a, $b) {
+          return (int) $a['question']->field_weight->value > (int) $b['question']->field_weight->value ? 1 : -1;
+        });
+        
+        foreach ($sorted_items as $question_id => $item) {
+          /** @var \Drupal\audit\Entity\AuditQuestion $question */
+          $question = $item['question'];
+          $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
+          $question_build = $view_builder->view($question, 'audit');
+          // Pass the entities to the template.
+          $question_build['#audit_question'] = $question;
+          $question_build['#audit_question_entity_children'] = $question->field_children->referencedEntities();
+          $question_build['#audit_entity'] = $node;
+          $question_build['#audit_question_entity'] = $question;
+          $question_build['#question_hierarchy_level'] = $current_level;
+          
+          // Add question to the cluster
+          $build['cluster_' . $term->id()]['question_' . $question->id()] = $question_build;
+          
+          // Process children recursively under the same parent key structure
+          if (!empty($item['children'])) {
+            $process_questions_tree($item['children'], $current_level + 1);
+          }
+        }
+      };
+      
+      // Sort top-level questions by weight
+      uasort($tree, function ($a, $b) {
+        return (int) $a['question']->field_weight->value > (int) $b['question']->field_weight->value ? 1 : -1;
       });
 
-      // Add each question to the cluster details element.
-      foreach ($questions as $question) {
-        /** @var \Drupal\audit\Entity\AuditQuestion $question */
-        $view_builder = \Drupal::entityTypeManager()->getViewBuilder('audit_question');
-        $question_build = $view_builder->view($question, 'audit');
-        // Pass the entities to the template.
-        $question_build['#audit_question'] = $question;
-
-        $question_build['#audit_entity'] = $node;
-        $question_build['#audit_question_entity'] = $question;
-        $build['cluster_' . $term->id()]['question_' . $question->id()] = $question_build;
-      }
+      // Process the render array in hierarchical order
+      $process_questions_tree($tree);
     }
   }
 }
