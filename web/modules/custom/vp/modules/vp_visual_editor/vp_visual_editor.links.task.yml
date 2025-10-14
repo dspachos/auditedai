@@ -1,5 +1,0 @@
-vp_visual_editor.visual.editing:
-  route_name: vp_visual_editor.visual.editor
-  title: 'Visual Editor'
-  base_route: entity.virtual_patient.canonical
-  weight: 3

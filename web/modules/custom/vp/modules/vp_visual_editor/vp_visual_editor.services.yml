@@ -1,4 +1,0 @@
-services:
-  vp_visual_editor.visual_editing:
-    class: Drupal\vp_visual_editor\VisualEditing
-    arguments: ['@current_route_match', '@current_user', '@entity_type.manager', '@logger.factory']

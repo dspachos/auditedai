@@ -1,5 +1,0 @@
-virtual_patient.add_form:
-  title: 'Add virtual patient'
-  route_name: entity.virtual_patient.add_form
-  appears_on:
-    - entity.virtual_patient.collection
