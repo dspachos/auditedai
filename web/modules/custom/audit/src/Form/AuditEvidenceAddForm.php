@@ -123,18 +123,11 @@ final class AuditEvidenceAddForm extends FormBase {
     }
 
     if ($is_yes_no_question) {
-      // For yes/no questions, show a dropdown with Yes/No options
-      $form['field_yes_no_answer'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Answer'),
-        '#description' => $this->t('Select Yes or No for this question.'),
-        '#required' => FALSE,
-        '#options' => [
-          'none' => $this->t('- Select -'),
-          'yes' => $this->t('Yes'),
-          'no' => $this->t('No'),
-        ],
-        '#default_value' => '',
+      // For yes/no questions, we don't allow adding evidence via the form since it's handled by the template
+      // Just show a message to the user
+      $form['yes_no_info'] = [
+        '#type' => 'markup',
+        '#markup' => '<div class="messages messages--warning">' . $this->t('Yes/No status is managed directly on the main audit page via a toggle switch. You cannot add evidence in this way for yes/no questions.') . '</div>',
       ];
     } else {
       // For regular questions, show the text evidence field
@@ -225,12 +218,9 @@ final class AuditEvidenceAddForm extends FormBase {
       }
     }
 
+    // For yes/no questions, we don't allow adding evidence via this form
     if ($is_yes_no_question) {
-      // For yes/no questions, validate that an answer was selected
-      $yes_no_answer = $form_state->getValue('field_yes_no_answer');
-      if (empty($yes_no_answer)) {
-        $form_state->setErrorByName('field_yes_no_answer', $this->t('Please select an answer (Yes or No).'));
-      }
+      // No validation needed for yes/no questions since the form doesn't allow adding
     } else {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
@@ -262,17 +252,10 @@ final class AuditEvidenceAddForm extends FormBase {
     }
 
     if ($is_yes_no_question) {
-      // For yes/no questions, get the selected answer
-      $yes_no_answer = $form_state->getValue('field_yes_no_answer');
-
-      // Create a new audit evidence entity with the yes/no answer
-      $evidence = $this->entityTypeManager->getStorage('audit_evidence')->create([
-        'label' => $this->t('Evidence for @question', ['@question' => $audit_question->label()]),
-        'field_audit' => $audit->id(),
-        'field_audit_question' => $audit_question->id(),
-        'field_yes_no_answer' => $yes_no_answer == 'yes' ? TRUE : FALSE,
-        'uid' => $this->currentUser->id(),
-      ]);
+      // For yes/no questions, we don't allow adding evidence via this form
+      $this->messenger()->addWarning($this->t('Yes/No status must be updated directly on the main audit page.'));
+      $form_state->setRedirect('entity.node.canonical', ['node' => $audit->id()]);
+      return;
     } else {
       // For regular questions, get the text description
       $description = $form_state->getValue('description');

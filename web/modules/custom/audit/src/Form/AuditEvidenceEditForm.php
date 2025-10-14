@@ -114,39 +114,24 @@ final class AuditEvidenceEditForm extends FormBase {
       $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
+    // For yes/no questions, we now handle the yes/no answer through the toggle in the template
     // Check if this is a yes/no question
     $is_yes_no_question = FALSE;
     if ($audit_question) {
-      // Assuming there's a field to identify yes/no questions - adjust the field name as needed
       if ($audit_question->hasField('field_simple_yes_no') && !$audit_question->get('field_simple_yes_no')->isEmpty()) {
         $is_yes_no_question = (bool) $audit_question->get('field_simple_yes_no')->value;
       }
     }
 
-    // If it's a yes/no question, show the dropdown
     if ($is_yes_no_question) {
-      // Preload existing yes/no answer if available
-      $existing_yes_no_answer = NULL;
-      if ($audit_evidence && $audit_evidence->hasField('field_yes_no_answer') && !$audit_evidence->get('field_yes_no_answer')->isEmpty()) {
-        $existing_yes_no_answer = $audit_evidence->get('field_yes_no_answer')->value;
-      }
-
-      $form['field_yes_no_answer'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Answer'),
-        '#description' => $this->t('Select Yes or No for this question.'),
-        '#required' => FALSE,
-        '#options' => [
-          '' => $this->t('- Select -'),
-          'yes' => $this->t('Yes'),
-          'no' => $this->t('No'),
-        ],
-        '#default_value' => $existing_yes_no_answer ? 'yes' : 'no',
+      // For yes/no questions, we don't show the yes/no dropdown in this form since it's handled by the template
+      // Just show a message to the user
+      $form['yes_no_info'] = [
+        '#type' => 'markup',
+        '#markup' => '<div class="messages messages--warning">' . $this->t('Yes/No status is managed directly on the main audit page via a toggle switch. You cannot edit it here.') . '</div>',
       ];
-    }
-    // Otherwise, show the regular text field
-    else {
-      // Preload existing evidence value.
+    } else {
+      // Preload existing evidence value for non-yes/no questions.
       $existing_evidence = '';
       if ($audit_evidence && $audit_evidence->hasField('field_evidence')) {
         $existing_evidence = $audit_evidence->get('field_evidence')->value;
@@ -256,15 +241,10 @@ final class AuditEvidenceEditForm extends FormBase {
       }
     }
 
+    // For yes/no questions, we don't allow editing through this form
     if ($is_yes_no_question) {
-      // For yes/no questions, validate that an answer was selected
-      $yes_no_answer = $form_state->getValue('field_yes_no_answer');
-      if (empty($yes_no_answer)) {
-        $form_state->setErrorByName('field_yes_no_answer', $this->t('Please select an answer (Yes or No).'));
-      }
-    }
-
-    if (!$is_yes_no_question) {
+      // No validation needed for yes/no questions since the form doesn't allow editing
+    } else {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
       if (empty($description)) {
@@ -290,15 +270,17 @@ final class AuditEvidenceEditForm extends FormBase {
     // Check if this is a yes/no question
     $is_yes_no_question = FALSE;
     if ($audit_question) {
-      if ($audit_question->hasField('field_is_yes_no') && !$audit_question->get('field_is_yes_no')->isEmpty()) {
-        $is_yes_no_question = (bool) $audit_question->get('field_is_yes_no')->value;
+      if ($audit_question->hasField('field_simple_yes_no') && !$audit_question->get('field_simple_yes_no')->isEmpty()) {
+        $is_yes_no_question = (bool) $audit_question->get('field_simple_yes_no')->value;
       }
     }
 
+    // For yes/no questions, we don't allow editing through this form
     if ($is_yes_no_question) {
-      // For yes/no questions, save the yes/no answer
-      $yes_no_answer = $form_state->getValue('field_yes_no_answer');
-      $audit_evidence->set('field_yes_no_answer', $yes_no_answer == 'yes' ? TRUE : FALSE);
+      // Just return without making changes, since the yes/no toggle is handled on the main page
+      $this->messenger()->addWarning($this->t('Yes/No status must be updated directly on the main audit page.'));
+      $form_state->setRedirect('entity.node.canonical', ['node' => $audit->id()]);
+      return;
     } else {
       // For regular questions, save the text evidence
       $description = $form_state->getValue('description');

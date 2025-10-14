@@ -48,23 +48,12 @@
     </div>
     <div class="audit-card-body">
       <div class="audit-card-content">
-        {# Display existing evidences #}
-        {% if evidences is not empty %}
+        {# Display existing evidences - but not for yes/no questions #}
+        {% if evidences is not empty and not audit_question_entity.field_simple_yes_no.value %}
           <div class="audit-evidences">
             {% for evidence in evidences %}
               <div class="audit-evidence-item">
-
-                {% if audit_question_entity.field_simple_yes_no.value %}
-                  {% if evidence.field_yes_no_answer.value %}
-                    <em>{{ 'YES' | t }}</em>
-                  {% else %}
-                  <em>{{ 'NO' | t }}</em>
-                  {% endif %}
-                {% endif %}
-
-                {% if not audit_question_entity.field_simple_yes_no.value %}
-                  <div class="audit-evidence-content">{{ evidence.field_evidence.value|length > 140 ? (evidence.field_evidence.value|slice(0, 360) ~ '...') : evidence.field_evidence.value }}</div>
-                {% endif %}
+                <div class="audit-evidence-content">{{ evidence.field_evidence.value|length > 140 ? (evidence.field_evidence.value|slice(0, 360) ~ '...') : evidence.field_evidence.value }}</div>
 
                 {# files list here #}
                 {% if evidence.field_supporting_files is not empty %}
@@ -111,9 +100,9 @@
           <div class="yes-no-checkbox-container">
             <div class="toggle-container">
               <label class="toggle-switch">
-                <input 
-                  type="checkbox" 
-                  class="yes-no-checkbox" 
+                <input
+                  type="checkbox"
+                  class="yes-no-checkbox"
                   {{ yes_no_checked ? 'checked' : '' }}
                   data-question-id="{{ question_id }}"
                   data-audit-id="{{ audit_id }}"
@@ -127,11 +116,20 @@
         {% endif %}
 
         {# Show add evidence button for non-yes/no questions or when no evidence exists for yes/no questions #}
-        {% if not audit_question_entity.field_simple_yes_no.value %}
-          <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
-        {% elseif audit_question_entity.field_simple_yes_no.value and evidences is empty %}
-          <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
-        {% endif %}
+          {% if not audit_question_entity.field_simple_yes_no.value %}
+          <div class="audit-card-footer">
+            {% if evidences is empty %}
+              <em style="font-size: 0.9em; color: #6c757d; margin-right: auto; padding-right: 10px;">{{ 'No evidence added yet. Use the button to add evidence.' | t }}</em>
+            {% endif %}
+            <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
+          </div>
+          {% elseif audit_question_entity.field_simple_yes_no.value and evidences is empty %}
+          <div class="audit-card-footer">
+            <em style="color: #6c757d; margin-right: auto; padding-right: 10px;">{{ 'Use the button to add evidence.' | t }}</em>
+            <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
+          </div>
+          {% endif %}
+
       </div>
     </div>
     {# <div class="audit-card-footer"></div> #}

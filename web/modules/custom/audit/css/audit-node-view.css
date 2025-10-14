@@ -106,8 +106,6 @@
 
 .audit-card-footer {
   padding: 16px 20px;
-  border-top: 1px solid #e1e8ed;
-  background-color: #f7f9fa;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
@@ -271,10 +269,6 @@
 /* Yes/No Toggle Switch Styles */
 .yes-no-checkbox-container {
   margin: 10px 0;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border: 1px solid #e1e8ed;
-  border-radius: 4px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -357,4 +351,29 @@ input:checked + .toggle-slider:before {
   gap: 8px;
 }
 
+/* Yes/No status display */
+.yes-status {
+  color: #28a745;
+  font-weight: bold;
+  font-style: normal;
+}
 
+.no-status {
+  color: #dc3545;
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Evidence actions alignment */
+.audit-evidence-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.audit-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
