@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.audit_question.audit_question.field_parent
     - field.field.audit_question.audit_question.field_simple_yes_no
     - field.field.audit_question.audit_question.field_weight
   module:
@@ -97,6 +98,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: -4
+    region: content
+  field_parent:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 23
     region: content
   field_simple_yes_no:
     type: boolean

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.audit_question.audit
+    - field.field.audit_question.audit_question.field_parent
     - field.field.audit_question.audit_question.field_simple_yes_no
     - field.field.audit_question.audit_question.field_weight
   module:
@@ -31,6 +32,7 @@ hidden:
   field_iso_21001: true
   field_iso_21001_criteria: true
   field_iso_doc_info: true
+  field_parent: true
   field_simple_yes_no: true
   field_weight: true
   status: true

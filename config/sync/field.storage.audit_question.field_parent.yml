@@ -1,0 +1,19 @@
+uuid: c3130995-faf5-41b6-9802-b09724203640
+langcode: en
+status: true
+dependencies:
+  module:
+    - audit
+id: audit_question.field_parent
+field_name: field_parent
+entity_type: audit_question
+type: entity_reference
+settings:
+  target_type: audit_question
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
