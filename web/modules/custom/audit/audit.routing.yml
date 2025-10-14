@@ -97,3 +97,16 @@ audit.registration_success:
     _controller: '\Drupal\audit\Controller\RegistrationSuccessController::registrationSuccess'
   requirements:
     _access: 'TRUE'
+
+audit.ajax_toggle_yes_no:
+  path: "/audit/ajax-toggle-yes-no/{audit_id}/{question_id}"
+  defaults:
+    _controller: '\Drupal\audit\Controller\AjaxController::toggleYesNo'
+    _title: "Toggle Yes/No Value"
+  requirements:
+    _role: "authenticated"
+    audit_id: \d+
+    question_id: \d+
+  methods: [POST]
+
+

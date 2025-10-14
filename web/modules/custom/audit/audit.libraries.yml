@@ -5,6 +5,7 @@ audit-node-view:
       css/audit-node-view.css: {}
   js:
     js/audit-node-view.js: {}
+    js/ajax-yes-no-checkbox.js: {}
   dependencies:
     - core/jquery
     - core/drupal

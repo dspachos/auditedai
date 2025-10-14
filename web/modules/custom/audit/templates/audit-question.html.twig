@@ -106,11 +106,32 @@
           </div>
         {% endif %}
 
-          {% if audit_question_entity.field_simple_yes_no.value and evidences is not empty %}
-            <a href="#" class="audit-card-button audit-card-button-secondary" style="opacity: 0.2;pointer-events: none;">➕ {{ 'Evidence'|t }}</a>
-          {% else %}
-            <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
-          {% endif %}
+        {# Display AJAX toggle for yes/no questions if evidence exists or for creating new evidence #}
+        {% if audit_question_entity.field_simple_yes_no.value %}
+          <div class="yes-no-checkbox-container">
+            <div class="toggle-container">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  class="yes-no-checkbox" 
+                  {{ yes_no_checked ? 'checked' : '' }}
+                  data-question-id="{{ question_id }}"
+                  data-audit-id="{{ audit_id }}"
+                  onchange="handleYesNoChange(this)"
+                >
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">{{ 'Yes' | t }}</span>
+            </div>
+          </div>
+        {% endif %}
+
+        {# Show add evidence button for non-yes/no questions or when no evidence exists for yes/no questions #}
+        {% if not audit_question_entity.field_simple_yes_no.value %}
+          <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
+        {% elseif audit_question_entity.field_simple_yes_no.value and evidences is empty %}
+          <a href="{{ path('audit.evidence.add_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-card-button audit-card-button-secondary">➕ {{ 'Evidence'|t }}</a>
+        {% endif %}
       </div>
     </div>
     {# <div class="audit-card-footer"></div> #}
