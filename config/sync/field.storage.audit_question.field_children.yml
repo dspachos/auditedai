@@ -1,11 +1,11 @@
-uuid: c3130995-faf5-41b6-9802-b09724203640
+uuid: 9ef9921c-0a79-439f-b08e-89314fbb9bf7
 langcode: en
 status: true
 dependencies:
   module:
     - audit
-id: audit_question.field_parent
-field_name: field_parent
+id: audit_question.field_children
+field_name: field_children
 entity_type: audit_question
 type: entity_reference
 settings:

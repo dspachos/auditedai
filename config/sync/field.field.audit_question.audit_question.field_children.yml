@@ -1,16 +1,16 @@
-uuid: 40cd7746-5d56-4e89-a54f-0bebb2df7e67
+uuid: a5e7f924-d9eb-4845-90c4-e01744c114c4
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.audit_question.field_parent
+    - field.storage.audit_question.field_children
   module:
     - audit
-id: audit_question.audit_question.field_parent
-field_name: field_parent
+id: audit_question.audit_question.field_children
+field_name: field_children
 entity_type: audit_question
 bundle: audit_question
-label: Parent
+label: Children
 description: ''
 required: false
 translatable: false

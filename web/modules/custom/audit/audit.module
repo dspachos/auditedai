@@ -243,6 +243,7 @@ function audit_node_view(array &$build, NodeInterface $node, EntityViewDisplayIn
         $question_build = $view_builder->view($question, 'audit');
         // Pass the entities to the template.
         $question_build['#audit_question'] = $question;
+
         $question_build['#audit_entity'] = $node;
         $question_build['#audit_question_entity'] = $question;
         $build['cluster_' . $term->id()]['question_' . $question->id()] = $question_build;

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.audit_question.audit_question.field_parent
+    - field.field.audit_question.audit_question.field_children
     - field.field.audit_question.audit_question.field_simple_yes_no
     - field.field.audit_question.audit_question.field_weight
   module:
@@ -18,6 +18,16 @@ content:
     weight: 13
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_children:
+    type: entity_reference_autocomplete
+    weight: 14
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_cluster:
     type: entity_reference_autocomplete
@@ -82,16 +92,6 @@ content:
     weight: 7
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_parent:
-    type: entity_reference_autocomplete
-    weight: 14
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   field_simple_yes_no:
     type: boolean_checkbox
