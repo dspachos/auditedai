@@ -83,12 +83,8 @@ function template_preprocess_audit_question(array &$variables): void {
     $variables['question_hierarchy_level'] = 0;
   }
   
-  // Pass children if available
-  if (isset($variables['elements']['#question_children_from_tree'])) {
-    $variables['question_children'] = $variables['elements']['#question_children_from_tree'];
-  } else {
-    $variables['question_children'] = [];
-  }
+  // Determine if this is a child question (level > 0)
+  $variables['is_child_question'] = $variables['question_hierarchy_level'] > 0;
 }
 
 /**

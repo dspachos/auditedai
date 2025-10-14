@@ -31,10 +31,16 @@
 {% if(view_mode == 'audit') %}
   <div class="audit-card" style="margin-left: {{ question_hierarchy_level * 30 }}px;">
     <div class="audit-card-header">
-      <h3 class="audit-card-title">
-        {{ question }}
+      <h3 class="audit-card-title" style="display: flex; align-items: center;">
+        {% if is_child_question %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layout-sidebar-inset" viewBox="0 0 16 16" style="margin-right: 5px; flex-shrink: 0;">
+            <path d="M14 2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2z"/>
+            <path d="M3 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>
+          </svg>
+        {% endif %}
+        <span style="flex: 1;">{{ question }}</span>
         {% if help_text %}
-          <span class="audit-help-icon" data-audit-tooltip="{{ help_text }}">
+          <span class="audit-help-icon" data-audit-tooltip="{{ help_text }}" style="margin-left: auto;">
             <i class="bi bi-info-circle-fill"></i>
           </span>
         {% endif %}
