@@ -1,0 +1,249 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\audit\Form;
+
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalCommand;
+use Drupal\Core\Ajax\MessageCommand;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Ajax\InvokeCommand;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Form for attaching existing evidence to a question.
+ */
+class AttachEvidenceForm extends FormBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a new AttachEvidenceForm.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'attach_evidence_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, $audit = NULL, $audit_question = NULL) {
+    // Check if entities are valid
+    if (!$audit || !$audit_question) {
+      $form['error'] = [
+        '#type' => 'markup',
+        '#markup' => '<p>' . $this->t('Invalid audit or question specified.') . '</p>',
+      ];
+      return $form;
+    }
+    
+    // Check if the target question is a yes/no question, which shouldn't have attached evidence
+    if ($audit_question->hasField('field_simple_yes_no') && $audit_question->get('field_simple_yes_no')->value) {
+      $form['error'] = [
+        '#type' => 'markup',
+        '#markup' => '<p>' . $this->t('Cannot attach evidence to yes/no questions. Use the toggle switch instead.') . '</p>',
+      ];
+      return $form;
+    }
+
+    // Store entities in form state
+    $form_state->set('audit', $audit);
+    $form_state->set('audit_question', $audit_question);
+
+    // Get all available evidence for this audit
+    $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
+    $query = $evidence_storage->getQuery()
+      ->condition('field_audit', $audit->id())
+      ->accessCheck(TRUE);
+
+    $evidence_ids = $query->execute();
+    $existing_evidences = $evidence_storage->loadMultiple($evidence_ids);
+
+    // Filter out evidences that are already attached to this question
+    $attached_evidence_ids = [];
+    if ($existing_evidences) {
+      foreach ($existing_evidences as $evidence) {
+        $question_ref = $evidence->get('field_audit_question')->referencedEntities();
+        if (!empty($question_ref)) {
+          $ref_question = reset($question_ref);
+          if ($ref_question && $ref_question->id() == $audit_question->id()) {
+            $attached_evidence_ids[] = $evidence->id();
+          }
+        }
+      }
+    }
+
+    // Prepare options for select
+    $options = [];
+    if ($existing_evidences) {
+      foreach ($existing_evidences as $evidence) {
+        // Skip evidence that's already attached to this question
+        if (in_array($evidence->id(), $attached_evidence_ids)) {
+          continue;
+        }
+
+        // Get the question this evidence is currently attached to
+        $question_refs = $evidence->get('field_audit_question')->referencedEntities();
+        if (!empty($question_refs)) {
+          $current_question = reset($question_refs);
+          if ($current_question && $current_question->hasField('field_simple_yes_no') && $current_question->get('field_simple_yes_no')->value) {
+            // Skip this evidence as it belongs to a yes/no question
+            continue;
+          }
+        }
+
+        $label = $evidence->label();
+        if (empty($label)) {
+          $label = $this->t('Evidence @id', ['@id' => $evidence->id()]);
+        }
+        $options[$evidence->id()] = $label;
+      }
+    }
+
+    if (empty($options)) {
+      $form['message'] = [
+        '#type' => 'markup',
+        '#markup' => '<p>' . $this->t('No existing evidence available to attach.') . '</p>',
+      ];
+
+      $form['actions'] = ['#type' => 'actions'];
+      $form['actions']['close'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Close'),
+        '#attributes' => [
+          'class' => ['dialog-cancel'],
+        ],
+      ];
+
+      return $form;
+    }
+
+    $form['evidence_to_attach'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Select Evidence to Attach'),
+      '#description' => $this->t('Choose from existing evidence to attach to this question.'),
+      '#required' => TRUE,
+      '#options' => $options,
+      '#empty_option' => $this->t('- Select evidence -'),
+    ];
+
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['attach'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Attach Evidence'),
+      '#ajax' => [
+        'callback' => '::attachEvidenceCallback',
+        'effect' => 'fade',
+      ],
+    ];
+    $form['actions']['cancel'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Cancel'),
+      '#attributes' => [
+        'class' => ['dialog-cancel'],
+      ],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    // This is handled in the AJAX callback
+  }
+
+  /**
+   * AJAX callback for attaching evidence.
+   */
+  public function attachEvidenceCallback(array $form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+
+    $audit = $form_state->get('audit');
+    $audit_question = $form_state->get('audit_question');
+    $evidence_id = $form_state->getValue('evidence_to_attach');
+
+    if (!$audit || !$audit_question || !$evidence_id) {
+      $response->addCommand(new MessageCommand($this->t('Invalid parameters.'), NULL, ['type' => 'error']));
+      return $response;
+    }
+
+    // Load the evidence to attach
+    $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
+    $evidence = $evidence_storage->load($evidence_id);
+
+    if (!$evidence) {
+      $response->addCommand(new MessageCommand($this->t('Selected evidence not found.'), NULL, ['type' => 'error']));
+      return $response;
+    }
+
+    // Update the evidence to be associated with the current question
+    $evidence->set('field_audit_question', $audit_question->id());
+    $evidence->save();
+
+    $response->addCommand(new MessageCommand($this->t('Evidence attached successfully.'), NULL, ['type' => 'status']));
+
+    // Close modal and reload the page
+    $js_code = "
+      if (parent && parent.Drupal && parent.Drupal.modal) {
+        parent.Drupal.modal.close();
+      } else {
+        // If no parent modal, just close using standard dialog closing
+        jQuery('.ui-dialog-content').dialog('close');
+      }
+      // Reload the parent page to see changes
+      setTimeout(function() {
+        if (parent) {
+          parent.location.reload();
+        } else {
+          window.location.reload();
+        }
+      }, 500);
+    ";
+    $response->addCommand(new InvokeCommand(NULL, 'script', [$js_code]));
+
+    return $response;
+  }
+
+  /**
+   * Validation for the form.
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $evidence_id = $form_state->getValue('evidence_to_attach');
+
+    if ($evidence_id) {
+      $evidence = $this->entityTypeManager->getStorage('audit_evidence')->load($evidence_id);
+      if (!$evidence) {
+        $form_state->setErrorByName('evidence_to_attach', $this->t('Selected evidence does not exist.'));
+      }
+    }
+  }
+}

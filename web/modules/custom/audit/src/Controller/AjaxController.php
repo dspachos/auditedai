@@ -6,6 +6,7 @@ namespace Drupal\audit\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,13 +25,23 @@ class AjaxController extends ControllerBase {
   protected $entityTypeManager;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * Constructs a new AjaxController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FormBuilderInterface $form_builder) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -38,7 +49,8 @@ class AjaxController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('form_builder')
     );
   }
 
@@ -133,5 +145,27 @@ class AjaxController extends ControllerBase {
     }
 
     return NULL;
+  }
+
+  /**
+   * Controller method for the attach evidence modal.
+   */
+  public function attachEvidence($audit, $question) {
+    // Load the entities properly
+    $audit_storage = $this->entityTypeManager->getStorage('node');
+    $question_storage = $this->entityTypeManager->getStorage('audit_question');
+    
+    $audit_entity = is_numeric($audit) ? $audit_storage->load($audit) : $audit;
+    $question_entity = is_numeric($question) ? $question_storage->load($question) : $question;
+    
+    if (!$audit_entity || !$question_entity) {
+      return [
+        '#type' => 'markup',
+        '#markup' => '<p>' . $this->t('Invalid audit or question specified.') . '</p>',
+      ];
+    }
+    
+    // Build and return the form with the loaded entities
+    return $this->formBuilder->getForm('\Drupal\audit\Form\AttachEvidenceForm', $audit_entity, $question_entity);
   }
 }

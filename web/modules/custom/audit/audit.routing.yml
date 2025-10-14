@@ -109,4 +109,14 @@ audit.ajax_toggle_yes_no:
     question_id: \d+
   methods: [POST]
 
+audit.attach_evidence_modal:
+  path: "/audit/{audit}/question/{question}/attach-evidence"
+  defaults:
+    _controller: '\Drupal\audit\Controller\AjaxController::attachEvidence'
+    _title: "Attach Existing Evidence"
+  requirements:
+    _role: "authenticated"
+    audit: \d+
+    question: \d+
+
 
