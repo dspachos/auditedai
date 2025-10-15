@@ -278,7 +278,7 @@ class AttachEvidenceForm extends FormBase {
     // Close modal and reload the parent page
     $response->addCommand(new CloseDialogCommand('#drupal-modal'));
     
-    // Add JavaScript to reload the parent page after a short delay
+    // Add JavaScript to reload the parent page after a short delay to show the newly attached evidence
     $js_code = "
       setTimeout(function() {
         if (parent && parent.location) {
