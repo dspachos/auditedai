@@ -64,14 +64,7 @@ class AttachEvidenceForm extends FormBase {
       return $form;
     }
     
-    // Check if the target question is a yes/no question, which shouldn't have attached evidence
-    if ($audit_question->hasField('field_simple_yes_no') && $audit_question->get('field_simple_yes_no')->value) {
-      $form['error'] = [
-        '#type' => 'markup',
-        '#markup' => '<p>' . $this->t('Cannot attach evidence to yes/no questions. Use the toggle switch instead.') . '</p>',
-      ];
-      return $form;
-    }
+
 
     // Store entities in form state
     $form_state->set('audit', $audit);
@@ -194,12 +187,11 @@ class AttachEvidenceForm extends FormBase {
     }
 
     $form['evidence_to_attach'] = [
-      '#type' => 'select',
+      '#type' => 'checkboxes',
       '#title' => $this->t('Select Evidence to Attach'),
-      '#description' => $this->t('Choose from existing evidence to attach to this question.'),
-      '#required' => TRUE,
+      '#description' => $this->t('Choose from existing evidence to attach to this question. You can select multiple evidences.'),
       '#options' => $options,
-      '#empty_option' => $this->t('- Select evidence -'),
+      '#default_value' => [],
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -237,27 +229,35 @@ class AttachEvidenceForm extends FormBase {
 
     $audit = $form_state->get('audit');
     $audit_question = $form_state->get('audit_question');
-    $evidence_id = $form_state->getValue('evidence_to_attach');
+    $selected_evidences = array_filter($form_state->getValue('evidence_to_attach')); // Filter out unchecked items
 
-    if (!$audit || !$audit_question || !$evidence_id) {
+    if (!$audit || !$audit_question || empty($selected_evidences)) {
       $response->addCommand(new MessageCommand($this->t('Invalid parameters.'), NULL, ['type' => 'error']));
       return $response;
     }
 
-    // Load the evidence to attach
+    // Load the evidences to attach
     $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
-    $evidence = $evidence_storage->load($evidence_id);
+    $success_count = 0;
+    
+    foreach ($selected_evidences as $evidence_id) {
+      $evidence = $evidence_storage->load($evidence_id);
 
-    if (!$evidence) {
-      $response->addCommand(new MessageCommand($this->t('Selected evidence not found.'), NULL, ['type' => 'error']));
-      return $response;
+      if (!$evidence) {
+        $response->addCommand(new MessageCommand($this->t('Some selected evidences could not be found.'), NULL, ['type' => 'error']));
+        continue; // Skip to next evidence
+      }
+
+      // Update the evidence to be associated with the current question
+      $evidence->set('field_audit_question', $audit_question->id());
+      $evidence->save();
+      $success_count++;
     }
 
-    // Update the evidence to be associated with the current question
-    $evidence->set('field_audit_question', $audit_question->id());
-    $evidence->save();
-
-    $response->addCommand(new MessageCommand($this->t('Evidence attached successfully.'), NULL, ['type' => 'status']));
+    if ($success_count > 0) {
+      $message = $this->formatPlural($success_count, '1 evidence attached successfully.', '@count evidences attached successfully.');
+      $response->addCommand(new MessageCommand($message, NULL, ['type' => 'status']));
+    }
 
     // Close modal and reload the page
     $js_code = "
@@ -285,12 +285,16 @@ class AttachEvidenceForm extends FormBase {
    * Validation for the form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $evidence_id = $form_state->getValue('evidence_to_attach');
+    $selected_evidences = array_filter($form_state->getValue('evidence_to_attach')); // Filter out unchecked items
 
-    if ($evidence_id) {
-      $evidence = $this->entityTypeManager->getStorage('audit_evidence')->load($evidence_id);
-      if (!$evidence) {
-        $form_state->setErrorByName('evidence_to_attach', $this->t('Selected evidence does not exist.'));
+    if (!empty($selected_evidences)) {
+      $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
+      foreach ($selected_evidences as $evidence_id) {
+        $evidence = $evidence_storage->load($evidence_id);
+        if (!$evidence) {
+          $form_state->setErrorByName('evidence_to_attach', $this->t('One or more selected evidences do not exist.'));
+          break; // Exit on first error
+        }
       }
     }
   }
