@@ -275,21 +275,18 @@ class AttachEvidenceForm extends FormBase {
       $response->addCommand(new MessageCommand($message, NULL, ['type' => 'status']));
     }
 
-    // Close modal and reload the parent page
+    // Close modal and reload the parent page to show the newly attached evidence
     $response->addCommand(new CloseDialogCommand('#drupal-modal'));
     
-    // Add JavaScript to reload the parent page after a short delay to show the newly attached evidence
-    $js_code = "
-      setTimeout(function() {
-        if (parent && parent.location) {
-          parent.location.reload();
-        } else {
-          // Fallback for non-iframe contexts
-          window.top.location.reload();
-        }
-      }, 300);
-    ";
-    $response->addCommand(new InvokeCommand(NULL, 'script', [$js_code]));
+    // Get the audit ID from form state to redirect to the correct page
+    $audit = $form_state->get('audit');
+    if ($audit) {
+      // Redirect to the audit page to show the updated evidence list
+      $response->addCommand(new RedirectCommand('/node/' . $audit->id()));
+    } else {
+      // Fallback redirect to front page if no audit is available
+      $response->addCommand(new RedirectCommand('<front>'));
+    }
 
     return $response;
   }
