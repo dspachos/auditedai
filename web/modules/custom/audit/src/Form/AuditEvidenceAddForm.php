@@ -121,6 +121,14 @@ final class AuditEvidenceAddForm extends FormBase {
       '#description' => $this->t('Enter the unique evidence number.'),
       '#required' => TRUE,
     ];
+    
+    // Add the mandatory label field
+    $form['label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label'),
+      '#description' => $this->t('Enter the label for this evidence.'),
+      '#required' => TRUE,
+    ];
 
     $is_yes_no_question = FALSE;
     if ($audit_question) {
@@ -233,6 +241,7 @@ final class AuditEvidenceAddForm extends FormBase {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
       $evidence_number = $form_state->getValue('field_evidence_number');
+      $label = $form_state->getValue('label');
       
       if (empty($description)) {
         $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
@@ -240,6 +249,10 @@ final class AuditEvidenceAddForm extends FormBase {
       
       if (empty($evidence_number)) {
         $form_state->setErrorByName('field_evidence_number', $this->t('Evidence Number is required.'));
+      }
+      
+      if (empty($label)) {
+        $form_state->setErrorByName('label', $this->t('Label is required.'));
       }
     }
   }
@@ -274,10 +287,11 @@ final class AuditEvidenceAddForm extends FormBase {
       // For regular questions, get the text description
       $description = $form_state->getValue('description');
       $evidence_number = $form_state->getValue('field_evidence_number');
+      $label = $form_state->getValue('label');
 
       // Create a new audit evidence entity with the text evidence
       $evidence = $this->entityTypeManager->getStorage('audit_evidence')->create([
-        'label' => $evidence_number . ' - ' . $this->t('Evidence for @question', ['@question' => $audit_question->label()]),
+        'label' => $label,
         'field_evidence_number' => $evidence_number,
         'field_audit' => $audit->id(),
         'field_audit_question' => $audit_question->id(),

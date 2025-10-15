@@ -127,6 +127,15 @@ final class AuditEvidenceEditForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $existing_evidence_number,
     ];
+    
+    // Add the mandatory label field
+    $form['label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label'),
+      '#description' => $this->t('Enter the label for this evidence.'),
+      '#required' => TRUE,
+      '#default_value' => $audit_evidence ? $audit_evidence->label() : '',
+    ];
 
     // For yes/no questions, we now handle the yes/no answer through the toggle in the template
     // Check if this is a yes/no question
@@ -262,6 +271,7 @@ final class AuditEvidenceEditForm extends FormBase {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
       $evidence_number = $form_state->getValue('field_evidence_number');
+      $label = $form_state->getValue('label');
       
       if (empty($description)) {
         $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
@@ -269,6 +279,10 @@ final class AuditEvidenceEditForm extends FormBase {
       
       if (empty($evidence_number)) {
         $form_state->setErrorByName('field_evidence_number', $this->t('Evidence Number is required.'));
+      }
+      
+      if (empty($label)) {
+        $form_state->setErrorByName('label', $this->t('Label is required.'));
       }
     }
   }
@@ -305,11 +319,11 @@ final class AuditEvidenceEditForm extends FormBase {
       // For regular questions, save the text evidence
       $description = $form_state->getValue('description');
       $evidence_number = $form_state->getValue('field_evidence_number');
+      $label = $form_state->getValue('label');
       
       $audit_evidence->set('field_evidence_number', $evidence_number);
       $audit_evidence->set('field_evidence', $description);
-      // Update the label to include the evidence number
-      $audit_evidence->set('label', $evidence_number . ' - ' . $this->t('Evidence for @question', ['@question' => $audit_question->label()]));
+      $audit_evidence->set('label', $label);
     }
 
     // Handle file uploads if any.

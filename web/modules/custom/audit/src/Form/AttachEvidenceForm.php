@@ -144,7 +144,7 @@ class AttachEvidenceForm extends FormBase {
           }
         }
         
-        // Build the display label
+        // Build the display label in format "evidence_number - label" with additional info
         $label_parts = [];
         
         // Add evidence number if available
@@ -155,7 +155,13 @@ class AttachEvidenceForm extends FormBase {
           $label_parts[] = $this->t('Evidence @id', ['@id' => $evidence->id()]);
         }
         
-        // Add either description snippet or files list
+        // Add the main label
+        $main_label = $evidence->label();
+        if (!empty($main_label)) {
+          $label_parts[] = $main_label;
+        }
+        
+        // Add either description snippet or files list as additional context
         if (!empty($description)) {
           // Limit description to 140 characters
           $description_snippet = strlen($description) > 140 ? substr($description, 0, 140) . '...' : $description;
