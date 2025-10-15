@@ -56,7 +56,7 @@ audit.evidence.delete_modal_form:
   path: "/evidence/{audit_evidence}/delete-modal"
   defaults:
     _form: '\Drupal\audit\Form\AuditEvidenceDeleteModalForm'
-    _title: "Delete Evidence"
+    _title: "Detach Evidence"
   requirements:
     _role: "authenticated"
   options:

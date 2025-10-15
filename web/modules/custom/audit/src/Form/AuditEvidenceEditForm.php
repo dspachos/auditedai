@@ -114,6 +114,20 @@ final class AuditEvidenceEditForm extends FormBase {
       $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
+    // Add the mandatory evidence number field
+    $existing_evidence_number = '';
+    if ($audit_evidence && $audit_evidence->hasField('field_evidence_number')) {
+      $existing_evidence_number = $audit_evidence->get('field_evidence_number')->value;
+    }
+
+    $form['field_evidence_number'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Evidence Number'),
+      '#description' => $this->t('Enter the unique evidence number.'),
+      '#required' => TRUE,
+      '#default_value' => $existing_evidence_number,
+    ];
+
     // For yes/no questions, we now handle the yes/no answer through the toggle in the template
     // Check if this is a yes/no question
     $is_yes_no_question = FALSE;
@@ -247,8 +261,14 @@ final class AuditEvidenceEditForm extends FormBase {
     } else {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
+      $evidence_number = $form_state->getValue('field_evidence_number');
+      
       if (empty($description)) {
         $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
+      }
+      
+      if (empty($evidence_number)) {
+        $form_state->setErrorByName('field_evidence_number', $this->t('Evidence Number is required.'));
       }
     }
   }
@@ -284,7 +304,12 @@ final class AuditEvidenceEditForm extends FormBase {
     } else {
       // For regular questions, save the text evidence
       $description = $form_state->getValue('description');
+      $evidence_number = $form_state->getValue('field_evidence_number');
+      
+      $audit_evidence->set('field_evidence_number', $evidence_number);
       $audit_evidence->set('field_evidence', $description);
+      // Update the label to include the evidence number
+      $audit_evidence->set('label', $evidence_number . ' - ' . $this->t('Evidence for @question', ['@question' => $audit_question->label()]));
     }
 
     // Handle file uploads if any.

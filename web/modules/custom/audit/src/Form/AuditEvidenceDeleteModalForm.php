@@ -19,7 +19,7 @@ use Drupal\audit\Entity\AuditQuestion;
 use Drupal\audit\Entity\AuditEvidence;
 
 /**
- * Form controller for deleting audit evidence with modal confirmation.
+ * Form controller for detaching audit evidence from a question with modal confirmation.
  */
 final class AuditEvidenceDeleteModalForm extends FormBase {
 
@@ -99,7 +99,7 @@ final class AuditEvidenceDeleteModalForm extends FormBase {
 
     $form['confirmation'] = [
       '#type' => 'markup',
-      '#markup' => '<p>' . $this->t('Are you sure you want to delete this evidence? This action cannot be undone.') . '</p>',
+      '#markup' => '<p>' . $this->t('Are you sure you want to detach this evidence from the question? The evidence will be kept but removed from this audit question.') . '</p>',
     ];
 
     $form['actions'] = [
@@ -108,7 +108,7 @@ final class AuditEvidenceDeleteModalForm extends FormBase {
 
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Delete'),
+      '#value' => $this->t('Detach'),
       '#button_type' => 'primary',
       '#ajax' => [
         'callback' => '::ajaxSubmit',
@@ -174,14 +174,15 @@ final class AuditEvidenceDeleteModalForm extends FormBase {
       }
     }
     
-    // Delete the evidence.
-    $audit_evidence->delete();
+    // Remove the reference to the audit question instead of deleting the evidence.
+    $audit_evidence->set('field_audit_question', NULL);
+    $audit_evidence->save();
     
     // Close the modal.
     $response->addCommand(new CloseModalDialogCommand());
     
     // Show success message.
-    $this->messenger()->addStatus($this->t('Evidence has been deleted.'));
+    $this->messenger()->addStatus($this->t('Evidence has been detached from the question.'));
     
     // Redirect back to the audit page.
     if ($audit_id) {

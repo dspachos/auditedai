@@ -16,6 +16,24 @@ final class AuditEvidenceForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state): int {
+    $entity = $this->entity;
+    
+    // Update the label to include the evidence number when applicable
+    if ($entity->hasField('field_evidence_number') && !$entity->get('field_evidence_number')->isEmpty()) {
+      $evidence_number = $entity->get('field_evidence_number')->value;
+      
+      // Get the audit question if available
+      $audit_question_label = 'Audit Evidence';
+      if ($entity->hasField('field_audit_question') && !$entity->get('field_audit_question')->isEmpty()) {
+        $audit_question = $entity->get('field_audit_question')->entity;
+        if ($audit_question) {
+          $audit_question_label = $audit_question->label();
+        }
+      }
+      
+      $entity->set('label', $evidence_number . ' - ' . $this->t('Evidence for @question', ['@question' => $audit_question_label]));
+    }
+
     $result = parent::save($form, $form_state);
 
     $message_args = ['%label' => $this->entity->toLink()->toString()];

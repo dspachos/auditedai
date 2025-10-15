@@ -114,6 +114,14 @@ final class AuditEvidenceAddForm extends FormBase {
       $form['#attached']['library'][] = 'audit/standards-tags';
     }
 
+    // Add the mandatory evidence number field
+    $form['field_evidence_number'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Evidence Number'),
+      '#description' => $this->t('Enter the unique evidence number.'),
+      '#required' => TRUE,
+    ];
+
     $is_yes_no_question = FALSE;
     if ($audit_question) {
       // Check if the question is a yes/no question
@@ -224,8 +232,14 @@ final class AuditEvidenceAddForm extends FormBase {
     } else {
       // For regular questions, validate that evidence text is provided
       $description = $form_state->getValue('description');
+      $evidence_number = $form_state->getValue('field_evidence_number');
+      
       if (empty($description)) {
         $form_state->setErrorByName('description', $this->t('Evidence field is required.'));
+      }
+      
+      if (empty($evidence_number)) {
+        $form_state->setErrorByName('field_evidence_number', $this->t('Evidence Number is required.'));
       }
     }
   }
@@ -259,10 +273,12 @@ final class AuditEvidenceAddForm extends FormBase {
     } else {
       // For regular questions, get the text description
       $description = $form_state->getValue('description');
+      $evidence_number = $form_state->getValue('field_evidence_number');
 
       // Create a new audit evidence entity with the text evidence
       $evidence = $this->entityTypeManager->getStorage('audit_evidence')->create([
-        'label' => $this->t('Evidence for @question', ['@question' => $audit_question->label()]),
+        'label' => $evidence_number . ' - ' . $this->t('Evidence for @question', ['@question' => $audit_question->label()]),
+        'field_evidence_number' => $evidence_number,
         'field_audit' => $audit->id(),
         'field_audit_question' => $audit_question->id(),
         'field_evidence' => $description,

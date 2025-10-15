@@ -8,7 +8,7 @@ smtp_protocol: standard
 smtp_autotls: true
 smtp_timeout: 30
 smtp_username: no-reply@auditedai.med.auth.gr
-smtp_password: ''
+smtp_password: G1Ny4Or4FueWfmrd
 smtp_from: ''
 smtp_fromname: ''
 smtp_client_hostname: ''

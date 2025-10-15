@@ -119,10 +119,52 @@ class AttachEvidenceForm extends FormBase {
           }
         }
 
-        $label = $evidence->label();
-        if (empty($label)) {
-          $label = $this->t('Evidence @id', ['@id' => $evidence->id()]);
+        // Get the evidence number
+        $evidence_number = '';
+        if ($evidence->hasField('field_evidence_number') && !$evidence->get('field_evidence_number')->isEmpty()) {
+          $evidence_number = $evidence->get('field_evidence_number')->value;
         }
+        
+        // Get evidence description
+        $description = '';
+        if ($evidence->hasField('field_evidence') && !$evidence->get('field_evidence')->isEmpty()) {
+          $description = $evidence->get('field_evidence')->value;
+        }
+        
+        // Get supporting files if no description
+        $files_list = '';
+        if (empty($description) && $evidence->hasField('field_supporting_files') && !$evidence->get('field_supporting_files')->isEmpty()) {
+          $file_references = $evidence->get('field_supporting_files')->referencedEntities();
+          if (!empty($file_references)) {
+            $file_names = [];
+            foreach ($file_references as $file) {
+              $file_names[] = $file->getFilename();
+            }
+            $files_list = implode(', ', $file_names);
+          }
+        }
+        
+        // Build the display label
+        $label_parts = [];
+        
+        // Add evidence number if available
+        if (!empty($evidence_number)) {
+          $label_parts[] = $evidence_number;
+        } else {
+          // Fallback to ID if no evidence number
+          $label_parts[] = $this->t('Evidence @id', ['@id' => $evidence->id()]);
+        }
+        
+        // Add either description snippet or files list
+        if (!empty($description)) {
+          // Limit description to 140 characters
+          $description_snippet = strlen($description) > 140 ? substr($description, 0, 140) . '...' : $description;
+          $label_parts[] = $description_snippet;
+        } elseif (!empty($files_list)) {
+          $label_parts[] = $files_list;
+        }
+        
+        $label = implode(' - ', $label_parts);
         $options[$evidence->id()] = $label;
       }
     }
