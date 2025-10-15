@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Drupal\audit\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\CloseModalCommand;
+use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\MessageCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -259,22 +260,19 @@ class AttachEvidenceForm extends FormBase {
       $response->addCommand(new MessageCommand($message, NULL, ['type' => 'status']));
     }
 
-    // Close modal and reload the page
+    // Close modal and reload the parent page
+    $response->addCommand(new CloseDialogCommand('#drupal-modal'));
+    
+    // Add JavaScript to reload the parent page after a short delay
     $js_code = "
-      if (parent && parent.Drupal && parent.Drupal.modal) {
-        parent.Drupal.modal.close();
-      } else {
-        // If no parent modal, just close using standard dialog closing
-        jQuery('.ui-dialog-content').dialog('close');
-      }
-      // Reload the parent page to see changes
       setTimeout(function() {
-        if (parent) {
+        if (parent && parent.location) {
           parent.location.reload();
         } else {
-          window.location.reload();
+          // Fallback for non-iframe contexts
+          window.top.location.reload();
         }
-      }, 500);
+      }, 300);
     ";
     $response->addCommand(new InvokeCommand(NULL, 'script', [$js_code]));
 

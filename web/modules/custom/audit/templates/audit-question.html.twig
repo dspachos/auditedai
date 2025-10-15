@@ -117,10 +117,10 @@
 
         {# Show attach evidence button for all question types #}
           <div class="audit-card-footer">
-            <a href="{{ path('audit.attach_evidence_modal', {'audit': audit_entity.id(), 'question': audit_question_entity.id()}) }}" class="use-ajax" data-dialog-type="modal" data-dialog-options='{"width":600,"height":500}'>{{ 'Attach existing evidence' | t }}</a>
             {% if evidences is empty %}
               <em style="font-size: 0.9em; color: #6c757d; margin-right: auto; padding-right: 10px;">{{ 'No evidence attached yet. Use the button to attach existing evidence.' | t }}</em>
             {% endif %}
+            <a href="{{ path('audit.attach_evidence_modal', {'audit': audit_entity.id(), 'question': audit_question_entity.id()}) }}" class="use-ajax" data-dialog-type="modal" data-dialog-options='{"width":600,"height":500}'>{{ 'Attach existing evidence' | t }}</a>
           </div>
 
       </div>
