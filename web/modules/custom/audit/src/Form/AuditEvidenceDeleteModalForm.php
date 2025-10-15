@@ -56,9 +56,10 @@ final class AuditEvidenceDeleteModalForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?AuditEvidence $audit_evidence = NULL): array {
-    // Store the audit evidence entity in the form state for later use.
+  public function buildForm(array $form, FormStateInterface $form_state, ?AuditEvidence $audit_evidence = NULL, ?AuditQuestion $audit_question = NULL): array {
+    // Store the audit evidence and question entities in the form state for later use.
     $form_state->set('audit_evidence', $audit_evidence);
+    $form_state->set('audit_question', $audit_question);
 
     // Add evidence details.
     if ($audit_evidence) {
@@ -85,15 +86,13 @@ final class AuditEvidenceDeleteModalForm extends FormBase {
         }
       }
 
-      // Audit question information.
-      if ($audit_evidence->hasField('field_audit_question') && !$audit_evidence->get('field_audit_question')->isEmpty()) {
-        $audit_question = $audit_evidence->get('field_audit_question')->entity;
-        if ($audit_question) {
-          $form['evidence_details']['audit_question'] = [
-            '#type' => 'markup',
-            '#markup' => '<p><strong>' . $this->t('Question:') . '</strong> ' . $audit_question->label() . '</p>',
-          ];
-        }
+      // Audit question information - show the specific question to be detached
+      $question_to_detach = $form_state->get('audit_question');
+      if ($question_to_detach) {
+        $form['evidence_details']['audit_question'] = [
+          '#type' => 'markup',
+          '#markup' => '<p><strong>' . $this->t('Question:') . '</strong> ' . $question_to_detach->label() . '</p>',
+        ];
       }
     }
 
@@ -174,9 +173,30 @@ final class AuditEvidenceDeleteModalForm extends FormBase {
       }
     }
     
-    // Remove the reference to the audit question instead of deleting the evidence.
-    $audit_evidence->set('field_audit_question', NULL);
-    $audit_evidence->save();
+    // Remove only the specific audit question reference that was passed to the form
+    $question_to_detach = $form_state->get('audit_question');
+    
+    if ($question_to_detach) {
+      // Get all current question references
+      $existing_questions = $audit_evidence->get('field_audit_question')->getValue();
+      
+      // Create a new array excluding the question to detach
+      $updated_questions = [];
+      $question_found = FALSE;
+      foreach ($existing_questions as $existing_ref) {
+        if ($existing_ref['target_id'] != $question_to_detach->id()) {
+          $updated_questions[] = $existing_ref;
+        } else {
+          $question_found = TRUE;
+        }
+      }
+      
+      // Only save if we actually removed a question
+      if ($question_found) {
+        $audit_evidence->set('field_audit_question', $updated_questions);
+        $audit_evidence->save();
+      }
+    }
     
     // Close the modal.
     $response->addCommand(new CloseModalDialogCommand());

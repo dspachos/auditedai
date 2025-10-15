@@ -88,7 +88,7 @@
                   {% endif %}
                   <span>&nbsp;</span>
                   {# Detach button #}
-                  <a href="{{ path('audit.evidence.delete_modal_form', {'audit_evidence': evidence.id()}) }}" class="audit-evidence-detach use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:800,&quot;height&quot;:600}"><i class="bi bi-x-circle"></i></a>
+                  <a href="{{ path('audit.evidence.detach_modal_form', {'audit_evidence': evidence.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-evidence-detach use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:800,&quot;height&quot;:600}"><i class="bi bi-x-circle"></i></a>
                 </div>
               </div>
             {% endfor %}

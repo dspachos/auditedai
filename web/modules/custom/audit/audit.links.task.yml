@@ -43,3 +43,9 @@ entity.audit_evidence.collection:
   route_name: entity.audit_evidence.collection
   base_route: system.admin_content
   weight: 10
+
+entity.node.evidences:
+  title: 'Evidences'
+  route_name: audit.evidence_list
+  base_route: entity.node.canonical
+  weight: 5

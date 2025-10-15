@@ -52,8 +52,8 @@ audit.evidence.edit_form:
       audit_evidence:
         type: entity:audit_evidence
 
-audit.evidence.delete_modal_form:
-  path: "/evidence/{audit_evidence}/delete-modal"
+audit.evidence.detach_modal_form:
+  path: "/evidence/{audit_evidence}/detach-modal/{audit_question}"
   defaults:
     _form: '\Drupal\audit\Form\AuditEvidenceDeleteModalForm'
     _title: "Detach Evidence"
@@ -63,6 +63,8 @@ audit.evidence.delete_modal_form:
     parameters:
       audit_evidence:
         type: entity:audit_evidence
+      audit_question:
+        type: entity:audit_question
     _admin_route: TRUE
 
 audit.audit_export:
@@ -118,5 +120,31 @@ audit.attach_evidence_modal:
     _role: "authenticated"
     audit: \d+
     question: \d+
+
+audit.add_audit_evidence:
+  path: "/node/{node}/evidences/add"
+  defaults:
+    _form: '\Drupal\audit\Form\AuditEvidenceAddToAuditForm'
+    _title: 'Add Evidence to Audit'
+  requirements:
+    _permission: 'create audit_evidence entities'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+
+audit.evidence_list:
+  path: "/node/{node}/evidences"
+  defaults:
+    _controller: '\Drupal\audit\Controller\AuditEvidenceListController::view'
+    _title: 'Evidences'
+  requirements:
+    _permission: 'access content'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
 
 

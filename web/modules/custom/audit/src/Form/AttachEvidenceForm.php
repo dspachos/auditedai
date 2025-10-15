@@ -249,8 +249,23 @@ class AttachEvidenceForm extends FormBase {
         continue; // Skip to next evidence
       }
 
-      // Update the evidence to be associated with the current question
-      $evidence->set('field_audit_question', $audit_question->id());
+      // Add the current question to the evidence's question references (append, don't replace)
+      $existing_questions = $evidence->get('field_audit_question')->getValue();
+      $new_question_id = $audit_question->id();
+      
+      // Check if the question is already attached to avoid duplicates
+      $already_attached = FALSE;
+      foreach ($existing_questions as $existing_ref) {
+        if ($existing_ref['target_id'] == $new_question_id) {
+          $already_attached = TRUE;
+          break;
+        }
+      }
+      
+      if (!$already_attached) {
+        $existing_questions[] = ['target_id' => $new_question_id];
+        $evidence->set('field_audit_question', $existing_questions);
+      }
       $evidence->save();
       $success_count++;
     }
