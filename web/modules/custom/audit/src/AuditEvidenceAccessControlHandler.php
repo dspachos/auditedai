@@ -26,12 +26,35 @@ final class AuditEvidenceAccessControlHandler extends EntityAccessControlHandler
       return AccessResult::allowed()->cachePerPermissions();
     }
 
-    return match($operation) {
-      'view' => AccessResult::allowedIfHasPermission($account, 'view audit_evidence'),
-      'update' => AccessResult::allowedIfHasPermission($account, 'edit audit_evidence'),
-      'delete' => AccessResult::allowedIfHasPermission($account, 'delete audit_evidence'),
-      default => AccessResult::neutral(),
+    $has_any_permission = match($operation) {
+      'view' => $account->hasPermission('view audit_evidence'),
+      'update' => $account->hasPermission('edit audit_evidence'),
+      'delete' => $account->hasPermission('delete audit_evidence'),
+      default => FALSE,
     };
+
+    if ($has_any_permission) {
+      return AccessResult::allowed()->cachePerPermissions();
+    }
+
+    // Check for "own" permissions
+    $has_own_permission = match($operation) {
+      'view' => $account->hasPermission('view own audit_evidence'),
+      'update' => $account->hasPermission('edit own audit_evidence'),
+      'delete' => $account->hasPermission('delete own audit_evidence'),
+      default => FALSE,
+    };
+
+    if ($has_own_permission) {
+      // Check if the entity belongs to the current user
+      $entity_owner = $entity->getOwnerId();
+      $current_user_id = $account->id();
+      return AccessResult::allowedIf($entity_owner == $current_user_id)
+        ->cachePerPermissions()
+        ->cachePerUser();
+    }
+
+    return AccessResult::neutral();
   }
 
   /**

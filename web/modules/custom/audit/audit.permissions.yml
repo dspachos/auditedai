@@ -33,9 +33,22 @@ administer audit_evidence:
   restrict access: true
 view audit_evidence:
   title: 'View audit evidence'
+view own audit_evidence:
+  title: 'View own audit evidence'
+  description: 'View own audit evidences.'
 edit audit_evidence:
-  title: 'Edit audit evidence'
+  title: 'Edit any audit evidence'
+  description: 'Edit any audit evidence.'
+  restrict access: true
+edit own audit_evidence:
+  title: 'Edit own audit evidence'
+  description: 'Edit own audit evidences.'
 delete audit_evidence:
-  title: 'Delete audit evidence'
+  title: 'Delete any audit evidence'
+  description: 'Delete any audit evidence.'
+  restrict access: true
+delete own audit_evidence:
+  title: 'Delete own audit evidence'
+  description: 'Delete own audit evidences.'
 create audit_evidence:
   title: 'Create audit evidence'
