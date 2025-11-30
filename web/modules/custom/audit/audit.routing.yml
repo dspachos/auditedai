@@ -113,7 +113,7 @@ audit.attach_evidence_modal:
   path: "/audit/{audit}/question/{question}/attach-evidence"
   defaults:
     _controller: '\Drupal\audit\Controller\AjaxController::attachEvidence'
-    _title: "Attach Existing Evidence"
+    _title: "Attach Evidence"
   requirements:
     _role: "authenticated"
     audit: \d+
