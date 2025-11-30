@@ -52,3 +52,22 @@ delete own audit_evidence:
   description: 'Delete own audit evidences.'
 create audit_evidence:
   title: 'Create audit evidence'
+
+# Permissions for audit question response comments
+create audit_question_response_comment:
+  title: 'Create audit question response comment'
+  description: 'Create comment for an audit question response.'
+edit audit_question_response_comment:
+  title: 'Edit any audit question response comment'
+  description: 'Edit any audit question response comment.'
+  restrict access: true
+edit own audit_question_response_comment:
+  title: 'Edit own audit question response comment'
+  description: 'Edit own audit question response comment.'
+delete audit_question_response_comment:
+  title: 'Delete any audit question response comment'
+  description: 'Delete any audit question response comment.'
+  restrict access: true
+delete own audit_question_response_comment:
+  title: 'Delete own audit question response comment'
+  description: 'Delete own audit question response comment.'

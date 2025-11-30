@@ -119,6 +119,52 @@ audit.attach_evidence_modal:
     audit: \d+
     question: \d+
 
+audit.audit_question_response_comment_modal:
+  path: "/audit/{audit}/question/{question}/response-comment/{paragraph}"
+  defaults:
+    _controller: '\Drupal\audit\Controller\AjaxController::auditQuestionResponseComment'
+    _title: "Add/Edit Comment"
+  requirements:
+    _role: "authenticated"
+    audit: \d+
+    question: \d+
+    paragraph: \d+
+  options:
+    parameters:
+      audit: { type: 'entity:node' }
+      question: { type: 'entity:audit_question' }
+      paragraph: { type: 'entity:paragraph' }
+
+audit.audit_question_response_comment_add_modal:
+  path: "/audit/{audit}/question/{question}/response-comment"
+  defaults:
+    _controller: '\Drupal\audit\Controller\AjaxController::auditQuestionResponseComment'
+    _title: "Add Comment"
+  requirements:
+    _role: "authenticated"
+    audit: \d+
+    question: \d+
+  options:
+    parameters:
+      audit: { type: 'entity:node' }
+      question: { type: 'entity:audit_question' }
+
+audit.audit_question_response_comment_delete:
+  path: "/audit/{audit}/question/{question}/response-comment-delete/{paragraph}"
+  defaults:
+    _controller: '\Drupal\audit\Controller\AjaxController::deleteAuditQuestionResponseComment'
+    _title: "Delete Comment"
+  requirements:
+    _role: "authenticated"
+    audit: \d+
+    question: \d+
+    paragraph: \d+
+  options:
+    parameters:
+      audit: { type: 'entity:node' }
+      question: { type: 'entity:audit_question' }
+      paragraph: { type: 'entity:paragraph' }
+
 audit.add_audit_evidence:
   path: "/node/{node}/evidences/add"
   defaults:

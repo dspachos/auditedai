@@ -89,6 +89,37 @@ function template_preprocess_audit_question(array &$variables): void {
         $variables['question_id'] = $audit_question_entity->id();
         $variables['audit_id'] = $variables['audit_entity']->id();
       }
+
+      // Load any existing paragraph response for this question to show comments
+      $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+      $query = $paragraph_storage->getQuery()
+        ->condition('type', 'audit_question_response')
+        ->condition('field_audit', $variables['audit_entity']->id())
+        ->condition('field_audit_question', $audit_question_entity->id())
+        ->sort('created', 'DESC')
+        ->range(0, 1)
+        ->accessCheck(TRUE);
+
+      $paragraph_ids = $query->execute();
+      $response_paragraph = !empty($paragraph_ids) ? $paragraph_storage->load(reset($paragraph_ids)) : NULL;
+
+      // Check if the paragraph has an actual comment (field_response value)
+      $has_comment = FALSE;
+      if ($response_paragraph && $response_paragraph->hasField('field_response')) {
+        $response_value = $response_paragraph->get('field_response')->value;
+        $has_comment = !empty($response_value);
+      }
+
+      $variables['response_paragraph'] = $response_paragraph;
+      $variables['has_comment'] = $has_comment;
+
+      // Pass permission information to the template
+      $current_user = \Drupal::currentUser();
+      $variables['has_audit_question_response_comment_create_permission'] = $current_user->hasPermission('create audit_question_response_comment');
+      $variables['has_audit_question_response_comment_edit_permission'] = $current_user->hasPermission('edit audit_question_response_comment');
+      $variables['has_own_audit_question_response_comment_edit_permission'] = $current_user->hasPermission('edit own audit_question_response_comment');
+      $variables['has_audit_question_response_comment_delete_permission'] = $current_user->hasPermission('delete audit_question_response_comment');
+      $variables['has_own_audit_question_response_comment_delete_permission'] = $current_user->hasPermission('delete own audit_question_response_comment');
     }
   }
 

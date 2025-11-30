@@ -117,6 +117,7 @@ class AjaxController extends ControllerBase {
         'field_audit' => $audit_entity->id(),
         'field_audit_question' => $audit_question_entity->id(),
         'field_yes_no' => $answer_value ? 1 : 0,
+        'field_response' => '', // Initialize with empty response field
         'status' => TRUE,
       ]);
 
@@ -168,5 +169,78 @@ class AjaxController extends ControllerBase {
     
     // Build and return the form with the loaded entities
     return $this->formBuilder->getForm('\Drupal\audit\Form\AttachEvidenceForm', $audit_entity, $question_entity);
+  }
+
+  /**
+   * Controller method for the audit question response comment modal.
+   */
+  public function auditQuestionResponseComment($audit, $question, $paragraph = NULL) {
+    // Load the entities properly
+    $audit_storage = $this->entityTypeManager->getStorage('node');
+    $question_storage = $this->entityTypeManager->getStorage('audit_question');
+    $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+
+    $audit_entity = is_numeric($audit) ? $audit_storage->load($audit) : $audit;
+    $question_entity = is_numeric($question) ? $question_storage->load($question) : $question;
+    $paragraph_entity = NULL;
+
+    // Handle the paragraph parameter - if it's numeric, load it, otherwise it's already loaded
+    if ($paragraph) {
+      if (is_numeric($paragraph)) {
+        $paragraph_entity = $paragraph_storage->load($paragraph);
+      } else {
+        $paragraph_entity = $paragraph;
+      }
+    }
+
+    if (!$audit_entity || !$question_entity) {
+      return [
+        '#type' => 'markup',
+        '#markup' => '<p>' . $this->t('Invalid audit or question specified.') . '</p>',
+      ];
+    }
+
+    // Build and return the form with the loaded entities
+    return $this->formBuilder->getForm('\Drupal\audit\Form\AuditQuestionResponseCommentForm', $paragraph_entity, $audit_entity->id(), $question_entity->id());
+  }
+
+  /**
+   * Controller method for deleting an audit question response comment via AJAX.
+   */
+  public function deleteAuditQuestionResponseComment($audit, $question, $paragraph) {
+    $audit_storage = $this->entityTypeManager->getStorage('node');
+    $question_storage = $this->entityTypeManager->getStorage('audit_question');
+    $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+
+    $audit_entity = is_numeric($audit) ? $audit_storage->load($audit) : $audit;
+    $question_entity = is_numeric($question) ? $question_storage->load($question) : $question;
+    $paragraph_entity = is_numeric($paragraph) ? $paragraph_storage->load($paragraph) : $paragraph;
+
+    if (!$paragraph_entity) {
+      return new \Symfony\Component\HttpFoundation\JsonResponse(['error' => 'Invalid paragraph'], 404);
+    }
+
+    // Check permissions for deletion
+    $current_user = $this->currentUser();
+    $paragraph_owner_id = $paragraph_entity->getOwnerId() ?? 0;
+    $current_user_id = $current_user->id();
+    $is_owner = $paragraph_owner_id == $current_user_id;
+
+    $can_delete = $current_user->hasPermission('delete audit_question_response_comment') ||
+                  ($current_user->hasPermission('delete own audit_question_response_comment') && $is_owner);
+
+    if (!$can_delete) {
+      return new \Symfony\Component\HttpFoundation\JsonResponse([
+        'error' => $this->t('You do not have permission to delete this comment.')
+      ], 403);
+    }
+
+    // Delete the paragraph
+    $paragraph_entity->delete();
+
+    return new \Symfony\Component\HttpFoundation\JsonResponse([
+      'success' => TRUE,
+      'message' => $this->t('Comment has been deleted.')
+    ]);
   }
 }

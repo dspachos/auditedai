@@ -112,6 +112,56 @@
           </div>
         {% endif %}
 
+        {# Display and manage comments for this question #}
+        {% if has_comment and response_paragraph %}
+          <div class="audit-question-comment">
+            <div class="comment-content">
+              <strong>{{ 'Comment:' | t }}</strong>
+              <p>{{ response_paragraph.field_response.value }}</p>
+            </div>
+            <div class="comment-actions">
+              {% if has_own_audit_question_response_comment_edit_permission or has_audit_question_response_comment_edit_permission %}
+                <a href="{{ path('audit.audit_question_response_comment_modal', {
+                    'audit': audit_entity.id(),
+                    'question': audit_question_entity.id(),
+                    'paragraph': response_paragraph.id()
+                  }) }}"
+                  class="use-ajax"
+                  data-dialog-type="modal"
+                  data-dialog-options='{"width":600,"height":500}'>
+                  {{ 'Edit Comment' | t }}
+                </a>
+              {% endif %}
+              <span>&nbsp;</span>
+              {% if has_own_audit_question_response_comment_delete_permission or has_audit_question_response_comment_delete_permission %}
+                <a href="{{ path('audit.audit_question_response_comment_delete', {
+                    'audit': audit_entity.id(),
+                    'question': audit_question_entity.id(),
+                    'paragraph': response_paragraph.id()
+                  }) }}"
+                  class="use-ajax"
+                  data-dialog-type="modal"
+                  data-dialog-options='{"width":400,"height":200}'>
+                  {{ 'Delete Comment' | t }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        {% if not has_comment and has_audit_question_response_comment_create_permission %}
+          <div class="audit-question-comment">
+            <a href="{{ path('audit.audit_question_response_comment_add_modal', {
+                'audit': audit_entity.id(),
+                'question': audit_question_entity.id()
+              }) }}"
+              class="use-ajax"
+              data-dialog-type="modal"
+              data-dialog-options='{"width":600,"height":500}'>
+              {{ 'Add Comment' | t }}
+            </a>
+          </div>
+        {% endif %}
+
         {# Show attach evidence button for all question types #}
           <div class="audit-card-footer">
             {% if evidences is empty %}
