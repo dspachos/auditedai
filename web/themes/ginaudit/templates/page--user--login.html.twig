@@ -43,15 +43,9 @@
   <div class="user-form-page__user-form">
     <header class="content-header clearfix">
       <div class="layout-container">
-        {% if icon_default == false and icon_path != '' %}
           <a href="{{ path('<front>') }}" class="toolbar-logo" data-drupal-link-system-path="<front>">
-            <img src="{{ file_url(icon_path) }}" alt="{{ site_name }}" class="toolbar-icon-home" />
+            <img src="/themes/ginaudit/images/logo.png" alt="{{ site_name }}" class="toolbar-icon-home" />
           </a>
-        {% else %}
-          <a href="{{ path('<front>') }}" alt="{{ site_name }}" class="toolbar-icon toolbar-icon-default" data-drupal-link-system-path="<front>">
-            {{ 'Home'|t }}
-          </a>
-        {% endif %}
       </div>
     </header>
 
@@ -60,7 +54,7 @@
       <main class="page-content clearfix" role="main">
         <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
         {% block title %}
-          <h1 class="page-title user-form-page__page-title">{{ 'Log in'|t }}</h1>
+          <h1 class="page-title user-form-page__page-title"> <span style="color: #555">{{ 'AuditED' | t }}</span>  {{ ' Log in'|t }}</h1>
         {% endblock %}
         {{ page.highlighted }}
         {% if page.help %}

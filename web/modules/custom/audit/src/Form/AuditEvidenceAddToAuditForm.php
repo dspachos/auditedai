@@ -108,7 +108,7 @@ class AuditEvidenceAddToAuditForm extends FormBase {
       '#type' => 'link',
       '#title' => $this->t('Cancel'),
       '#attributes' => ['class' => ['button', 'button--secondary']],
-      '#url' => $audit->toUrl()->mergeOptions(['fragment' => 'evidences']),
+      '#url' => $node->toUrl()->mergeOptions(['fragment' => 'evidences']),
     ];
 
     return $form;
