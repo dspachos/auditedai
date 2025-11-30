@@ -2,6 +2,7 @@
 
 namespace Drupal\audit\EventSubscriber;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,13 +22,23 @@ class RedirectSubscriber implements EventSubscriberInterface {
   protected $currentUser;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructs a RedirectSubscriber object.
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  public function __construct(AccountProxyInterface $current_user) {
+  public function __construct(AccountProxyInterface $current_user, LoggerChannelFactoryInterface $logger_factory) {
     $this->currentUser = $current_user;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -49,7 +60,7 @@ class RedirectSubscriber implements EventSubscriberInterface {
 
     // Check if the user is authenticated and the request is for the front page, /, or /user/login.
     if ($is_authenticated && ($route_name === 'system.front' || $route_name === 'user.login' || $path === '/' || $path === '/user/login')) {
-      \Drupal::logger('audit')->debug('Redirecting authenticated user to /dashboard');
+      $this->loggerFactory->get('audit')->debug('Redirecting authenticated user to /dashboard');
       $response = new TrustedRedirectResponse('/dashboard');
       $response->getCacheableMetadata()->setCacheContexts(['user.roles:authenticated']);
       $event->setResponse($response);
