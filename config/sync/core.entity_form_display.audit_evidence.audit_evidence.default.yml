@@ -6,7 +6,6 @@ dependencies:
     - field.field.audit_evidence.audit_evidence.field_audit
     - field.field.audit_evidence.audit_evidence.field_audit_question
     - field.field.audit_evidence.audit_evidence.field_evidence
-    - field.field.audit_evidence.audit_evidence.field_evidence_number
     - field.field.audit_evidence.audit_evidence.field_supporting_files
   module:
     - audit
@@ -57,14 +56,6 @@ content:
     region: content
     settings:
       rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_evidence_number:
-    type: string_textfield
-    weight: 26
-    region: content
-    settings:
-      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_supporting_files:

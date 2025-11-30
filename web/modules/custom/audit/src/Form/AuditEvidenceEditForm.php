@@ -73,19 +73,17 @@ final class AuditEvidenceEditForm extends FormBase {
       ];
     }
 
-    // Add the mandatory evidence number field
-    $existing_evidence_number = '';
-    if ($audit_evidence && $audit_evidence->hasField('field_evidence_number')) {
-      $existing_evidence_number = $audit_evidence->get('field_evidence_number')->value;
-    }
-
+    // Display the evidence number (automatically set to entity ID)
+    $evidence_id = $audit_evidence ? $audit_evidence->id() : 'new';
     $form['field_evidence_number'] = [
-      '#type' => 'textfield',
+      '#type' => 'item',
       '#title' => $this->t('Evidence Number'),
-      '#description' => $this->t('Enter the unique evidence number.'),
-      '#required' => TRUE,
-      '#default_value' => $existing_evidence_number,
+      '#markup' => $evidence_id,
+      '#value' => $evidence_id,
     ];
+
+    // Store the evidence ID in form state for use in submit handler
+    $form_state->set('evidence_id', $evidence_id);
     
     // Add the mandatory label field
     $form['label'] = [
@@ -182,12 +180,7 @@ final class AuditEvidenceEditForm extends FormBase {
 
     // Validate that evidence text is provided
     $description = $form_state->getValue('description');
-    $evidence_number = $form_state->getValue('field_evidence_number');
     $label = $form_state->getValue('label');
-
-    if (empty($evidence_number)) {
-      $form_state->setErrorByName('field_evidence_number', $this->t('Evidence Number is required.'));
-    }
 
     if (empty($label)) {
       $form_state->setErrorByName('label', $this->t('Label is required.'));
@@ -212,7 +205,6 @@ final class AuditEvidenceEditForm extends FormBase {
     $evidence_number = $form_state->getValue('field_evidence_number');
     $label = $form_state->getValue('label');
 
-    $audit_evidence->set('field_evidence_number', $evidence_number);
     $audit_evidence->set('field_evidence', $description);
     $audit_evidence->set('label', $label);
 
