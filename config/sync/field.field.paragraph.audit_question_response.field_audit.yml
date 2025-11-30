@@ -1,0 +1,29 @@
+uuid: 4995aff6-ad57-4298-88c8-f56437af4277
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_audit
+    - node.type.audit
+    - paragraphs.paragraphs_type.audit_question_response
+id: paragraph.audit_question_response.field_audit
+field_name: field_audit
+entity_type: paragraph
+bundle: audit_question_response
+label: Audit
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      audit: audit
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

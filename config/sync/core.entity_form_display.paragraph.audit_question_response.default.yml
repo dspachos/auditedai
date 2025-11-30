@@ -1,0 +1,53 @@
+uuid: c930957c-10a3-4698-9150-92c65b470949
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.audit_question_response.field_audit
+    - field.field.paragraph.audit_question_response.field_audit_question
+    - field.field.paragraph.audit_question_response.field_response
+    - field.field.paragraph.audit_question_response.field_yes_no
+    - paragraphs.paragraphs_type.audit_question_response
+id: paragraph.audit_question_response.default
+targetEntityType: paragraph
+bundle: audit_question_response
+mode: default
+content:
+  field_audit:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_audit_question:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_response:
+    type: string_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_yes_no:
+    type: boolean_checkbox
+    weight: 0
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

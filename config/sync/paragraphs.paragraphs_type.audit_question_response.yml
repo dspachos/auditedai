@@ -1,0 +1,10 @@
+uuid: 059d7c1c-3a70-4873-b49f-8f170c5f2132
+langcode: en
+status: true
+dependencies: {  }
+id: audit_question_response
+label: 'Audit Question Response'
+icon_uuid: null
+icon_default: null
+description: 'This entity keeps a specific question response for an audit.'
+behavior_plugins: {  }
