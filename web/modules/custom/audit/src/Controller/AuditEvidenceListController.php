@@ -70,6 +70,7 @@ class AuditEvidenceListController extends ControllerBase {
 
     // Create a table to display the evidence.
     $header = [
+      $this->t('ID'),
       $this->t('Label'),
       $this->t('Description'),
       $this->t('Audit Question'),
@@ -146,6 +147,9 @@ class AuditEvidenceListController extends ControllerBase {
 
       $rows[] = [
         'data' => [
+          [
+            'data' => $evidence->id(),
+          ],
           [
             'data' => $label,
           ],
