@@ -121,11 +121,11 @@
           </div>
 
         {# Display and manage comments for this question #}
-        {% if has_comment and response_paragraph %}
+        {% if has_comment and response_paragraph and response_paragraph.field_comments.value is not empty %}
           <div class="audit-question-comment">
             <div class="comment-content">
               <strong>{{ 'Comment:' | t }}</strong>
-              <p>{{ response_paragraph.field_response.value }}</p>
+              <p>{{ response_paragraph.field_comments.value }}</p>
             </div>
             <div class="comment-actions">
               {% if has_own_audit_question_response_comment_edit_permission or has_audit_question_response_comment_edit_permission %}

@@ -117,7 +117,7 @@ class AjaxController extends ControllerBase {
         'field_audit' => $audit_entity->id(),
         'field_audit_question' => $audit_question_entity->id(),
         'field_yes_no' => $answer_value ? 1 : 0,
-        'field_response' => '', // Initialize with empty response field
+        'field_comments' => '', // Initialize with empty comments field
         'status' => TRUE,
       ]);
 

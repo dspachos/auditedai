@@ -103,10 +103,10 @@ function template_preprocess_audit_question(array &$variables): void {
       $paragraph_ids = $query->execute();
       $response_paragraph = !empty($paragraph_ids) ? $paragraph_storage->load(reset($paragraph_ids)) : NULL;
 
-      // Check if the paragraph has an actual comment (field_response value)
+      // Check if the paragraph has an actual comment (field_comments value)
       $has_comment = FALSE;
-      if ($response_paragraph && $response_paragraph->hasField('field_response')) {
-        $response_value = $response_paragraph->get('field_response')->value;
+      if ($response_paragraph && $response_paragraph->hasField('field_comments')) {
+        $response_value = $response_paragraph->get('field_comments')->value;
         $has_comment = !empty($response_value);
       }
 

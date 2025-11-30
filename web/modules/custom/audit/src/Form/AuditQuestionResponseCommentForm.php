@@ -96,11 +96,11 @@ final class AuditQuestionResponseCommentForm extends FormBase {
 
     // Get current response value if editing existing paragraph
     $current_response = '';
-    if ($paragraph && $paragraph->hasField('field_response')) {
-      $current_response = $paragraph->get('field_response')->value ?? '';
+    if ($paragraph && $paragraph->hasField('field_comments')) {
+      $current_response = $paragraph->get('field_comments')->value ?? '';
     }
 
-    $form['field_response'] = [
+    $form['field_comments'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Comment'),
       '#description' => $this->t('Enter your comment for this audit question response.'),
@@ -171,8 +171,30 @@ final class AuditQuestionResponseCommentForm extends FormBase {
     }
 
     $paragraph = $form_state->get('paragraph');
-    $response_text = $form_state->getValue('field_response');
+    $response_text = $form_state->getValue('field_comments');
     $current_user_id = $this->currentUser->id();
+
+    // If no existing paragraph was passed, check if there's already one for this audit question
+    if (!$paragraph) {
+      $audit_id = $form_state->getValue('audit_id');
+      $question_id = $form_state->getValue('question_id');
+
+      if ($audit_id && $question_id) {
+        $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+        $query = $paragraph_storage->getQuery()
+          ->condition('type', 'audit_question_response')
+          ->condition('field_audit', $audit_id)
+          ->condition('field_audit_question', $question_id)
+          ->sort('created', 'DESC')
+          ->range(0, 1)
+          ->accessCheck(TRUE);
+
+        $paragraph_ids = $query->execute();
+        if (!empty($paragraph_ids)) {
+          $paragraph = $paragraph_storage->load(reset($paragraph_ids));
+        }
+      }
+    }
 
     // Check permissions when saving
     if ($paragraph) {
@@ -189,7 +211,7 @@ final class AuditQuestionResponseCommentForm extends FormBase {
       }
 
       // Update existing paragraph
-      $paragraph->set('field_response', $response_text);
+      $paragraph->set('field_comments', $response_text);
       $paragraph->save();
     } else {
       // Creating new paragraph
@@ -202,7 +224,7 @@ final class AuditQuestionResponseCommentForm extends FormBase {
       $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
       $paragraph = $paragraph_storage->create([
         'type' => 'audit_question_response',
-        'field_response' => $response_text,
+        'field_comments' => $response_text,
         'field_audit' => $form_state->getValue('audit_id'),
         'field_audit_question' => $form_state->getValue('question_id'),
         'uid' => $current_user_id, // Set the owner

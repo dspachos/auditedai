@@ -130,10 +130,12 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Capture the audit reference before deleting the entity
+    // Capture the audit reference before modifying the entity
     $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
 
-    $this->paragraph->delete();
+    // Clear the comment field instead of deleting the paragraph
+    $this->paragraph->set('field_comments', '');
+    $this->paragraph->save();
     $this->messenger()->addStatus($this->t('Comment has been deleted.'));
 
     if ($audit_ref) {
@@ -147,19 +149,19 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
    * AJAX callback for submit action.
    */
   public function ajaxSubmitCallback(array &$form, FormStateInterface $form_state) {
-    // Capture the audit reference before deleting the entity
+    // Capture the audit reference before modifying the entity
     $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
 
-    // Call the original submit logic (this will delete the paragraph)
+    // Call the original submit logic (this will clear the comment field)
     $this->submitForm($form, $form_state);
 
     // Create AJAX response
     $response = new AjaxResponse();
 
-    // Close the modal dialog
+    // Close the modal dialog first
     $response->addCommand(new CloseModalDialogCommand());
 
-    // Redirect to refresh the page
+    // Add a command to redirect after a brief delay to ensure modal closes properly
     if ($audit_ref) {
       $response->addCommand(new RedirectCommand(Url::fromRoute('entity.node.canonical', ['node' => $audit_ref])->toString()));
     } else {
@@ -168,5 +170,4 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
 
     return $response;
   }
-
 }
