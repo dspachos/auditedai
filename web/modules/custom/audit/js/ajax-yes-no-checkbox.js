@@ -10,10 +10,10 @@
     var questionId = $(checkbox).data('question-id');
     var auditId = $(checkbox).data('audit-id');
     var isChecked = checkbox.checked;
-    
+
     // Add temporary visual feedback
     $(checkbox).addClass('ajax-processing');
-    
+
     // Perform AJAX request to save the value
     $.ajax({
       url: Drupal.url('audit/ajax-toggle-yes-no/' + auditId + '/' + questionId),
@@ -25,9 +25,13 @@
       },
       dataType: 'json',
       success: function(response) {
+        // Update the label text based on the new checkbox state
+        var toggleLabel = $(checkbox).closest('.toggle-container').find('.toggle-label');
+        toggleLabel.text(isChecked ? Drupal.t('Yes') : Drupal.t('No'));
+
         // Add success visual feedback
         $(checkbox).addClass('ajax-success');
-        
+
         // Remove success class after delay
         setTimeout(function() {
           $(checkbox).removeClass('ajax-success ajax-processing');
@@ -36,10 +40,14 @@
       error: function(xhr, status, error) {
         // Revert the checkbox state on error
         checkbox.checked = !isChecked;
-        
+
+        // Update the label text to match the reverted state
+        var toggleLabel = $(checkbox).closest('.toggle-container').find('.toggle-label');
+        toggleLabel.text(!isChecked ? Drupal.t('Yes') : Drupal.t('No'));
+
         // Remove processing class
         $(checkbox).removeClass('ajax-processing');
-        
+
         console.error('Error saving yes/no value: ', error);
         alert('Error saving value. Please try again.');
       }
@@ -54,10 +62,10 @@
           var questionId = $(checkbox).data('question-id');
           var auditId = $(checkbox).data('audit-id');
           var isChecked = checkbox.checked;
-          
+
           // Add temporary visual feedback
           $(checkbox).addClass('ajax-processing');
-          
+
           // Perform AJAX request to save the value
           $.ajax({
             url: Drupal.url('audit/ajax-toggle-yes-no/' + auditId + '/' + questionId),
@@ -69,9 +77,13 @@
             },
             dataType: 'json',
             success: function(response) {
+              // Update the label text based on the new checkbox state
+              var toggleLabel = $(checkbox).closest('.toggle-container').find('.toggle-label');
+              toggleLabel.text(isChecked ? Drupal.t('Yes') : Drupal.t('No'));
+
               // Add success visual feedback
               $(checkbox).addClass('ajax-success');
-              
+
               // Remove success class after delay
               setTimeout(function() {
                 $(checkbox).removeClass('ajax-success ajax-processing');
@@ -80,10 +92,14 @@
             error: function(xhr, status, error) {
               // Revert the checkbox state on error
               checkbox.checked = !isChecked;
-              
+
+              // Update the label text to match the reverted state
+              var toggleLabel = $(checkbox).closest('.toggle-container').find('.toggle-label');
+              toggleLabel.text(!isChecked ? Drupal.t('Yes') : Drupal.t('No'));
+
               // Remove processing class
               $(checkbox).removeClass('ajax-processing');
-              
+
               console.error('Error saving yes/no value: ', error);
               alert('Error saving value. Please try again.');
             }
