@@ -125,7 +125,7 @@ audit.add_audit_evidence:
     _form: '\Drupal\audit\Form\AuditEvidenceAddToAuditForm'
     _title: "Add Evidence to Audit"
   requirements:
-    _permission: "create audit_evidence entities"
+    _permission: "create audit_evidence"
     node: \d+
   options:
     parameters:
