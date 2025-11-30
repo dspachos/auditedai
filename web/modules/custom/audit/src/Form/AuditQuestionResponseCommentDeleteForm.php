@@ -84,7 +84,10 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
    */
   public function getCancelUrl() {
     // Extract audit ID from the paragraph
-    $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
+    $audit_ref = NULL;
+    if ($this->paragraph) {
+      $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
+    }
     if ($audit_ref) {
       return new Url('entity.node.canonical', ['node' => $audit_ref]);
     }
@@ -127,10 +130,12 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Capture the audit reference before deleting the entity
+    $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
+
     $this->paragraph->delete();
     $this->messenger()->addStatus($this->t('Comment has been deleted.'));
 
-    $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
     if ($audit_ref) {
       $form_state->setRedirect('entity.node.canonical', ['node' => $audit_ref]);
     } else {
@@ -142,7 +147,10 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
    * AJAX callback for submit action.
    */
   public function ajaxSubmitCallback(array &$form, FormStateInterface $form_state) {
-    // Call the original submit logic
+    // Capture the audit reference before deleting the entity
+    $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
+
+    // Call the original submit logic (this will delete the paragraph)
     $this->submitForm($form, $form_state);
 
     // Create AJAX response
@@ -152,8 +160,6 @@ class AuditQuestionResponseCommentDeleteForm extends ConfirmFormBase {
     $response->addCommand(new CloseModalDialogCommand());
 
     // Redirect to refresh the page
-    $audit_ref = $this->paragraph->get('field_audit')->target_id ?? NULL;
-
     if ($audit_ref) {
       $response->addCommand(new RedirectCommand(Url::fromRoute('entity.node.canonical', ['node' => $audit_ref])->toString()));
     } else {
