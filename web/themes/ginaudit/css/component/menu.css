@@ -202,7 +202,16 @@ body {
 }
 
 .audit-footer-logo-placeholder {
-  padding-top: 20px;
+  padding: 20px 15px 0 0; /* top right bottom left - adding right padding */
+  font-size: 0.8em; /* Make text smaller */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to top */
+}
+
+.audit-footer-logo-placeholder p {
+  margin: 0 0 10px 0; /* Add some space between paragraphs */
+  line-height: 1.4; /* Ensure good readability for small text */
 }
 
 /* Responsive adjustments for footer */
