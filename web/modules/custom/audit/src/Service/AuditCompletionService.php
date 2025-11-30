@@ -52,15 +52,30 @@ class AuditCompletionService {
 
     // For each question, check if there's at least one evidence associated with it for this audit
     foreach ($all_questions as $question) {
-      // Load evidence for this specific question and audit
-      $evidence_entities = $this->entityTypeManager->getStorage('audit_evidence')->loadByProperties([
-        'field_audit' => $audit_id,
-        'field_audit_question' => $question->id(),
-      ]);
+      // Check if this is a yes/no question
+      if ($question->field_simple_yes_no->value) {
+        // For yes/no questions, check if there's a paragraph response
+        $paragraph_entities = $this->entityTypeManager->getStorage('paragraph')->loadByProperties([
+          'type' => 'audit_question_response',
+          'field_audit' => $audit_id,
+          'field_audit_question' => $question->id(),
+        ]);
 
-      // If there's at least one evidence for this question, count it as answered
-      if (!empty($evidence_entities)) {
-        $answered_questions++;
+        // If there's a paragraph response for this yes/no question, count it as answered
+        if (!empty($paragraph_entities)) {
+          $answered_questions++;
+        }
+      } else {
+        // For regular questions, check if there's evidence
+        $evidence_entities = $this->entityTypeManager->getStorage('audit_evidence')->loadByProperties([
+          'field_audit' => $audit_id,
+          'field_audit_question' => $question->id(),
+        ]);
+
+        // If there's at least one evidence for this question, count it as answered
+        if (!empty($evidence_entities)) {
+          $answered_questions++;
+        }
       }
     }
 
@@ -87,12 +102,6 @@ class AuditCompletionService {
     // Check if field_evidence has a value
     $evidence_value = $evidence->get('field_evidence')->value;
     if (!empty($evidence_value) && is_string($evidence_value) && trim($evidence_value) !== '') {
-      return TRUE;
-    }
-
-    // Check if field_yes_no_answer has a value (TRUE or FALSE)
-    $yes_no_value = $evidence->get('field_yes_no_answer')->value;
-    if ($yes_no_value !== NULL && $yes_no_value !== '') {
       return TRUE;
     }
 

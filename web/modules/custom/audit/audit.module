@@ -72,8 +72,20 @@ function template_preprocess_audit_question(array &$variables): void {
       
       // For yes/no questions, prepare data for the AJAX checkbox
       if ($audit_question_entity->field_simple_yes_no->value) {
-        $current_evidence = !empty($variables['evidences']) ? reset($variables['evidences']) : NULL;
-        $variables['yes_no_checked'] = $current_evidence ? (bool) $current_evidence->field_yes_no_answer->value : FALSE;
+        // Load paragraph response for this audit and question
+        $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+        $query = $paragraph_storage->getQuery()
+          ->condition('type', 'audit_question_response')
+          ->condition('field_audit', $variables['audit_entity']->id())
+          ->condition('field_audit_question', $audit_question_entity->id())
+          ->sort('created', 'DESC')
+          ->range(0, 1)
+          ->accessCheck(TRUE);
+
+        $paragraph_ids = $query->execute();
+        $current_paragraph = !empty($paragraph_ids) ? $paragraph_storage->load(reset($paragraph_ids)) : NULL;
+
+        $variables['yes_no_checked'] = $current_paragraph ? (bool) $current_paragraph->field_yes_no->value : FALSE;
         $variables['question_id'] = $audit_question_entity->id();
         $variables['audit_id'] = $variables['audit_entity']->id();
       }

@@ -55,14 +55,14 @@ class AjaxYesNoEvidenceForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $audit_entity = NULL, $audit_question_entity = NULL) {
     $form['#attributes']['class'][] = 'ajax-yes-no-form';
     
-    // Retrieve the current evidence if it exists
-    $current_evidence = $this->getCurrentEvidence($audit_entity, $audit_question_entity);
-    
+    // Retrieve the current paragraph response if it exists
+    $current_paragraph = $this->getCurrentParagraphResponse($audit_entity, $audit_question_entity);
+
     $form['audit_entity_id'] = [
       '#type' => 'hidden',
       '#value' => $audit_entity ? $audit_entity->id() : NULL,
     ];
-    
+
     $form['audit_question_entity_id'] = [
       '#type' => 'hidden',
       '#value' => $audit_question_entity ? $audit_question_entity->id() : NULL,
@@ -71,7 +71,7 @@ class AjaxYesNoEvidenceForm extends FormBase {
     $form['yes_no_answer'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Yes'),
-      '#default_value' => $current_evidence ? (bool) $current_evidence->field_yes_no_answer->value : FALSE,
+      '#default_value' => $current_paragraph ? (bool) $current_paragraph->field_yes_no->value : FALSE,
       '#ajax' => [
         'callback' => '::ajaxYesNoCallback',
         'wrapper' => 'yes-no-wrapper-' . ($audit_question_entity ? $audit_question_entity->id() : 'default'),
@@ -114,13 +114,13 @@ class AjaxYesNoEvidenceForm extends FormBase {
       $audit_question_entity = $this->entityTypeManager->getStorage('audit_question')->load($audit_question_entity_id);
       
       if ($audit_entity && $audit_question_entity) {
-        // Update or create the evidence
-        $evidence_entity = $this->createOrUpdateEvidence($audit_entity, $audit_question_entity, $new_value);
-        
-        if ($evidence_entity) {
+        // Update or create the paragraph response
+        $paragraph_entity = $this->createOrUpdateParagraphResponse($audit_entity, $audit_question_entity, $new_value);
+
+        if ($paragraph_entity) {
           // Add CSS class to indicate success
           $response->addCommand(new InvokeCommand('.yes-no-checkbox[data-question-id="' . $audit_question_entity_id . '"]', 'addClass', ['ajax-success']));
-          
+
           // Remove the success class after a delay to reset visual indicator
           $js_code = '
             setTimeout(function() {
@@ -143,55 +143,56 @@ class AjaxYesNoEvidenceForm extends FormBase {
   }
 
   /**
-   * Gets the current evidence for the given audit and question.
+   * Gets the current paragraph response for the given audit and question.
    */
-  protected function getCurrentEvidence($audit_entity, $audit_question_entity) {
+  protected function getCurrentParagraphResponse($audit_entity, $audit_question_entity) {
     if (!$audit_entity || !$audit_question_entity) {
       return NULL;
     }
 
-    $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
-    $query = $evidence_storage->getQuery()
+    $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+    $query = $paragraph_storage->getQuery()
+      ->condition('type', 'audit_question_response')
       ->condition('field_audit', $audit_entity->id())
       ->condition('field_audit_question', $audit_question_entity->id())
       ->sort('created', 'DESC')
       ->range(0, 1)
       ->accessCheck(TRUE);
 
-    $evidence_ids = $query->execute();
-    
-    if (!empty($evidence_ids)) {
-      $evidence_id = reset($evidence_ids);
-      return $evidence_storage->load($evidence_id);
+    $paragraph_ids = $query->execute();
+
+    if (!empty($paragraph_ids)) {
+      $paragraph_id = reset($paragraph_ids);
+      return $paragraph_storage->load($paragraph_id);
     }
 
     return NULL;
   }
 
   /**
-   * Creates or updates an evidence entity with the yes/no answer.
+   * Creates or updates a paragraph entity with the yes/no answer.
    */
-  protected function createOrUpdateEvidence($audit_entity, $audit_question_entity, $answer_value) {
-    $current_evidence = $this->getCurrentEvidence($audit_entity, $audit_question_entity);
-    
-    if ($current_evidence) {
-      // Update existing evidence
-      $current_evidence->field_yes_no_answer->value = $answer_value ? 1 : 0;
-      $current_evidence->save();
-      return $current_evidence;
+  protected function createOrUpdateParagraphResponse($audit_entity, $audit_question_entity, $answer_value) {
+    $current_paragraph = $this->getCurrentParagraphResponse($audit_entity, $audit_question_entity);
+
+    if ($current_paragraph) {
+      // Update existing paragraph
+      $current_paragraph->field_yes_no->value = $answer_value ? 1 : 0;
+      $current_paragraph->save();
+      return $current_paragraph;
     } else {
-      // Create new evidence
-      $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
-      $evidence = $evidence_storage->create([
-        'label' => 'Evidence for question: ' . $audit_question_entity->label(),
+      // Create new paragraph response
+      $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+      $paragraph = $paragraph_storage->create([
+        'type' => 'audit_question_response',
         'field_audit' => $audit_entity->id(),
         'field_audit_question' => $audit_question_entity->id(),
-        'field_yes_no_answer' => $answer_value ? 1 : 0,
+        'field_yes_no' => $answer_value ? 1 : 0,
         'status' => TRUE,
       ]);
-      
-      $evidence->save();
-      return $evidence;
+
+      $paragraph->save();
+      return $paragraph;
     }
   }
 

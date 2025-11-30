@@ -84,13 +84,13 @@ class AjaxController extends ControllerBase {
       return new JsonResponse(['error' => 'Question is not a yes/no question'], 400);
     }
     
-    // Create or update the evidence entity
-    $evidence_entity = $this->createOrUpdateEvidence($audit_entity, $question_entity, $value);
-    
-    if (!$evidence_entity) {
-      return new JsonResponse(['error' => 'Failed to save evidence'], 500);
+    // Create or update the paragraph response
+    $paragraph_entity = $this->createOrUpdateParagraphResponse($audit_entity, $question_entity, $value);
+
+    if (!$paragraph_entity) {
+      return new JsonResponse(['error' => 'Failed to save paragraph response'], 500);
     }
-    
+
     return new JsonResponse([
       'success' => TRUE,
       'message' => 'Value saved successfully',
@@ -99,49 +99,50 @@ class AjaxController extends ControllerBase {
   }
   
   /**
-   * Creates or updates an evidence entity with the yes/no answer.
+   * Creates or updates a paragraph entity with the yes/no answer.
    */
-  protected function createOrUpdateEvidence($audit_entity, $audit_question_entity, $answer_value) {
-    $current_evidence = $this->getCurrentEvidence($audit_entity, $audit_question_entity);
-    
-    if ($current_evidence) {
-      // Update existing evidence
-      $current_evidence->field_yes_no_answer->value = $answer_value ? 1 : 0;
-      $current_evidence->save();
-      return $current_evidence;
+  protected function createOrUpdateParagraphResponse($audit_entity, $audit_question_entity, $answer_value) {
+    $current_paragraph = $this->getCurrentParagraphResponse($audit_entity, $audit_question_entity);
+
+    if ($current_paragraph) {
+      // Update existing paragraph
+      $current_paragraph->field_yes_no->value = $answer_value ? 1 : 0;
+      $current_paragraph->save();
+      return $current_paragraph;
     } else {
-      // Create new evidence
-      $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
-      $evidence = $evidence_storage->create([
-        'label' => 'Evidence for question: ' . $audit_question_entity->label(),
+      // Create new paragraph response
+      $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+      $paragraph = $paragraph_storage->create([
+        'type' => 'audit_question_response',
         'field_audit' => $audit_entity->id(),
         'field_audit_question' => $audit_question_entity->id(),
-        'field_yes_no_answer' => $answer_value ? 1 : 0,
+        'field_yes_no' => $answer_value ? 1 : 0,
         'status' => TRUE,
       ]);
-      
-      $evidence->save();
-      return $evidence;
+
+      $paragraph->save();
+      return $paragraph;
     }
   }
 
   /**
-   * Gets the current evidence for the given audit and question.
+   * Gets the current paragraph response for the given audit and question.
    */
-  protected function getCurrentEvidence($audit_entity, $audit_question_entity) {
-    $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
-    $query = $evidence_storage->getQuery()
+  protected function getCurrentParagraphResponse($audit_entity, $audit_question_entity) {
+    $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+    $query = $paragraph_storage->getQuery()
+      ->condition('type', 'audit_question_response')
       ->condition('field_audit', $audit_entity->id())
       ->condition('field_audit_question', $audit_question_entity->id())
       ->sort('created', 'DESC')
       ->range(0, 1)
       ->accessCheck(TRUE);
 
-    $evidence_ids = $query->execute();
-    
-    if (!empty($evidence_ids)) {
-      $evidence_id = reset($evidence_ids);
-      return $evidence_storage->load($evidence_id);
+    $paragraph_ids = $query->execute();
+
+    if (!empty($paragraph_ids)) {
+      $paragraph_id = reset($paragraph_ids);
+      return $paragraph_storage->load($paragraph_id);
     }
 
     return NULL;
