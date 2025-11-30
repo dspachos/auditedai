@@ -73,17 +73,6 @@ final class AuditEvidenceEditForm extends FormBase {
       ];
     }
 
-    // Display the evidence number (automatically set to entity ID)
-    $evidence_id = $audit_evidence ? $audit_evidence->id() : 'new';
-    $form['field_evidence_number'] = [
-      '#type' => 'item',
-      '#title' => $this->t('Evidence Number'),
-      '#markup' => $evidence_id,
-      '#value' => $evidence_id,
-    ];
-
-    // Store the evidence ID in form state for use in submit handler
-    $form_state->set('evidence_id', $evidence_id);
     
     // Add the mandatory label field
     $form['label'] = [
@@ -202,7 +191,6 @@ final class AuditEvidenceEditForm extends FormBase {
 
     // Save the evidence
     $description = $form_state->getValue('description');
-    $evidence_number = $form_state->getValue('field_evidence_number');
     $label = $form_state->getValue('label');
 
     $audit_evidence->set('field_evidence', $description);

@@ -58,13 +58,6 @@ class AuditEvidenceAddToAuditForm extends FormBase {
 
     $form_state->set('audit', $node);
 
-    // Add the mandatory evidence number field
-    $form['field_evidence_number'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Evidence Number'),
-      '#description' => $this->t('Enter the unique evidence number.'),
-      '#required' => TRUE,
-    ];
 
     // Add the mandatory label field
     $form['label'] = [
@@ -120,12 +113,7 @@ class AuditEvidenceAddToAuditForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    $evidence_number = $form_state->getValue('field_evidence_number');
     $label = $form_state->getValue('label');
-
-    if (empty($evidence_number)) {
-      $form_state->setErrorByName('field_evidence_number', $this->t('Evidence Number is required.'));
-    }
 
     if (empty($label)) {
       $form_state->setErrorByName('label', $this->t('Label is required.'));
@@ -138,7 +126,6 @@ class AuditEvidenceAddToAuditForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $audit = $form_state->get('audit');
 
-    $evidence_number = $form_state->getValue('field_evidence_number');
     $label = $form_state->getValue('label');
     $description = $form_state->getValue('field_evidence');
     $file_ids = $form_state->getValue('field_supporting_files', []);
@@ -148,7 +135,6 @@ class AuditEvidenceAddToAuditForm extends FormBase {
     $evidence = $evidence_storage->create([
       'type' => 'audit_evidence', // assuming bundle type
       'label' => $label,
-      'field_evidence_number' => $evidence_number,
       'field_audit' => $audit->id(),
       'field_evidence' => $description,
       'uid' => $this->currentUser()->id(),

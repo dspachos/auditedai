@@ -99,10 +99,6 @@ class AttachEvidenceForm extends FormBase {
     $options = [];
     if ($existing_evidences) {
       foreach ($existing_evidences as $evidence) {
-        $evidence_number = '';
-        if ($evidence->hasField('field_evidence_number') && !$evidence->get('field_evidence_number')->isEmpty()) {
-          $evidence_number = $evidence->get('field_evidence_number')->value;
-        }
 
         // Get evidence description
         $description = '';
@@ -123,30 +119,13 @@ class AttachEvidenceForm extends FormBase {
           }
         }
 
-        // Build the display label in format "evidence_number - label" with additional info
+        // Build the display label in format "label" with additional info
         $label_parts = [];
-
-        // Add evidence number if available
-        if (!empty($evidence_number)) {
-          $label_parts[] = $evidence_number;
-        } else {
-          // Fallback to ID if no evidence number
-          $label_parts[] = $this->t('Evidence @id', ['@id' => $evidence->id()]);
-        }
 
         // Add the main label
         $main_label = $evidence->label();
         if (!empty($main_label)) {
           $label_parts[] = $main_label;
-        }
-
-        // Add either description snippet or files list as additional context
-        if (!empty($description)) {
-          // Limit description to 140 characters
-          $description_snippet = strlen($description) > 140 ? substr($description, 0, 140) . '...' : $description;
-          $label_parts[] = $description_snippet;
-        } elseif (!empty($files_list)) {
-          $label_parts[] = $files_list;
         }
 
         $label = implode(' - ', $label_parts);

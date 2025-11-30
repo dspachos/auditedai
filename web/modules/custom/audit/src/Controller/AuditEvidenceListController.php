@@ -70,7 +70,6 @@ class AuditEvidenceListController extends ControllerBase {
 
     // Create a table to display the evidence.
     $header = [
-      $this->t('Evidence Number'),
       $this->t('Label'),
       $this->t('Description'),
       $this->t('Audit Question'),
@@ -81,11 +80,6 @@ class AuditEvidenceListController extends ControllerBase {
     $rows = [];
 
     foreach ($evidence_entities as $evidence) {
-      // Get evidence number if available
-      $evidence_number = '';
-      if ($evidence->hasField('field_evidence_number') && !$evidence->get('field_evidence_number')->isEmpty()) {
-        $evidence_number = $evidence->get('field_evidence_number')->value;
-      }
 
       // Get label (title)
       $label = $evidence->label();
@@ -152,9 +146,6 @@ class AuditEvidenceListController extends ControllerBase {
 
       $rows[] = [
         'data' => [
-          [
-            'data' => $evidence_number,
-          ],
           [
             'data' => $label,
           ],
