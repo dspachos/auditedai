@@ -7,6 +7,7 @@ dependencies:
     - filter.format.webform_default
     - node.type.audit
   module:
+    - audit
     - contact
     - file
     - filter
@@ -23,9 +24,13 @@ permissions:
   - 'access content'
   - 'access site-wide contact form'
   - 'create audit content'
+  - 'create audit_evidence'
   - 'delete own audit content'
+  - 'delete own audit_evidence'
   - 'delete own files'
   - 'edit own audit content'
+  - 'edit own audit_evidence'
   - 'search content'
   - 'use text format basic_html'
   - 'use text format webform_default'
+  - 'view own audit_evidence'
