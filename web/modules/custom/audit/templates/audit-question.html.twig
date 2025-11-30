@@ -81,14 +81,12 @@
                   {# <a href="#" title="Evaluate with AI"><i class="bi bi-stars"></i></a> #}
                   <span>&nbsp;</span>
                   {# Edit button #}
-                  {% if audit_entity and audit_question_entity %}
-                    <a title="Edit evidence" href="{{ path('audit.evidence.edit_form', {'audit': audit_entity.id(), 'audit_question': audit_question_entity.id(), 'audit_evidence': evidence.id()}) }}" class="audit-evidence-edit"><i class="bi bi-pencil-square"></i></a>
-                  {% else %}
-                    <button class="audit-evidence-edit" data-evidence-id="{{ evidence.id() }}"><i class="bi bi-pencil-square"></i></button>
+                  {% if audit_entity %}
+                      <a title="Edit evidence" href="{{ path('audit.evidence.edit_form', {'audit': audit_entity.id(), 'audit_evidence': evidence.id()}) }}" class="audit-evidence-edit"><i class="bi bi-pencil-square"></i></a>
                   {% endif %}
                   <span>&nbsp;</span>
                   {# Detach button #}
-                  <a href="{{ path('audit.evidence.detach_modal_form', {'audit_evidence': evidence.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-evidence-detach use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:800,&quot;height&quot;:600}"><i class="bi bi-x-circle"></i></a>
+                  <a title="Detach evidence" href="{{ path('audit.evidence.detach_modal_form', {'audit_evidence': evidence.id(), 'audit_question': audit_question_entity.id()}) }}" class="audit-evidence-detach use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:800,&quot;height&quot;:600}"><i class="bi bi-x-circle"></i></a>
                 </div>
               </div>
             {% endfor %}

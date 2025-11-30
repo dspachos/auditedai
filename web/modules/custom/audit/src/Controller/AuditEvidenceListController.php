@@ -138,7 +138,6 @@ class AuditEvidenceListController extends ControllerBase {
             'title' => $this->t('Edit'),
             'url' => Url::fromRoute('audit.evidence.edit_form', [
               'audit' => $node->id(),  // audit parameter (the parent audit node)
-              'audit_question' => $question_entity ? $question_entity->id() : 0,  // audit_question parameter (first associated question)
               'audit_evidence' => $evidence->id()  // audit_evidence parameter
             ])->setOption('query', ['destination' => '/node/' . $node->id() . '/evidences'])
           ],

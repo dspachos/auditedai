@@ -103,15 +103,6 @@ class AttachEvidenceForm extends FormBase {
           continue;
         }
 
-        // Get the question this evidence is currently attached to
-        $question_refs = $evidence->get('field_audit_question')->referencedEntities();
-        if (!empty($question_refs)) {
-          $current_question = reset($question_refs);
-          if ($current_question && $current_question->hasField('field_simple_yes_no') && $current_question->get('field_simple_yes_no')->value) {
-            // Skip this evidence as it belongs to a yes/no question
-            continue;
-          }
-        }
 
         // Get the evidence number
         $evidence_number = '';

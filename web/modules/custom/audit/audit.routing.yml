@@ -37,7 +37,7 @@ audit.evidence.add_form:
         type: entity:audit_question
 
 audit.evidence.edit_form:
-  path: "/evidence/{audit}/{audit_question}/{audit_evidence}/edit"
+  path: "/evidence/{audit}/{audit_evidence}/edit"
   defaults:
     _form: '\Drupal\audit\Form\AuditEvidenceEditForm'
     _title: "Edit Evidence"
@@ -47,8 +47,6 @@ audit.evidence.edit_form:
     parameters:
       audit:
         type: entity:node
-      audit_question:
-        type: entity:audit_question
       audit_evidence:
         type: entity:audit_evidence
 
@@ -83,9 +81,9 @@ audit.promote_status_form:
   path: "/node/{node}/promote-status"
   defaults:
     _form: '\Drupal\audit\Form\AuditPromoteStatusForm'
-    _title: 'Promote Audit Status'
+    _title: "Promote Audit Status"
   requirements:
-    _permission: 'edit any audit content'
+    _permission: "edit any audit content"
     node: '\d+'
   options:
     parameters:
@@ -98,7 +96,7 @@ audit.registration_success:
     _title: "Registration Success"
     _controller: '\Drupal\audit\Controller\RegistrationSuccessController::registrationSuccess'
   requirements:
-    _access: 'TRUE'
+    _access: "TRUE"
 
 audit.ajax_toggle_yes_no:
   path: "/audit/ajax-toggle-yes-no/{audit_id}/{question_id}"
@@ -125,9 +123,9 @@ audit.add_audit_evidence:
   path: "/node/{node}/evidences/add"
   defaults:
     _form: '\Drupal\audit\Form\AuditEvidenceAddToAuditForm'
-    _title: 'Add Evidence to Audit'
+    _title: "Add Evidence to Audit"
   requirements:
-    _permission: 'create audit_evidence entities'
+    _permission: "create audit_evidence entities"
     node: \d+
   options:
     parameters:
@@ -138,13 +136,11 @@ audit.evidence_list:
   path: "/node/{node}/evidences"
   defaults:
     _controller: '\Drupal\audit\Controller\AuditEvidenceListController::view'
-    _title: 'Evidences'
+    _title: "Audit Evidences"
   requirements:
-    _permission: 'access content'
+    _permission: "access content"
     node: \d+
   options:
     parameters:
       node:
         type: entity:node
-
-
