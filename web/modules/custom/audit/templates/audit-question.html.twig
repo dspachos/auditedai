@@ -57,8 +57,7 @@
 
                 {# files list here #}
                 {% if evidence.field_supporting_files is not empty %}
-                  <div class="audit-evidence-files">
-                    <strong>{{ 'Supporting Files:'|t }}</strong>
+                  <div class="audit-evidence-files" style="font-size: 0.8em">
                     <ul>
                       {% for file_item in evidence.field_supporting_files %}
                         {% set file = file_item.entity %}

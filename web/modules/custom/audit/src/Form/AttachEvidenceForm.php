@@ -64,58 +64,52 @@ class AttachEvidenceForm extends FormBase {
       ];
       return $form;
     }
-    
+
 
 
     // Store entities in form state
     $form_state->set('audit', $audit);
     $form_state->set('audit_question', $audit_question);
-
-    // Get all available evidence for this audit
+    // Get all available evidence for this audit that are not attached to the specific question
     $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
+
+    // Query to get evidences that belong to this audit but are not attached to this specific question
     $query = $evidence_storage->getQuery()
       ->condition('field_audit', $audit->id())
       ->accessCheck(TRUE);
 
-    $evidence_ids = $query->execute();
-    $existing_evidences = $evidence_storage->loadMultiple($evidence_ids);
+    // Get all evidences for this audit
+    $all_evidence_ids = $query->execute();
 
-    // Filter out evidences that are already attached to this question
-    $attached_evidence_ids = [];
-    if ($existing_evidences) {
-      foreach ($existing_evidences as $evidence) {
-        $question_ref = $evidence->get('field_audit_question')->referencedEntities();
-        if (!empty($question_ref)) {
-          $ref_question = reset($question_ref);
-          if ($ref_question && $ref_question->id() == $audit_question->id()) {
-            $attached_evidence_ids[] = $evidence->id();
-          }
-        }
-      }
-    }
+    // Now filter out those that are already attached to this question using a separate query
+    $query = $evidence_storage->getQuery()
+      ->condition('field_audit', $audit->id())
+      ->condition('field_audit_question.target_id', $audit_question->id())
+      ->accessCheck(TRUE);
+
+    $attached_evidence_ids = $query->execute();
+
+    // Get the unattached evidence IDs
+    $unattached_evidence_ids = array_diff($all_evidence_ids, $attached_evidence_ids);
+
+    // Load the unattached evidences
+    $existing_evidences = $evidence_storage->loadMultiple($unattached_evidence_ids);
 
     // Prepare options for select
     $options = [];
     if ($existing_evidences) {
       foreach ($existing_evidences as $evidence) {
-        // Skip evidence that's already attached to this question
-        if (in_array($evidence->id(), $attached_evidence_ids)) {
-          continue;
-        }
-
-
-        // Get the evidence number
         $evidence_number = '';
         if ($evidence->hasField('field_evidence_number') && !$evidence->get('field_evidence_number')->isEmpty()) {
           $evidence_number = $evidence->get('field_evidence_number')->value;
         }
-        
+
         // Get evidence description
         $description = '';
         if ($evidence->hasField('field_evidence') && !$evidence->get('field_evidence')->isEmpty()) {
           $description = $evidence->get('field_evidence')->value;
         }
-        
+
         // Get supporting files if no description
         $files_list = '';
         if (empty($description) && $evidence->hasField('field_supporting_files') && !$evidence->get('field_supporting_files')->isEmpty()) {
@@ -128,10 +122,10 @@ class AttachEvidenceForm extends FormBase {
             $files_list = implode(', ', $file_names);
           }
         }
-        
+
         // Build the display label in format "evidence_number - label" with additional info
         $label_parts = [];
-        
+
         // Add evidence number if available
         if (!empty($evidence_number)) {
           $label_parts[] = $evidence_number;
@@ -139,13 +133,13 @@ class AttachEvidenceForm extends FormBase {
           // Fallback to ID if no evidence number
           $label_parts[] = $this->t('Evidence @id', ['@id' => $evidence->id()]);
         }
-        
+
         // Add the main label
         $main_label = $evidence->label();
         if (!empty($main_label)) {
           $label_parts[] = $main_label;
         }
-        
+
         // Add either description snippet or files list as additional context
         if (!empty($description)) {
           // Limit description to 140 characters
@@ -154,7 +148,7 @@ class AttachEvidenceForm extends FormBase {
         } elseif (!empty($files_list)) {
           $label_parts[] = $files_list;
         }
-        
+
         $label = implode(' - ', $label_parts);
         $options[$evidence->id()] = $label;
       }
@@ -231,7 +225,7 @@ class AttachEvidenceForm extends FormBase {
     // Load the evidences to attach
     $evidence_storage = $this->entityTypeManager->getStorage('audit_evidence');
     $success_count = 0;
-    
+
     foreach ($selected_evidences as $evidence_id) {
       $evidence = $evidence_storage->load($evidence_id);
 
@@ -243,7 +237,7 @@ class AttachEvidenceForm extends FormBase {
       // Add the current question to the evidence's question references (append, don't replace)
       $existing_questions = $evidence->get('field_audit_question')->getValue();
       $new_question_id = $audit_question->id();
-      
+
       // Check if the question is already attached to avoid duplicates
       $already_attached = FALSE;
       foreach ($existing_questions as $existing_ref) {
@@ -252,7 +246,7 @@ class AttachEvidenceForm extends FormBase {
           break;
         }
       }
-      
+
       if (!$already_attached) {
         $existing_questions[] = ['target_id' => $new_question_id];
         $evidence->set('field_audit_question', $existing_questions);
@@ -268,7 +262,7 @@ class AttachEvidenceForm extends FormBase {
 
     // Close modal and reload the parent page to show the newly attached evidence
     $response->addCommand(new CloseDialogCommand('#drupal-modal'));
-    
+
     // Get the audit ID from form state to redirect to the correct page
     $audit = $form_state->get('audit');
     if ($audit) {
