@@ -152,7 +152,7 @@ audit.audit_question_response_comment_add_modal:
 audit.audit_question_response_comment_delete:
   path: "/audit/{audit}/question/{question}/response-comment-delete/{paragraph}"
   defaults:
-    _controller: '\Drupal\audit\Controller\AjaxController::deleteAuditQuestionResponseComment'
+    _form: '\Drupal\audit\Form\AuditQuestionResponseCommentDeleteForm'
     _title: "Delete Comment"
   requirements:
     _role: "authenticated"

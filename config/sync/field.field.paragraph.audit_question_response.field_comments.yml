@@ -1,0 +1,19 @@
+uuid: 9780e638-8059-4e21-a780-f8d3f5663a15
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_comments
+    - paragraphs.paragraphs_type.audit_question_response
+id: paragraph.audit_question_response.field_comments
+field_name: field_comments
+entity_type: paragraph
+bundle: audit_question_response
+label: Comments
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

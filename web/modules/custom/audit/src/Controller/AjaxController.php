@@ -64,26 +64,26 @@ class AjaxController extends ControllerBase {
     }
 
     $value = $request->request->get('value');
-    
+
     if ($value !== '0' && $value !== '1') {
       return new JsonResponse(['error' => 'Invalid value'], 400);
     }
-    
+
     $value = (bool) $value;
-    
+
     // Load the entities
     $audit_entity = $this->entityTypeManager->getStorage('node')->load($audit_id);
     $question_entity = $this->entityTypeManager->getStorage('audit_question')->load($question_id);
-    
+
     if (!$audit_entity || !$question_entity) {
       return new JsonResponse(['error' => 'Invalid audit or question entity'], 404);
     }
-    
+
     // Check if this is a yes/no question
     if (!$question_entity->field_simple_yes_no->value) {
       return new JsonResponse(['error' => 'Question is not a yes/no question'], 400);
     }
-    
+
     // Create or update the paragraph response
     $paragraph_entity = $this->createOrUpdateParagraphResponse($audit_entity, $question_entity, $value);
 
